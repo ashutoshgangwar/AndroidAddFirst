@@ -10,6 +10,7 @@ export const Colors = {
   WHITE:'#fff',
   PRIMERY:'#000',
   GRAY:'#808080',
+  DIMMYGRAY: '#a6a6a6',
   light: {
     text: '#11181C',
     background: '#fff',

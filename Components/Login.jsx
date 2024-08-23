@@ -33,7 +33,7 @@ export default function Login() {
         >
           The error stylesheet does not exist is occurring because you have
           referenced StyleSheet but haven't imported it. You need to import
-          StyleSheet from react-native. Here's the corrected code:
+          StyleSheet from react-native. Here's the corrected code
         </Text>
         <TouchableOpacity
           style={styles.button}
