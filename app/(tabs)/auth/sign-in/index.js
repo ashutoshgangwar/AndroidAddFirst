@@ -52,7 +52,7 @@ export default function SignIn() {
       </Text>
 
       <View style={{ marginTop: 20 }}>
-        {/* Emamild Address */}
+        {/* Email Address */}
 
         <Text> Email </Text>
 
@@ -75,10 +75,11 @@ export default function SignIn() {
 
       <View
         style={{
-          padding: 20,
+          padding: 15,
           backgroundColor: Colors.PRIMERY,
           borderRadius: 15,
           marginTop: 20,
+          borderWidth:1
         }}
       >
         <Text
@@ -92,7 +93,7 @@ export default function SignIn() {
         </Text>
       </View>
 
-      {/* Creat Account */}
+      {/* Create Account */}
 
       <TouchableOpacity
       onPress={()=>
@@ -108,7 +109,7 @@ export default function SignIn() {
       >
         <Text
           style={{
-            color: Colors.PRIMERY,
+            color: Colors.PRIMARY,
             textAlign: "center",
             fontSize: 20,
           }}
