@@ -1,4 +1,10 @@
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import React, { useEffect } from "react";
 import { useNavigation, useRouter } from "expo-router";
 import { Colors } from "../../../../constants/Colors";
@@ -19,6 +25,8 @@ export default function SignIn() {
         padding: 25,
         marginTop: 0,
         backgroundColor: Colors.WHITE,
+        height:'100%'
+        
       }}
     >
       <Text
@@ -51,9 +59,9 @@ export default function SignIn() {
         You have been missed
       </Text>
 
-      <View style={{ marginTop: 20 }}>
-        {/* Email Address */}
 
+      {/* Email Address */}
+      <View style={{ marginTop: 20 }}>
         <Text> Email </Text>
 
         <TextInput style={style.input} placeholder="Enter your email address" />
@@ -79,7 +87,7 @@ export default function SignIn() {
           backgroundColor: Colors.PRIMERY,
           borderRadius: 15,
           marginTop: 20,
-          borderWidth:1
+          borderWidth: 1,
         }}
       >
         <Text
@@ -96,15 +104,13 @@ export default function SignIn() {
       {/* Create Account */}
 
       <TouchableOpacity
-      onPress={()=>
-        router.replace('auth/sign-up')
-      }
+        onPress={() => router.replace("auth/sign-up")}
         style={{
           padding: 15,
           backgroundColor: Colors.WHITE,
           borderRadius: 15,
           marginTop: 20,
-          borderWidth:1,
+          borderWidth: 1,
         }}
       >
         <Text

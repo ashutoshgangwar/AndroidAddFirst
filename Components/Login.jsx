@@ -29,6 +29,8 @@ export default function Login() {
             textAlign: "center",
             color: Colors.GRAY,
             marginTop: 10,
+            height:'100%'
+          
           }}
         >
           The error stylesheet does not exist is occurring because you have

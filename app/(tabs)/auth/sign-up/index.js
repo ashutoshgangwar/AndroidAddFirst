@@ -19,6 +19,7 @@ export default function SignIn() {
         padding: 25,
         marginTop: 0,
         backgroundColor: Colors.WHITE,
+        height:'100%'
       }}
     >
       <Text
@@ -51,8 +52,18 @@ export default function SignIn() {
         You have been missed
       </Text>
 
+      {/* User Name */}
+
+      <View style={{ marginTop: 20}}>
+        <Text> Full Name</Text>
+
+        <TextInput style={style.input} placeholder="Enter your full name" />
+      </View>
+
+
+ {/* Email Address */}
       <View style={{ marginTop: 20 }}>
-        {/* Email Address */}
+       
 
         <Text> Email </Text>
 
