@@ -72,7 +72,10 @@ export default function Journey() {
 
       <TouchableOpacity
           style={styles.button}
-          onPress={() => router.push("auth/sign-in")}
+          
+          onPress={() =>
+            router.push("./../Pages/FirstForm")}
+          
         >
           <Text
             style={{ color: Colors.WHITE, textAlign: "center", fontSize: 17 }}
@@ -105,7 +108,7 @@ const styles = StyleSheet.create({
   button: {
     padding: 15,
     backgroundColor: Colors.PRIMERY,
-    borderRadius: 80,
+    borderRadius: 40,
     marginTop: 50,
 
   }
