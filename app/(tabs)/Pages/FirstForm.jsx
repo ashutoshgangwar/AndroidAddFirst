@@ -6,7 +6,7 @@ import { Colors } from "../../../constants/Colors";
 
 import Fontisto from "@expo/vector-icons/Fontisto";
 
-export default function Profile() {
+export default function FirstForm() {
   const navigation = useNavigation();
   const router = useRouter();
 

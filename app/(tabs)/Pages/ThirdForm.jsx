@@ -36,7 +36,7 @@ export default function SecondForm() {
         }}
       >
          <Foundation name="target-two" size={50} color="black" /> 
-        Your Goal is Ready.
+        Let's finish this
        
       </Text>
 
@@ -45,24 +45,24 @@ export default function SecondForm() {
       {/* Player Name */}
       <View>
         <View style={{ marginTop: 20 }}>
-          <Text style={style.label}>Weight</Text>
-          <TextInput style={style.input} placeholder="Your Weight" />
+          <Text style={style.label}>How Many Years to play</Text>
+          <TextInput style={style.input} placeholder="Years" />
         </View>
       </View>
 
       {/* Player DOB */}
       <View>
         <View style={{ marginTop: 20 }}>
-          <Text style={style.label}>Height</Text>
-          <TextInput style={style.input} placeholder="Your Height" />
+          <Text style={style.label}>Heighest Stage to play</Text>
+          <TextInput style={style.input} placeholder="School/Dist/State" />
         </View>
       </View>
 
       {/* Player City */}
       <View>
         <View style={{ marginTop: 20 }}>
-          <Text style={style.label}>Game Type</Text>
-          <TextInput style={style.input} placeholder="Enter your Prefrence (Indore/OutDoor)" />
+          <Text style={style.label}>Top Score</Text>
+          <TextInput style={style.input} placeholder="Top Score accordin to sports" />
         </View>
       </View>
 
@@ -70,8 +70,8 @@ export default function SecondForm() {
 
       <View>
         <View style={{ marginTop: 20 }}>
-          <Text style={style.label}>Game</Text>
-          <TextInput style={style.input} placeholder="Hockey/?/?" />
+          <Text style={style.label}>Did you get ever coaching</Text>
+          <TextInput style={style.input} placeholder="Yes/No" />
         </View>
       </View>
 
