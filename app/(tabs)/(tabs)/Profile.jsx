@@ -7,11 +7,13 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import { useNavigation } from "expo-router";
+import { useRouter, useNavigation } from "expo-router";
 import { Colors } from "../../../constants/Colors";
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'; // Import the icon
 
 export default function Profile() {
   const navigation = useNavigation();
+  const router = useRouter();
 
   useEffect(() => {
     navigation.setOptions({
@@ -69,7 +71,6 @@ export default function Profile() {
           <Text style={styles.infoValue}>Mayur Vihar</Text>
         </View>
 
-
         <View style={styles.infoItem}>
           <Text style={styles.infoLabel}>Location:</Text>
           <Text style={styles.infoValue}>Delhi</Text>
@@ -89,7 +90,16 @@ export default function Profile() {
           <Text style={styles.infoLabel}>Game Stage:</Text>
           <Text style={styles.infoValue}>State Level</Text>
         </View>
+      </View>
 
+      <View style={styles.logoutSection}>
+        <TouchableOpacity
+          style={styles.logoutButton}
+          onPress={() => router.push("auth/sign-in")}
+        >
+          <MaterialCommunityIcons name="logout" size={24} color="white" />
+          <Text style={styles.logoutButtonText}>Logout</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -152,5 +162,22 @@ const styles = StyleSheet.create({
   infoValue: {
     fontSize: 16,
     color: "#555",
+  },
+  logoutSection: {
+    alignItems: "center",
+    marginTop: 10,
+  },
+  logoutButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: Colors.PRIMERY,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 30,
+  },
+  logoutButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    marginLeft: 10,
   },
 });

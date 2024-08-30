@@ -7,9 +7,12 @@ export default function Login() {
   const router = useRouter();
 
   return (
-    <View>
+    <View style={{height:'100%',
+      marginTop:200,
+      backgroundColor: Colors.WHITE
+    }}>
       <Image
-        source={require("./../assets/images/logo.jpg")}
+        source={require("./../assets/images/logo1.jpeg")}
         style={{
           width: 400,
           height: 520,
@@ -20,8 +23,8 @@ export default function Login() {
       />
 
       <View style={styles.container}>
-        <Text style={{ fontSize: 20, textAlign: "center", marginTop: 10 }}>
-          Shopping Here
+        <Text style={{ fontSize: 20, textAlign: "center", marginTop: 10, fontWeight:"bold" }}>
+          Game Started
         </Text>
         <Text
           style={{
@@ -44,7 +47,7 @@ export default function Login() {
           <Text
             style={{ color: Colors.WHITE, textAlign: "center", fontSize: 17 }}
           >
-            Get Started
+            Start your Journey
           </Text>
         </TouchableOpacity>
       </View>
@@ -66,5 +69,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.PRIMERY,
     borderRadius: 99,
     marginTop: 25,
+    
   },
 });
