@@ -1,18 +1,24 @@
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import React, { useEffect } from "react";
 import { useNavigation, useRouter } from "expo-router";
 import { Colors } from "../../../constants/Colors";
 
 
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 export default function Journey() {
+
+  const router = useRouter();
+
   const navigation = useNavigation();
   useEffect(() => {
     navigation.setOptions({
       headerShown: false,
     });
   });
+
+
   return (
     <View
       style={{
@@ -22,98 +28,85 @@ export default function Journey() {
         height: "100%",
       }}
     >
-      
-      
       <Text
         style={{
-          padding: 25,
+          padding: 10,
           fontWeight: "bold",
           fontSize: 40,
-          marginTop: 30,
+          marginTop: 15,
           textAlign: "center",
         }}
       >
         Welcome to Fitness World
       </Text>
 
-      <View>
-        <Text
-          style={{
-            padding: 10,
-            fontWeight: "bold",
-            fontSize: 20,
-            marginTop: 20,
-            textAlign: "center",
-            alignContent: 'space-around'
-          }}
-        >
+      <View style={{ alignItems: "center", marginTop: 20 }}>
+        <View style={styles.iconRow}>
           <FontAwesome name="unlock" size={60} color="black" />
-         
-          Unlock Your Potencial
-        </Text>
-        <Text
-          style={{
-            padding: 1,
-            fontSize: 18,
-            marginTop: 10,
-            textAlign: "center",
-          }}
-        >
-          Start your journey with healthier you with personalized guidance
+          <Text style={styles.iconText}>Unlock Your Potential</Text>
+        </View>
+        <Text style={styles.descriptionText}>
+          Start your journey with a healthier you with personalized guidance.
         </Text>
       </View>
 
-      <View>
-        <Text
-          style={{
-            padding: 10,
-            fontWeight: "bold",
-            fontSize: 20,
-            marginTop: 20,
-            textAlign: "center",
-          }}
-        >
-          Tailored, Nutrition & Fitness
-        </Text>
-
-        <Text
-          style={{
-            padding: 1,
-            fontSize: 18,
-            marginTop: 10,
-            textAlign: "center",
-          }}
-        >
-          We Create Plan Just for you, based on your goles and premisess.
+      <View style={{ alignItems: "center", marginTop: 20 }}>
+        <View style={styles.iconRow}>
+          <MaterialIcons name="sports-martial-arts" size={60} color="black" />
+          <Text style={styles.iconText}>Tailored Nutrition & Fitness</Text>
+        </View>
+        <Text style={styles.descriptionText}>
+          We create plans just for you, based on your goals and premises.
         </Text>
       </View>
 
-      <View>
-        <Text
-          style={{
-            padding: 10,
-            fontWeight: "bold",
-            fontSize: 20,
-            marginTop: 20,
-            textAlign: "center",
-          }}
-        >
-          Easy data and bigest achievment.
-        </Text>
-
-        <Text
-          style={{
-            padding: 1,
-            fontSize: 18,
-            marginTop: 10,
-            textAlign: "center",
-          }}
-        >
-          Answer a few questions, and we'll do the rest for you, it's that
-          simple.
+      <View style={{ alignItems: "center", marginTop: 20 }}>
+        <View style={styles.iconRow}>
+          <MaterialIcons name="data-exploration" size={60} color="black" />
+          <Text style={styles.iconText}>Easy Data and Biggest Achievements</Text>
+        </View>
+        <Text style={styles.descriptionText}>
+          Answer a few questions, and we'll do the rest for you. It's that simple.
         </Text>
       </View>
+
+      <TouchableOpacity
+          style={styles.button}
+          onPress={() => router.push("auth/sign-in")}
+        >
+          <Text
+            style={{ color: Colors.WHITE, textAlign: "center", fontSize: 17 }}
+          >
+            Continue
+          </Text>
+        </TouchableOpacity>
     </View>
   );
 }
 
+const styles = StyleSheet.create({
+  iconRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 10,
+  },
+  iconText: {
+    marginLeft: 10,
+    fontWeight: "bold",
+    fontSize: 20,
+  },
+  descriptionText: {
+    padding: 1,
+    fontSize: 18,
+    textAlign: "center",
+  },
+
+  button: {
+    padding: 15,
+    backgroundColor: Colors.PRIMERY,
+    borderRadius: 80,
+    marginTop: 50,
+
+  }
+});
