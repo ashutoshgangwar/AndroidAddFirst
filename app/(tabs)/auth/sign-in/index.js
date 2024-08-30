@@ -81,7 +81,8 @@ export default function SignIn() {
 
       {/* SignIn Button */}
 
-      <View
+      <TouchableOpacity
+      onPress={() => router.replace("(tabs)/RegistationForm")}
         style={{
           padding: 15,
           backgroundColor: Colors.PRIMERY,
@@ -99,7 +100,7 @@ export default function SignIn() {
         >
           Sign In
         </Text>
-      </View>
+      </TouchableOpacity>
 
       {/* Create Account */}
 
