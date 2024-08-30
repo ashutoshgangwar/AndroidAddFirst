@@ -32,7 +32,7 @@ export default function Profile() {
         <Text style={styles.email}>ashu@games.com</Text>
         <TouchableOpacity
           style={styles.backButton}
-          onPress={() => navigation.goBack()}
+          onPress={() => router.push("")}
         >
           <Text style={styles.backButtonText}>Back to Home</Text>
         </TouchableOpacity>

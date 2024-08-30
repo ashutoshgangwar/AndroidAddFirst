@@ -80,7 +80,7 @@ export default function Profile() {
           style={styles.button}
           
           onPress={() =>
-            router.push("./../(tabs)/Journey")}
+            router.push("./../(tab)/Profile")}
           
         >
           <Text
