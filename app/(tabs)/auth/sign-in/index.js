@@ -82,7 +82,7 @@ export default function SignIn() {
       {/* SignIn Button */}
 
       <TouchableOpacity
-      onPress={() => router.replace("(tabs)/RegistationForm")}
+      onPress={() => router.replace("(tabs)/Profile")}
         style={{
           padding: 15,
           backgroundColor: Colors.PRIMERY,
