@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { useNavigation, useRouter } from "expo-router";
 import { Colors } from "../../../constants/Colors";
 
-export default function RegistationForm() {
+export default function Journey() {
     const navigation = useNavigation();
     useEffect(() => {
         navigation.setOptions({
