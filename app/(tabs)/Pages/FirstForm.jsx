@@ -35,7 +35,7 @@ export default function FirstForm() {
         }}
       >
         Welcome to Fitness
-        <Fontisto name="world" size={60} color="black" /> World.
+        <Fontisto name="world" size={60} color="black" /> World (1).
       </Text>
 
       {/* Form Started */}

@@ -36,13 +36,13 @@ export default function SecondForm() {
         }}
       >
          <Foundation name="target-two" size={50} color="black" /> 
-        Your Goal is Ready.
+        Your Goal is Ready (2).
        
       </Text>
 
       {/* Form Started */}
 
-      {/* Player Name */}
+      {/* Player Weight */}
       <View>
         <View style={{ marginTop: 20 }}>
           <Text style={style.label}>Weight</Text>
@@ -50,7 +50,7 @@ export default function SecondForm() {
         </View>
       </View>
 
-      {/* Player DOB */}
+      {/* Player Height */}
       <View>
         <View style={{ marginTop: 20 }}>
           <Text style={style.label}>Height</Text>
@@ -58,7 +58,7 @@ export default function SecondForm() {
         </View>
       </View>
 
-      {/* Player City */}
+      {/* Player Game Type */}
       <View>
         <View style={{ marginTop: 20 }}>
           <Text style={style.label}>Game Type</Text>
@@ -66,7 +66,7 @@ export default function SecondForm() {
         </View>
       </View>
 
-      {/* Player State */}
+      {/* Player Game */}
 
       <View>
         <View style={{ marginTop: 20 }}>

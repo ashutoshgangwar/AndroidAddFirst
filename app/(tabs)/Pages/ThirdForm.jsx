@@ -36,7 +36,7 @@ export default function SecondForm() {
         }}
       >
          <Foundation name="target-two" size={50} color="black" /> 
-        Let's finish this
+        Let's finish it Up (3).
        
       </Text>
 
@@ -50,7 +50,7 @@ export default function SecondForm() {
         </View>
       </View>
 
-      {/* Player DOB */}
+      {/* Player Stage */}
       <View>
         <View style={{ marginTop: 20 }}>
           <Text style={style.label}>Heighest Stage to play</Text>
@@ -80,7 +80,7 @@ export default function SecondForm() {
           style={styles.button}
           
           onPress={() =>
-            router.push("./../Pages/ThirdForm")}
+            router.push("./../(tab)/Journey")}
           
         >
           <Text

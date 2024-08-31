@@ -62,7 +62,7 @@ export default function Journey() {
 
       <View style={{ alignItems: "center", marginTop: 20 }}>
         <View style={styles.iconRow}>
-          <MaterialIcons name="data-exploration" size={60} color="black" />
+          <MaterialIcons name="data-exploration" size={50} color="black" />
           <Text style={styles.iconText}>Easy Data and Biggest Achievements</Text>
         </View>
         <Text style={styles.descriptionText}>
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   iconText: {
-    marginLeft: 10,
+    marginLeft: 30,
     fontWeight: "bold",
     fontSize: 20,
   },
