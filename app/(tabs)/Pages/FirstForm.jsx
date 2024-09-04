@@ -1,9 +1,7 @@
-import React, { useEffect } from "react";
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Alert } from "react-native";
 import { useNavigation, useRouter } from "expo-router";
 import { Colors } from "../../../constants/Colors";
-
-
 import Fontisto from "@expo/vector-icons/Fontisto";
 
 export default function FirstForm() {
@@ -14,84 +12,122 @@ export default function FirstForm() {
     navigation.setOptions({
       headerShown: false,
     });
-  });
+  }, []);
+
+  const [name, setName] = useState('');
+  const [age, setAge] = useState('');
+  const [city, setCity] = useState('');
+  const [state, setState] = useState('');
+
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch('http://192.168.29.46:6000/userdata', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, age, city, state }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        Alert.alert('Success', 'Data submitted successfully');
+        // Navigate to the next page
+        router.push("./../Pages/SecondForm");
+      } else {
+        Alert.alert('Error', data.message || 'Something went wrong');
+      }
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Error', 'Something went wrong');
+    }
+  };
 
   return (
-    <View
-      style={{
-        padding: 25,
-        marginTop: 0,
-        backgroundColor: Colors.WHITE,
-        height: "100%",
-      }}
-    >
-      <Text
-        style={{
-          padding: 10,
-          fontWeight: "bold",
-          fontSize: 40,
-          marginTop: 15,
-          textAlign: "center",
-        }}
-      >
-        Welcome to Fitness
-        <Fontisto name="world" size={60} color="black" /> World (1).
-      </Text>
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.contentContainer}>
+        <Text style={styles.title}>
+          Welcome to Fitness{" "}
+          <Fontisto name="world" size={60} color="black" /> World (1).
+        </Text>
 
-      {/* Form Started */}
-
-      {/* Player Name */}
-      <View>
-        <View style={{ marginTop: 20 }}>
-          <Text style={style.label}>Name</Text>
-          <TextInput style={style.input} placeholder="Enter your Name" />
+        {/* Player Name */}
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Name</Text>
+          <TextInput
+            style={styles.input}
+            value={name}
+            onChangeText={setName}
+            placeholder="Enter your Name"
+          />
         </View>
-      </View>
 
-      {/* Player DOB */}
-      <View>
-        <View style={{ marginTop: 20 }}>
-          <Text style={style.label}>Age</Text>
-          <TextInput style={style.input} placeholder="Enter your Age" />
+        {/* Player DOB */}
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Age</Text>
+          <TextInput
+            style={styles.input}
+            value={age}
+            onChangeText={setAge}
+            keyboardType="numeric"
+            placeholder="Enter your Age"
+          />
         </View>
-      </View>
 
-      {/* Player City */}
-      <View>
-        <View style={{ marginTop: 20 }}>
-          <Text style={style.label}>City</Text>
-          <TextInput style={style.input} placeholder="Enter your City" />
+        {/* Player City */}
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>City</Text>
+          <TextInput
+            style={styles.input}
+            value={city}
+            onChangeText={setCity}
+            placeholder="Enter your City"
+          />
         </View>
-      </View>
 
-      {/* Player State */}
-
-      <View>
-        <View style={{ marginTop: 20 }}>
-          <Text style={style.label}>State</Text>
-          <TextInput style={style.input} placeholder="Enter your State" />
+        {/* Player State */}
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>State</Text>
+          <TextInput
+            style={styles.input}
+            value={state}
+            onChangeText={setState}
+            placeholder="Enter your State"
+          />
         </View>
-      </View>
 
-
-      <TouchableOpacity
+        {/* Next Button */}
+        <TouchableOpacity
           style={styles.button}
-          
-          onPress={() =>
-            router.push("./../Pages/SecondForm")}
-          
+          onPress={handleSubmit}
         >
-          <Text
-            style={{ color: Colors.WHITE, textAlign: "center", fontSize: 17 }}
-          >
-            Next
-          </Text>
+          <Text style={styles.buttonText}>Next</Text>
         </TouchableOpacity>
+      </ScrollView>
     </View>
   );
 }
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: Colors.WHITE,
+    padding: 25,
+  },
+  contentContainer: {
+    paddingBottom: 50,
+  },
+  title: {
+    padding: 10,
+    fontWeight: "bold",
+    fontSize: 30,
+    marginTop: 15,
+    textAlign: "center",
+  },
+  inputContainer: {
+    marginTop: 20,
+  },
   label: {
     fontSize: 18,
     fontWeight: "600",
@@ -105,15 +141,15 @@ const style = StyleSheet.create({
     marginTop: 5,
     width: "100%",
   },
+  button: {
+    padding: 15,
+    backgroundColor: Colors.PRIMERY,
+    borderRadius: 40,
+    marginTop: 50,
+  },
+  buttonText: {
+    color: Colors.WHITE,
+    textAlign: "center",
+    fontSize: 17,
+  },
 });
-
-
-const styles = StyleSheet.create({
-    button: {
-      padding: 15,
-      backgroundColor: Colors.PRIMERY,
-      borderRadius: 40,
-      marginTop: 50,
-  
-    }
-  });
