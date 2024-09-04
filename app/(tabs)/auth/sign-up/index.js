@@ -25,7 +25,7 @@ export default function SignIn() {
     }
 
     try {
-      const response = await fetch('http://192.168.29.46:6000/signup', {
+      const response = await fetch('http://192.168.0.103:6000/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -57,9 +57,12 @@ export default function SignIn() {
       }}
     >
       <Text
-        style={{
+         style={{
           fontSize: 30,
           padding: 25,
+          fontWeight:"bold",
+           textAlign:"center"
+
         }}
       >
         Let's Sign you Up
@@ -72,7 +75,10 @@ export default function SignIn() {
           color: Colors.GRAY,
           marginLeft: 20,
           marginTop: 10,
-          fontWeight:'bold'
+          fontWeight:'bold',
+          textAlign:"center",
+          textDecorationLine:"underline"
+        
         }}
       >
         Welcome to you

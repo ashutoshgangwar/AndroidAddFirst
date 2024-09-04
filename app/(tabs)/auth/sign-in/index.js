@@ -21,47 +21,43 @@ export default function SignIn() {
 
   return (
     <View
+    style={{
+      padding: 25,
+      marginTop: 0,
+      backgroundColor: Colors.WHITE,
+      height: '100%',
+    }}
+  >
+    <Text
       style={{
+        fontSize: 30,
         padding: 25,
-        marginTop: 0,
-        backgroundColor: Colors.WHITE,
-        height:'100%'
-        
+        fontWeight:"bold",
+         textAlign:"center"
+
       }}
     >
-      <Text
-        style={{
-          fontSize: 30,
-          padding: 25,
-        }}
-      >
-        Let's Sign you In
-      </Text>
+      Let's Sign you In
+    </Text>
 
-      <Text
-        style={{
-          fontSize: 15,
-          padding: 5,
-          color: Colors.GRAY,
-          marginLeft: 20,
-          marginTop: 10,
-        }}
-      >
-        Welcome to you
-      </Text>
-
-      <Text
-        style={{
-          fontSize: 20,
-          padding: 25,
-        }}
-      >
-        You have been missed
-      </Text>
+    <Text
+      style={{
+        fontSize: 25,
+        padding: 5,
+        color: Colors.GRAY,
+        marginLeft: 20,
+        marginTop: 10,
+        fontWeight:'bold',
+        textAlign:"center",
+        textDecorationLine:"underline"
+      }}
+    >
+      Welcome to you
+    </Text>
 
 
       {/* Email Address */}
-      <View style={{ marginTop: 20 }}>
+      <View style={{ marginTop: 20, marginTop: 50 }}>
         <Text> Email </Text>
 
         <TextInput style={style.input} placeholder="Enter your email address" />
@@ -119,6 +115,8 @@ export default function SignIn() {
             color: Colors.PRIMARY,
             textAlign: "center",
             fontSize: 20,
+            fontWeight:"bold",
+        
           }}
         >
           Create Account

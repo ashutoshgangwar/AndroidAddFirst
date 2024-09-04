@@ -24,7 +24,7 @@ export default function FirstForm() {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch('http://192.168.29.46:6000/userdata', {
+      const response = await fetch('http://192.168.0.103:6000/userdata', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -37,7 +37,7 @@ export default function FirstForm() {
       if (response.ok) {
         Alert.alert('Success', 'Data submitted successfully');
         // Navigate to the next page
-        router.push("./../auth/sign-in/index");
+        router.push("(tabs)/Pages/SecondForm");
       } else {
         Alert.alert('Error', data.message || 'Something went wrong');
       }
