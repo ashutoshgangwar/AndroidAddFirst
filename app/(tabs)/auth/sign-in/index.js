@@ -80,7 +80,7 @@ export default function SignIn() {
           textAlign: "center",
         }}
       >
-        Let's Sign you In
+        Let's Start your Journey
       </Text>
 
       <Text
@@ -96,6 +96,21 @@ export default function SignIn() {
         }}
       >
         Welcome to you
+      </Text>
+
+      <Text
+        style={{
+          fontSize: 40,
+          padding: 5,
+          color: Colors.PRIMERY,
+          marginLeft: 20,
+          marginTop: 10,
+          fontWeight: 'bold',
+          textAlign: "center",
+          
+        }}
+      >
+        User Login
       </Text>
 
       {/* Email Address */}
