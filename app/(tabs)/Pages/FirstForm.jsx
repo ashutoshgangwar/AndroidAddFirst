@@ -14,6 +14,9 @@ export default function FirstForm() {
     });
   }, []);
 
+
+  // API integration
+
   const [name, setName] = useState('');
   const [age, setAge] = useState('');
   const [city, setCity] = useState('');
@@ -34,7 +37,7 @@ export default function FirstForm() {
       if (response.ok) {
         Alert.alert('Success', 'Data submitted successfully');
         // Navigate to the next page
-        router.push("./../Pages/SecondForm");
+        router.push("./../auth/sign-in/index");
       } else {
         Alert.alert('Error', data.message || 'Something went wrong');
       }
