@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -6,13 +6,18 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  ActivityIndicator,
+  Alert,
 } from "react-native";
 import { useRouter, useNavigation } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Colors } from "../../../constants/Colors";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons"; // Import the icon
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 export default function Profile() {
+  const [profileData, setProfileData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigation = useNavigation();
   const router = useRouter();
 
@@ -20,32 +25,75 @@ export default function Profile() {
     navigation.setOptions({
       headerShown: false,
     });
-  }, [navigation]);
+    fetchProfileData();
+  }, []);
+
+  const fetchProfileData = async () => {
+    try {
+      const token = await AsyncStorage.getItem("userToken");
+      if (!token) {
+        throw new Error("No token found, please login again.");
+      }
+  
+      const response = await fetch("http://192.168.0.103:6000/profile", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
+        },
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to fetch profile data.");
+      }
+  
+      const data = await response.json();
+      setProfileData(data);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
 
   const handleLogout = async () => {
     try {
-      // Remove the token from AsyncStorage
       await AsyncStorage.removeItem("userToken");
-      console.log("Token removed from AsyncStorage");
-  
-      // Navigate to the sign-in screen
       router.replace("auth/sign-in");
     } catch (error) {
       console.error("Error during logout:", error);
       Alert.alert("Logout failed", "Something went wrong.");
     }
   };
-  
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={Colors.PRIMERY} />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorText}>{error}</Text>
+        <TouchableOpacity onPress={fetchProfileData} style={styles.retryButton}>
+          <Text style={styles.retryButtonText}>Retry</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.header}>
         <Image
           style={styles.avatar}
-          source={require("./../../../assets/images/profile.png")} // Replace with your image URL
+          source={require("./../../../assets/images/profile.png")}
         />
-       
-        <Text style={styles.name}>Ashutosh Gangwar</Text>
+        <Text style={styles.name}>{profileData.fullname}</Text>
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => router.push("")}
@@ -55,50 +103,38 @@ export default function Profile() {
       </View>
 
       <View style={styles.accountInfo}>
-        <Text style={styles.sectionTitle}>User Details:-</Text>
-
-        
-
+        <Text style={styles.sectionTitle}>User Details:</Text>
         <View style={styles.infoItem}>
           <Text style={styles.infoLabel}>Mobile Number:</Text>
-          <Text style={styles.infoValue}>+91-8368300788</Text>
+          <Text style={styles.infoValue}>{profileData.phonenumber}</Text>
         </View>
-
         <View style={styles.infoItem}>
           <Text style={styles.infoLabel}>Email-id:</Text>
-          <Text style={styles.infoValue}>ashutosh@games.com</Text>
+          <Text style={styles.infoValue}>{profileData.email}</Text>
         </View>
-
         <View style={styles.infoItem}>
           <Text style={styles.infoLabel}>D.O.B:</Text>
-          <Text style={styles.infoValue}>02-05-1994</Text>
+          <Text style={styles.infoValue}>{profileData.DOB}</Text>
         </View>
-
-       
-
         <View style={styles.infoItem}>
           <Text style={styles.infoLabel}>City:</Text>
-          <Text style={styles.infoValue}>Mayur Vihar</Text>
+          <Text style={styles.infoValue}>{profileData.city}</Text>
         </View>
-
         <View style={styles.infoItem}>
           <Text style={styles.infoLabel}>Location:</Text>
-          <Text style={styles.infoValue}>Delhi</Text>
+          <Text style={styles.infoValue}>{profileData.location}</Text>
         </View>
-
         <View style={styles.infoItem}>
           <Text style={styles.infoLabel}>Game Type:</Text>
-          <Text style={styles.infoValue}>Indore/Outdoor</Text>
+          <Text style={styles.infoValue}>{profileData.gametype}</Text>
         </View>
-
         <View style={styles.infoItem}>
           <Text style={styles.infoLabel}>Game:</Text>
-          <Text style={styles.infoValue}>Hockey</Text>
+          <Text style={styles.infoValue}>{profileData.game}</Text>
         </View>
-
         <View style={styles.infoItem}>
           <Text style={styles.infoLabel}>Game Stage:</Text>
-          <Text style={styles.infoValue}>State Level</Text>
+          <Text style={styles.infoValue}>{profileData.gamestage}</Text>
         </View>
       </View>
 
@@ -128,17 +164,12 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     marginBottom: 10,
   },
-  username: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#333",
-  },
   name: {
     fontSize: 24,
     color: Colors.PRIMERY,
     marginBottom: 10,
-    fontWeight:"bold",
-    textDecorationLine:"underline"
+    fontWeight: "bold",
+    textDecorationLine: "underline",
   },
   backButton: {
     backgroundColor: Colors.PRIMERY,
@@ -188,5 +219,29 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     marginLeft: 10,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  errorText: {
+    fontSize: 18,
+    color: "red",
+  },
+  retryButton: {
+    marginTop: 20,
+    padding: 10,
+    backgroundColor: Colors.PRIMERY,
+    borderRadius: 20,
+  },
+  retryButtonText: {
+    color: "#fff",
+    fontSize: 16,
   },
 });

@@ -24,8 +24,8 @@ export default function FirstForm() {
 
   const handleSubmit = async () => {
     try {
-      // const response = await fetch('http://192.168.0.103:6000/userdata', {
-      const response = await fetch('http://192.168.29.46:6000/userdata', {
+      const response = await fetch('http://192.168.0.103:6000/userdata', {
+      // const response = await fetch('http://192.168.29.46:6000/userdata', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
