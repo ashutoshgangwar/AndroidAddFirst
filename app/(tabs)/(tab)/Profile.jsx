@@ -55,7 +55,36 @@ export default function Profile() {
       setLoading(false);
     }
   };
-  
+
+  const handleUpdateProfile = async (updatedProfileData) => {
+    try {
+      const token = await AsyncStorage.getItem("userToken");
+      if (!token) {
+        throw new Error("No token found, please login again.");
+      }
+
+      const response = await fetch("http://192.168.0.103:6000/profile", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
+        },
+        body: JSON.stringify(updatedProfileData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to update profile data.");
+      }
+
+      // Refresh profile data after update
+      fetchProfileData();
+      Alert.alert("Success", "Profile updated successfully!");
+    } catch (error) {
+      console.error("Error during profile update:", error);
+      Alert.alert("Update failed", "Something went wrong.");
+    }
+  };
 
   const handleLogout = async () => {
     try {
@@ -100,6 +129,7 @@ export default function Profile() {
         >
           <Text style={styles.backButtonText}>Back to Home</Text>
         </TouchableOpacity>
+        
       </View>
 
       <View style={styles.accountInfo}>
@@ -108,10 +138,10 @@ export default function Profile() {
           <Text style={styles.infoLabel}>Mobile Number:</Text>
           <Text style={styles.infoValue}>{profileData.phonenumber}</Text>
         </View>
-        <View style={styles.infoItem}>
+        {/* <View style={styles.infoItem}>
           <Text style={styles.infoLabel}>Email-id:</Text>
           <Text style={styles.infoValue}>{profileData.email}</Text>
-        </View>
+        </View> */}
         <View style={styles.infoItem}>
           <Text style={styles.infoLabel}>D.O.B:</Text>
           <Text style={styles.infoValue}>{profileData.DOB}</Text>
@@ -136,7 +166,9 @@ export default function Profile() {
           <Text style={styles.infoLabel}>Game Stage:</Text>
           <Text style={styles.infoValue}>{profileData.gamestage}</Text>
         </View>
+        
       </View>
+      
 
       <View style={styles.logoutSection}>
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
@@ -205,7 +237,8 @@ const styles = StyleSheet.create({
   },
   logoutSection: {
     alignItems: "center",
-    marginTop: 10,
+    marginTop: 60,
+    
   },
   logoutButton: {
     flexDirection: "row",
@@ -245,3 +278,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+ 
