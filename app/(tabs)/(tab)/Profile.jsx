@@ -144,15 +144,15 @@ export default function Profile() {
         </View> */}
         <View style={styles.infoItem}>
           <Text style={styles.infoLabel}>D.O.B:</Text>
-          <Text style={styles.infoValue}>{profileData.DOB}</Text>
+          <Text style={styles.infoValue}>{profileData.dob}</Text>
         </View>
         <View style={styles.infoItem}>
           <Text style={styles.infoLabel}>City:</Text>
           <Text style={styles.infoValue}>{profileData.city}</Text>
         </View>
         <View style={styles.infoItem}>
-          <Text style={styles.infoLabel}>Location:</Text>
-          <Text style={styles.infoValue}>{profileData.location}</Text>
+          <Text style={styles.infoLabel}>State:</Text>
+          <Text style={styles.infoValue}>{profileData.state}</Text>
         </View>
         <View style={styles.infoItem}>
           <Text style={styles.infoLabel}>Game Type:</Text>
