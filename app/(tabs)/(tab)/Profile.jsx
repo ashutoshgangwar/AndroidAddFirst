@@ -8,8 +8,9 @@ import {
   ScrollView,
 } from "react-native";
 import { useRouter, useNavigation } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Colors } from "../../../constants/Colors";
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'; // Import the icon
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons"; // Import the icon
 
 export default function Profile() {
   const navigation = useNavigation();
@@ -20,6 +21,21 @@ export default function Profile() {
       headerShown: false,
     });
   }, [navigation]);
+
+  const handleLogout = async () => {
+    try {
+      // Remove the token from AsyncStorage
+      await AsyncStorage.removeItem("userToken");
+      console.log("Token removed from AsyncStorage");
+  
+      // Navigate to the sign-in screen
+      router.replace("auth/sign-in");
+    } catch (error) {
+      console.error("Error during logout:", error);
+      Alert.alert("Logout failed", "Something went wrong.");
+    }
+  };
+  
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -93,10 +109,7 @@ export default function Profile() {
       </View>
 
       <View style={styles.logoutSection}>
-        <TouchableOpacity
-          style={styles.logoutButton}
-          onPress={() => router.push("auth/sign-in")}
-        >
+        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
           <MaterialCommunityIcons name="logout" size={24} color="white" />
           <Text style={styles.logoutButtonText}>Logout</Text>
         </TouchableOpacity>

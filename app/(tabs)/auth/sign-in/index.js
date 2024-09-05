@@ -7,6 +7,8 @@ import {
   ActivityIndicator,
   Alert
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import React, { useState, useEffect } from "react";
 import { useNavigation, useRouter } from "expo-router";
 import { Colors } from "../../../../constants/Colors";
@@ -26,41 +28,35 @@ export default function SignIn() {
 
   const handleSignIn = async () => {
     setLoading(true);
-  
     try {
-      console.log('Request Body:', { email, password }); // Log request body for debugging
-
-      const response = await fetch('http://192.168.0.103:6000/login', {
+      const response = await fetch('http://192.168.29.46:6000/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
+        body: JSON.stringify({ email, password }),
       });
-
-      console.log('Response Status:', response.status); // Log response status for debugging
-
+  
       const data = await response.json();
-      console.log('Response Data:', data); // Log the response data for debugging
-
-      if (response.ok) {
-        // Navigate to the next screen or show success message
+  
+      // Log the response to see the structure
+      console.log('Response Data:', data);
+  
+      if (response.ok && data.token) {
+        // Check if the token exists before storing it
+        await AsyncStorage.setItem('userToken', data.token);
         router.replace("(tabs)/Journey");
       } else {
-        // Show error message with detailed info
-        Alert.alert('Sign In Failed', data.message || 'Invalid email or password.');
+        Alert.alert('Login failed', data.message || 'Invalid credentials');
       }
     } catch (error) {
-      // Handle network errors
-      console.error('Network Error:', error); // Log the network error for debugging
-      Alert.alert('Network Error', 'Please check your internet connection.');
+      console.error('Error during login:', error);
+      Alert.alert('Network error', 'Please check your internet connection.');
     } finally {
       setLoading(false);
     }
   };
+  
   
 
   return (
