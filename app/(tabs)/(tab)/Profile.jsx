@@ -44,8 +44,8 @@ export default function Profile() {
           style={styles.avatar}
           source={require("./../../../assets/images/profile.png")} // Replace with your image URL
         />
-        <Text style={styles.username}>@ashutosh</Text>
-        <Text style={styles.email}>ashu@games.com</Text>
+       
+        <Text style={styles.name}>Ashutosh Gangwar</Text>
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => router.push("")}
@@ -55,12 +55,9 @@ export default function Profile() {
       </View>
 
       <View style={styles.accountInfo}>
-        <Text style={styles.sectionTitle}>Account Details</Text>
+        <Text style={styles.sectionTitle}>User Details:-</Text>
 
-        <View style={styles.infoItem}>
-          <Text style={styles.infoLabel}>Name:</Text>
-          <Text style={styles.infoValue}>Ashutosh Gangwar</Text>
-        </View>
+        
 
         <View style={styles.infoItem}>
           <Text style={styles.infoLabel}>Mobile Number:</Text>
@@ -77,10 +74,7 @@ export default function Profile() {
           <Text style={styles.infoValue}>02-05-1994</Text>
         </View>
 
-        <View style={styles.infoItem}>
-          <Text style={styles.infoLabel}>Address:</Text>
-          <Text style={styles.infoValue}>Mayur Vihar Ph-1</Text>
-        </View>
+       
 
         <View style={styles.infoItem}>
           <Text style={styles.infoLabel}>City:</Text>
@@ -139,10 +133,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#333",
   },
-  email: {
-    fontSize: 14,
-    color: "#888",
+  name: {
+    fontSize: 24,
+    color: Colors.PRIMERY,
     marginBottom: 10,
+    fontWeight:"bold",
+    textDecorationLine:"underline"
   },
   backButton: {
     backgroundColor: Colors.PRIMERY,
@@ -158,7 +154,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: 25,
     fontWeight: "bold",
     color: "#333",
     marginBottom: 20,
