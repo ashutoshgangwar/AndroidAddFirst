@@ -13,38 +13,41 @@ export default function FirstForm() {
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
 
-  const handleSubmit = async () => {
-    try {
-      const token = await AsyncStorage.getItem('userToken');  // Use consistent token key
-      console.log('Retrieved token:', token);
+ const handleSubmit = async () => {
+  try {
+    const token = await AsyncStorage.getItem('userToken');
+    const userId = await AsyncStorage.getItem('userId'); // Retrieve user ID
+    console.log('Retrieved token:', token);
+    console.log('Retrieved user ID:', userId); // Log the user ID
 
-      if (!token) {
-        Alert.alert('Error', 'You are not authenticated');
-        return;
-      }
-
-      const response = await fetch('http://192.168.0.103:6000/userdata', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ name, age, city, state }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        Alert.alert('Success', 'Data submitted successfully');
-        router.push("(tabs)/Pages/SecondForm");
-      } else {
-        Alert.alert('Error', data.error || 'Failed to submit data');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      Alert.alert('Error', 'Something went wrong');
+    if (!token || !userId) {
+      Alert.alert('Error', 'You are not authenticated');
+      return;
     }
-  };
+
+    const response = await fetch('http://192.168.0.103:6000/userdata', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ name, age, city, state, userId }), // Include user ID in request body
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      Alert.alert('Success', 'Data submitted successfully');
+      router.push("(tabs)/Pages/SecondForm");
+    } else {
+      Alert.alert('Error', data.error || 'Failed to submit data');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    Alert.alert('Error', 'Something went wrong');
+  }
+};
+
 
   return (
     <View style={styles.container}>
