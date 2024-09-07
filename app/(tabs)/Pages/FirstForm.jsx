@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Alert } from "react-native";
 import { useNavigation, useRouter } from "expo-router";
 import { Colors } from "../../../constants/Colors";
@@ -6,6 +6,11 @@ import Fontisto from "@expo/vector-icons/Fontisto";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function FirstForm() {
+
+  useEffect(() => {
+    navigation.setOptions({ headerShown: false });
+  }, [navigation]);
+
   const navigation = useNavigation();
   const router = useRouter();
   const [name, setName] = useState('');
