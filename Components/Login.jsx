@@ -12,7 +12,7 @@ export default function Login() {
       backgroundColor: Colors.WHITE
     }}>
       <Image
-        source={require("./../assets/images/logo1.jpeg")}
+        source={require("./../assets/images/logo.jpg")}
         style={{
           width: 400,
           height: 520,
@@ -24,7 +24,7 @@ export default function Login() {
 
       <View style={styles.container}>
         <Text style={{ fontSize: 20, textAlign: "center", marginTop: 10, fontWeight:"bold" }}>
-          Game Started
+          Game Started Now
         </Text>
         <Text
           style={{
