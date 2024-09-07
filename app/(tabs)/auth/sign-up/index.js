@@ -19,11 +19,12 @@ export default function SignIn() {
   const [dob, setDob] = useState('');
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
+  const [gametype, setGametype] = useState('');
   const [game, setGame] = useState('');
   const [password, setPassword] = useState('');
 
   const handleSubmit = async () => {
-    if (!fullname || !email || !phonenumber || !dob || !city || !state || !game || !password) {
+    if (!fullname || !email || !phonenumber || !dob || !city || !state || !gametype || !game || !password) {
       Alert.alert('Error', 'Please fill out all fields');
       return;
     }
@@ -34,7 +35,7 @@ export default function SignIn() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ fullname, email, phonenumber, dob, city, state, game, password }),
+        body: JSON.stringify({ fullname, email, phonenumber, dob, city, state, gametype, game, password }),
       });
 
       const data = await response.json();
@@ -118,15 +119,31 @@ export default function SignIn() {
         </View>
       </View>
 
-      <View style={styles.formGroup}>
-        <Text style={styles.inputText}>Game</Text>
-        <TextInput
-          style={styles.input}
-          value={game}
-          onChangeText={setGame}
-          placeholder="Enter your Game Preference"
-        />
+
+      {/* Edited */}
+
+      <View style={styles.doubleFormGroup}>
+        <View style={styles.halfWidth}>
+          <Text style={styles.inputText}>Game Type</Text>
+          <TextInput
+            style={styles.input}
+            value={gametype}
+            onChangeText={setGametype}
+            placeholder="Game Type"
+          />
+        </View>
+        <View style={styles.halfWidth}>
+          <Text style={styles.inputText}>Game</Text>
+          <TextInput
+            style={styles.input}
+            value={game}
+            onChangeText={setGame}
+            placeholder="Enter your Game"
+          />
+        </View>
       </View>
+
+      
 
       <View style={styles.formGroup}>
         <Text style={styles.inputText}>Password</Text>
