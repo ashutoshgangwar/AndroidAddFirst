@@ -23,20 +23,24 @@ export default function SignIn() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
-
+  
       const data = await response.json();
       console.log('Response Data:', data);
-
+  
       if (response.ok && data.token) {
+        // Save both token and userId to AsyncStorage
         await AsyncStorage.setItem('userToken', data.token);
-
+        await AsyncStorage.setItem('userId', data.userId); // Save userId
+  
         const storedToken = await AsyncStorage.getItem('userToken');
+        const storedUserId = await AsyncStorage.getItem('userId'); // Retrieve userId
         console.log('Stored Token:', storedToken);
-
-        if (storedToken) {
+        console.log('Stored User ID:', storedUserId);
+  
+        if (storedToken && storedUserId) {
           router.replace("(tabs)/Journey");
         } else {
-          Alert.alert('Storage Error', 'Unable to store the token');
+          Alert.alert('Storage Error', 'Unable to store token or user ID');
         }
       } else {
         Alert.alert('Login failed', data.error || 'Invalid credentials');
@@ -48,6 +52,7 @@ export default function SignIn() {
       setLoading(false);
     }
   };
+  
 
   return (
     <View style={styles.container}>
