@@ -13,10 +13,10 @@ export default function FirstForm() {
 
   const navigation = useNavigation();
   const router = useRouter();
-  const [name, setName] = useState('');
-  const [age, setAge] = useState('');
-  const [city, setCity] = useState('');
-  const [state, setState] = useState('');
+  const [height, setHeight] = useState('');
+  const [weight, setWeight] = useState('');
+  const [bloodgroup, setBloodgroup] = useState('');
+  const [diet, setDiet] = useState('');
 
  const handleSubmit = async () => {
   try {
@@ -36,7 +36,7 @@ export default function FirstForm() {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
-      body: JSON.stringify({ name, age, city, state, userId }), // Include user ID in request body
+      body: JSON.stringify({ height, weight, bloodgroup, diet, userId }), // Include user ID in request body
     });
 
     const data = await response.json();
@@ -63,43 +63,44 @@ export default function FirstForm() {
         </Text>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>Name</Text>
+          <Text style={styles.label}>Weight</Text>
           <TextInput
             style={styles.input}
-            value={name}
-            onChangeText={setName}
-            placeholder="Enter your Name"
+            value={weight}
+            onChangeText={setWeight}
+             keyboardType="numeric"
+            placeholder="Enter your weightt in KG"
           />
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>Age</Text>
+          <Text style={styles.label}>Height</Text>
           <TextInput
             style={styles.input}
-            value={age}
-            onChangeText={setAge}
+            value={height}
+            onChangeText={setHeight}
             keyboardType="numeric"
-            placeholder="Enter your Age"
+            placeholder="Enter your height in cm."
           />
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>City</Text>
+          <Text style={styles.label}>Blood Group</Text>
           <TextInput
             style={styles.input}
-            value={city}
-            onChangeText={setCity}
-            placeholder="Enter your City"
+            value={bloodgroup}
+            onChangeText={setBloodgroup}
+            placeholder="Your Blood Group "
           />
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>State</Text>
+          <Text style={styles.label}>Dight Prefrence</Text>
           <TextInput
             style={styles.input}
-            value={state}
-            onChangeText={setState}
-            placeholder="Enter your State"
+            value={diet}
+            onChangeText={setDiet}
+            placeholder="Prefrence (Veg/Non-veg/Vegan)"
           />
         </View>
 
