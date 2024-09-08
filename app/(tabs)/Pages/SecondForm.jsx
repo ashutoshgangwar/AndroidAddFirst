@@ -36,7 +36,7 @@ export default function SecondForm() {
         }}
       >
          <Foundation name="target-two" size={50} color="black" /> 
-        Your Goal is Ready (2).
+        Your Game Details (2).
        
       </Text>
 

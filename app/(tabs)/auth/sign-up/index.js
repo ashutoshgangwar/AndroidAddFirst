@@ -17,6 +17,7 @@ export default function SignIn() {
   const [email, setEmail] = useState('');
   const [phonenumber, setPhonenumber] = useState('');
   const [dob, setDob] = useState('');
+  const [gender, setGender] = useState('');
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
   const [gametype, setGametype] = useState('');
@@ -24,7 +25,7 @@ export default function SignIn() {
   const [password, setPassword] = useState('');
 
   const handleSubmit = async () => {
-    if (!fullname || !email || !phonenumber || !dob || !city || !state || !gametype || !game || !password) {
+    if (!fullname || !email || !phonenumber || !gender || !dob || !city || !state || !gametype || !game || !password) {
       Alert.alert('Error', 'Please fill out all fields');
       return;
     }
@@ -35,7 +36,7 @@ export default function SignIn() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ fullname, email, phonenumber, dob, city, state, gametype, game, password }),
+        body: JSON.stringify({ fullname, email, phonenumber, gender, dob, city, state, gametype, game, password }),
       });
 
       const data = await response.json();
@@ -79,12 +80,12 @@ export default function SignIn() {
 
       <View style={styles.doubleFormGroup}>
         <View style={styles.halfWidth}>
-          <Text style={styles.inputText}>Phone Number</Text>
+          <Text style={styles.inputText}>Gender</Text>
           <TextInput
             style={styles.input}
-            value={phonenumber}
-            onChangeText={setPhonenumber}
-            placeholder="Enter your Contact Number"
+            value={gender}
+            onChangeText={setGender}
+            placeholder="Male/Female"
           />
         </View>
         <View style={styles.halfWidth}>
@@ -143,7 +144,15 @@ export default function SignIn() {
         </View>
       </View>
 
-      
+      <View style={styles.formGroup}>
+          <Text style={styles.inputText}>Phone Number</Text>
+          <TextInput
+            style={styles.input}
+            value={phonenumber}
+            onChangeText={setPhonenumber}
+            placeholder="Enter your Contact Number"
+          />
+        </View>
 
       <View style={styles.formGroup}>
         <Text style={styles.inputText}>Password</Text>

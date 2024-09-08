@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Alert } from "react-native";
 import { useNavigation, useRouter } from "expo-router";
 import { Colors } from "../../../constants/Colors";
-import Fontisto from "@expo/vector-icons/Fontisto";
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function FirstForm() {
@@ -58,8 +58,8 @@ export default function FirstForm() {
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <Text style={styles.title}>
-          Welcome to Fitness{" "}
-          <Fontisto name="world" size={60} color="black" /> World (1).
+          Your personal{" "}
+           Details(1).
         </Text>
 
         <View style={styles.inputContainer}>
@@ -95,7 +95,7 @@ export default function FirstForm() {
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>Dight Prefrence</Text>
+          <Text style={styles.label}>Diet Prefrence</Text>
           <TextInput
             style={styles.input}
             value={diet}

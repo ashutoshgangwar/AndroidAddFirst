@@ -200,6 +200,10 @@ export default function Profile() {
           <Text style={styles.infoValue}>{profileData?.dob}</Text>
         </View>
         <View style={styles.infoItem}>
+          <Text style={styles.infoLabel}>Gender:</Text>
+          <Text style={styles.infoValue}>{profileData?.gender}</Text>
+        </View>
+        <View style={styles.infoItem}>
           <Text style={styles.infoLabel}>City:</Text>
           <Text style={styles.infoValue}>{profileData?.city}</Text>
         </View>
@@ -215,10 +219,7 @@ export default function Profile() {
           <Text style={styles.infoLabel}>Game:</Text>
           <Text style={styles.infoValue}>{profileData?.game}</Text>
         </View>
-        <View style={styles.infoItem}>
-          <Text style={styles.infoLabel}>Game Stage:</Text>
-          <Text style={styles.infoValue}>{profileData?.gamestage}</Text>
-        </View>
+       
       </View>
 
       <View style={styles.logoutSection}>
