@@ -53,7 +53,7 @@ export default function SecondForm() {
             value={agegroup}
             onChangeText={setAgegroup}
             keyboardType="numeric"
-            placeholder="Enter your Age Group"
+            placeholder="Enter your Age Group (Under 19 or 20....)"
           />
         </View>
 
@@ -64,18 +64,18 @@ export default function SecondForm() {
             style={styles.input}
             value={gamelevel}
             onChangeText={setGamelevel}
-            placeholder="Enter your game level"
+            placeholder="Enter your game level (School/District/Stage)"
           />
         </View>
 
         {/* Best performance input field */}
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>Your Best Performance</Text>
+          <Text style={styles.label}>Your Best Performance Year</Text>
           <TextInput
             style={styles.input}
             value={performance}
             onChangeText={setPerformance}
-            placeholder="Your Best Performance"
+            placeholder="Your Best Performance in (2020/2021/2022....)"
           />
         </View>
 

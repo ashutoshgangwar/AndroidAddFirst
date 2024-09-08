@@ -77,12 +77,12 @@ export default function ThirdForm() {
 
         {/* Game played input field */}
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>Where you get coaching</Text>
+          <Text style={styles.label}>Where do your practice</Text>
           <TextInput
             style={styles.input}
             value={coachingplace}
             onChangeText={setCoachingplace}
-            placeholder="Coaching place"
+            placeholder="Coaching place (School ground/Academy)"
           />
         </View>
 
@@ -93,7 +93,7 @@ export default function ThirdForm() {
             style={styles.input}
             value={coachingintrest}
             onChangeText={setCoachingintrest}
-            placeholder="Enter your game stage"
+            placeholder="Enter your game stage (Yes/No)"
           />
         </View>
 
