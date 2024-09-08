@@ -3,113 +3,113 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Alert 
 import { useNavigation, useRouter } from "expo-router";
 import { Colors } from "../../../constants/Colors";
 import Foundation from '@expo/vector-icons/Foundation';
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function FirstForm() {
+export default function ThirdForm() {
 
+  // Hide the header when the component is mounted
   useEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, [navigation]);
 
   const navigation = useNavigation();
   const router = useRouter();
-  const [previouscoaching, setPreviuoscoaching] = useState('');
-  const [coachingplace, setCoachingplace] = useState('');
-  const [coachingintrest, setCoachingintrest] = useState('');
-  
+  const [previouscoaching, setPreviouscoaching] = useState(''); // State for game type
+  const [coachingplace, setCoachingplace] = useState(''); // State for game played
+  const [coachingintrest, setCoachingintrest] = useState(''); // State for game stage
 
- const handleSubmit = async () => {
-  try {
-    const token = await AsyncStorage.getItem('userToken');
-    const userId = await AsyncStorage.getItem('userId'); // Retrieve user ID
-    console.log('Retrieved token:', token);
-    console.log('Retrieved user ID:', userId); // Log the user ID
+  const handleSubmit = async () => {
+    try {
+      const token = await AsyncStorage.getItem('userToken');
+      const userId = await AsyncStorage.getItem('userId');
 
-    if (!token || !userId) {
-      Alert.alert('Error', 'You are not authenticated');
-      return;
+      // Fetch data from previous forms
+      const personalData = JSON.parse(await AsyncStorage.getItem('personalData'));
+      const gameDetails = JSON.parse(await AsyncStorage.getItem('gameDetails'));
+
+      // Submit all the data
+      const response = await fetch('http://192.168.0.103:6000/userdata', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          ...personalData,
+          ...gameDetails,
+          previouscoaching,
+          coachingplace,
+          coachingintrest,
+          userId,
+        }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        Alert.alert('Success', 'Data submitted successfully');
+        router.push("./../(tab)/Profile");
+      } else {
+        Alert.alert('Error', data.error || 'Failed to submit data');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Something went wrong');
     }
-
-    const response = await fetch('http://192.168.0.103:6000/userdata', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify({ previouscoaching, coachingplace, coachingintrest, userId }), // Include user ID in request body
-    });
-
-    const data = await response.json();
-
-    if (response.ok) {
-      Alert.alert('Success', 'Data submitted successfully');
-      router.push("./../(tab)/Profile");
-    } else {
-      Alert.alert('Error', data.error || 'Failed to submit data');
-    }
-  } catch (error) {
-    console.error('Error:', error);
-    Alert.alert('Error', 'Something went wrong');
-  }
-};
-
+  };
 
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <Text style={styles.title}>
-        <Foundation name="target-two" size={50} color="black" /> 
-        Your coaching details (3).
+          <Foundation name="target-two" size={50} color="black" />
+          Game Carrier Information (3).
         </Text>
 
+        {/* Game type input field */}
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>Did you ever get caoching</Text>
+          <Text style={styles.label}>Did you get coaching</Text>
           <TextInput
             style={styles.input}
             value={previouscoaching}
-            onChangeText={setPreviuoscoaching}
-            //  keyboardType="numeric"
-            placeholder="When did you get coaching"
+            onChangeText={setPreviouscoaching}
+            placeholder="Yes/No"
           />
         </View>
 
+        {/* Game played input field */}
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>Your Coaching place</Text>
+          <Text style={styles.label}>Where you get coaching</Text>
           <TextInput
             style={styles.input}
             value={coachingplace}
             onChangeText={setCoachingplace}
-            // keyboardType="numeric"
-            placeholder="Enter your coaching place"
+            placeholder="Coaching place"
           />
         </View>
 
+        {/* Game stage input field */}
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>Are you inntrested for further coaching</Text>
+          <Text style={styles.label}>Are you intrested for further coaching</Text>
           <TextInput
             style={styles.input}
             value={coachingintrest}
             onChangeText={setCoachingintrest}
-            placeholder="Yes/No "
+            placeholder="Enter your game stage"
           />
         </View>
 
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={handleSubmit}
-        >
-          <Text style={styles.buttonText}>Next</Text>
+        {/* Submit button */}
+        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+          <Text style={styles.buttonText}>Submit</Text>
         </TouchableOpacity>
       </ScrollView>
     </View>
   );
 }
 
+// Styling for the form
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.WHITE, padding: 25 },
-  contentContainer: { marginTop:50, paddingBottom: 50 },
+  contentContainer: { marginTop: 50, paddingBottom: 50 },
   title: { padding: 10, fontWeight: "bold", fontSize: 30, marginTop: 15, textAlign: "center" },
   inputContainer: { marginTop: 20 },
   label: { fontSize: 18, fontWeight: "600", marginBottom: 8 },

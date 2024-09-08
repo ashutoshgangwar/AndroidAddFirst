@@ -2,77 +2,63 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Alert } from "react-native";
 import { useNavigation, useRouter } from "expo-router";
 import { Colors } from "../../../constants/Colors";
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function FirstForm() {
 
+  // Hide the header when the component is mounted
   useEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, [navigation]);
 
   const navigation = useNavigation();
   const router = useRouter();
-  const [height, setHeight] = useState('');
-  const [weight, setWeight] = useState('');
-  const [bloodgroup, setBloodgroup] = useState('');
-  const [diet, setDiet] = useState('');
+  const [height, setHeight] = useState(''); // State for height
+  const [weight, setWeight] = useState(''); // State for weight
+  const [bloodgroup, setBloodgroup] = useState(''); // State for blood group
+  const [diet, setDiet] = useState(''); // State for diet preference
 
- const handleSubmit = async () => {
-  try {
-    const token = await AsyncStorage.getItem('userToken');
-    const userId = await AsyncStorage.getItem('userId'); // Retrieve user ID
-    console.log('Retrieved token:', token);
-    console.log('Retrieved user ID:', userId); // Log the user ID
-
-    if (!token || !userId) {
-      Alert.alert('Error', 'You are not authenticated');
-      return;
+  // Validate inputs
+  const validateForm = () => {
+    if (!height || !weight || !bloodgroup || !diet) {
+      Alert.alert('Error', 'Please fill all fields');
+      return false;
     }
+    return true;
+  };
 
-    const response = await fetch('http://192.168.0.103:6000/userdata', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify({ height, weight, bloodgroup, diet, userId }), // Include user ID in request body
-    });
+  // Handle form submission
+  const handleSubmit = async () => {
+    if (!validateForm()) return;
 
-    const data = await response.json();
-
-    if (response.ok) {
-      Alert.alert('Success', 'Data submitted successfully');
-      router.push("(tabs)/Pages/SecondForm");
-    } else {
-      Alert.alert('Error', data.error || 'Failed to submit data');
+    try {
+      // Store form data in AsyncStorage or pass to next screen
+      await AsyncStorage.setItem('personalData', JSON.stringify({ height, weight, bloodgroup, diet }));
+      router.push("(tabs)/Pages/SecondForm"); // Navigate to second form
+    } catch (error) {
+      console.error('Error:', error);
+      Alert.alert('Error', 'Something went wrong');
     }
-  } catch (error) {
-    console.error('Error:', error);
-    Alert.alert('Error', 'Something went wrong');
-  }
-};
-
+  };
 
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.contentContainer}>
-        <Text style={styles.title}>
-          Your personal{" "}
-           Details(1).
-        </Text>
+        <Text style={styles.title}>Your personal Details(1).</Text>
 
+        {/* Weight input field */}
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Weight</Text>
           <TextInput
             style={styles.input}
             value={weight}
             onChangeText={setWeight}
-             keyboardType="numeric"
-            placeholder="Enter your weightt in KG"
+            keyboardType="numeric"
+            placeholder="Enter your weight in KG"
           />
         </View>
 
+        {/* Height input field */}
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Height</Text>
           <TextInput
@@ -84,30 +70,30 @@ export default function FirstForm() {
           />
         </View>
 
+        {/* Blood group input field */}
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Blood Group</Text>
           <TextInput
             style={styles.input}
             value={bloodgroup}
             onChangeText={setBloodgroup}
-            placeholder="Your Blood Group "
+            placeholder="Your Blood Group"
           />
         </View>
 
+        {/* Diet preference input field */}
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>Diet Prefrence</Text>
+          <Text style={styles.label}>Diet Preference</Text>
           <TextInput
             style={styles.input}
             value={diet}
             onChangeText={setDiet}
-            placeholder="Prefrence (Veg/Non-veg/Vegan)"
+            placeholder="Preference (Veg/Non-veg/Vegan)"
           />
         </View>
 
-        <TouchableOpacity
-          style={styles.button}
-          onPress={handleSubmit}
-        >
+        {/* Submit button */}
+        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
           <Text style={styles.buttonText}>Next</Text>
         </TouchableOpacity>
       </ScrollView>
@@ -115,6 +101,7 @@ export default function FirstForm() {
   );
 }
 
+// Styling for the form
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.WHITE, padding: 25 },
   contentContainer: { paddingBottom: 50 },
