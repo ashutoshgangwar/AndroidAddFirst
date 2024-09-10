@@ -14,12 +14,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Colors } from "../../../constants/Colors";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import * as ImagePicker from "expo-image-picker";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 export default function Profile() {
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [imageUri, setImageUri] = useState(null);
+  const [initialImageUri, setInitialImageUri] = useState(null);
   const [imageUpdated, setImageUpdated] = useState(false);
   const navigation = useNavigation();
   const router = useRouter();
@@ -52,7 +54,11 @@ export default function Profile() {
 
       const data = await response.json();
       setProfileData(data);
-      setImageUri(data.profilePic ? `http://192.168.0.103:6000${data.profilePic}` : null);
+      const fetchedImageUri = data.profilePic
+        ? `http://192.168.0.103:6000${data.profilePic}`
+        : null;
+      setImageUri(fetchedImageUri);
+      setInitialImageUri(fetchedImageUri); // Set initial image URI
       setImageUpdated(false);
     } catch (error) {
       setError(error.message);
@@ -69,7 +75,7 @@ export default function Profile() {
       }
 
       const formData = new FormData();
-      if (imageUri) {
+      if (imageUri && imageUri !== initialImageUri) {
         const fileName = imageUri.split("/").pop();
         const fileType = fileName.split(".").pop();
         console.log("Uploading image:", {
@@ -105,6 +111,7 @@ export default function Profile() {
         ...prevData,
         profilePic: data.profilePic,
       }));
+      setInitialImageUri(imageUri); // Update initial image URI
       setImageUpdated(true);
     } catch (error) {
       Alert.alert("Error", error.message);
@@ -114,7 +121,10 @@ export default function Profile() {
   const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
-      Alert.alert("Error", "Sorry, we need camera roll permissions to make this work!");
+      Alert.alert(
+        "Error",
+        "Sorry, we need camera roll permissions to make this work!"
+      );
       return;
     }
 
@@ -171,7 +181,11 @@ export default function Profile() {
               style={styles.profilePic}
             />
           ) : (
-            <MaterialCommunityIcons name="account-circle" size={100} color={Colors.secondary} />
+            <MaterialCommunityIcons
+              name="account-circle"
+              size={100}
+              color={Colors.secondary}
+            />
           )}
         </TouchableOpacity>
 
@@ -182,15 +196,21 @@ export default function Profile() {
         >
           <Text style={styles.backButtonText}>Back to Home</Text>
         </TouchableOpacity>
-        {!imageUpdated && (
-          <TouchableOpacity style={styles.saveButton} onPress={handleUpdateProfile}>
+        {imageUri !== initialImageUri && (
+          <TouchableOpacity
+            style={styles.saveButton}
+            onPress={handleUpdateProfile}
+          >
             <Text style={styles.saveButtonText}>Save</Text>
           </TouchableOpacity>
         )}
       </View>
 
       <View style={styles.accountInfo}>
-        <Text style={styles.sectionTitle}>User Details:</Text>
+        <View>
+          <Text style={styles.sectionTitle}>User Details:</Text>
+        </View>
+
         <View style={styles.infoItem}>
           <Text style={styles.infoLabel}>Mobile Number:</Text>
           <Text style={styles.infoValue}>{profileData?.phonenumber}</Text>
@@ -219,13 +239,21 @@ export default function Profile() {
           <Text style={styles.infoLabel}>Game:</Text>
           <Text style={styles.infoValue}>{profileData?.game}</Text>
         </View>
-       
       </View>
 
-      <View style={styles.logoutSection}>
+      <View style={styles.detailsRow}>
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
           <MaterialCommunityIcons name="logout" size={24} color="white" />
           <Text style={styles.logoutButtonText}>Logout</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.MoreButton}>
+          <Text style={styles.detailsButtonText}>More Details</Text>
+          <MaterialIcons
+            name="expand-more"
+            size={25}
+            color="white"
+            fontWeight="bold"
+          />
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -278,7 +306,7 @@ const styles = StyleSheet.create({
   },
   accountInfo: {
     paddingHorizontal: 20,
-    marginTop:20
+    marginTop: 15,
   },
   sectionTitle: {
     fontSize: 25,
@@ -320,6 +348,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginLeft: 10,
   },
+  MoreButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: Colors.PRIMERY,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    borderRadius: 25,
+  },
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
@@ -346,5 +382,35 @@ const styles = StyleSheet.create({
   retryButtonText: {
     color: "#fff",
     fontSize: 16,
+  },
+
+  detailsRow: {
+    flexDirection: "row",
+    justifyContent: "space-between", // Aligns buttons to opposite ends
+    alignItems: "center", // Align items vertically
+    marginTop: 20, // Add margin if needed
+  },
+  detailsButton: {
+    backgroundColor: Colors.PRIMERY,
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    borderRadius: 10,
+  },
+  detailsButtonText: {
+    color: "#fff",
+    fontSize: 16,
+  },
+  logoutButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: Colors.PRIMERY,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+  },
+  logoutButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    marginLeft: 10,
   },
 });
