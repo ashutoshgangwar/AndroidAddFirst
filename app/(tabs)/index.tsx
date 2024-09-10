@@ -3,6 +3,7 @@ import { Text, View } from "react-native";
 import Login from "./../../Components/Login";
 
 
+
 export default function HomeScreen() {
   return (
     <View
@@ -14,6 +15,7 @@ export default function HomeScreen() {
     >
      
       <Login/>
+   
     </View>
     
   );

@@ -38,7 +38,7 @@ export default function SignIn() {
         console.log('Stored User ID:', storedUserId);
   
         if (storedToken && storedUserId) {
-          router.replace("(tabs)/Journey");
+          router.replace("./../../Journey");
         } else {
           Alert.alert('Storage Error', 'Unable to store token or user ID');
         }

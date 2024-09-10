@@ -1,7 +1,7 @@
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import React, { useEffect } from "react";
 import { useNavigation, useRouter } from "expo-router";
-import { Colors } from "../../../constants/Colors";
+import { Colors } from "./../../constants/Colors";
 
 
 import FontAwesome from '@expo/vector-icons/FontAwesome';
@@ -74,7 +74,7 @@ export default function Journey() {
           style={styles.button}
           
           onPress={() =>
-            router.push("./../Pages/FirstForm")}
+            router.push("./Pages/FirstForm")}
           
         >
           <Text

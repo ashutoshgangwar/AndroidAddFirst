@@ -36,24 +36,7 @@ export default function TabLayout() {
             </Text>
           ),
         }} 
-      />
-      <Tabs.Screen 
-        name="Journey" 
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <MaterialCommunityIcons 
-              name="highway" 
-              size={24} 
-              color={focused ? 'black' : 'gray'} 
-            />
-          ),
-          tabBarLabel: ({ focused }) => (
-            <Text style={{ color: focused ? 'black' : 'gray', fontWeight: focused ? 'bold' : 'normal' }}>
-              Journey
-            </Text>
-          ),
-        }} 
-      />
+      />     
       <Tabs.Screen 
         name="Games" 
         options={{

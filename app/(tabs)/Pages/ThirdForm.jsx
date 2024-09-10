@@ -47,7 +47,7 @@ export default function ThirdForm() {
       const data = await response.json();
       if (response.ok) {
         Alert.alert('Success', 'Data submitted successfully');
-        router.push("./Profile_details");
+        router.push("./../(tab)/Profile");
       } else {
         Alert.alert('Error', data.error || 'Failed to submit data');
       }
