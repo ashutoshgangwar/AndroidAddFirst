@@ -151,6 +151,7 @@ export default function Profile() {
       Alert.alert("Logout failed", "Something went wrong.");
     }
   };
+   
 
   if (loading) {
     return (
@@ -246,7 +247,7 @@ export default function Profile() {
           <MaterialCommunityIcons name="logout" size={24} color="white" />
           <Text style={styles.logoutButtonText}>Logout</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.MoreButton}>
+        <TouchableOpacity style={styles.MoreButton}   onPress={() => router.push("./../../(tabs)/Pages/Profile_details")}>
           <Text style={styles.detailsButtonText}>More Details</Text>
           <MaterialIcons
             name="expand-more"
