@@ -1,59 +1,95 @@
-import { View, Text, Image, StyleSheet, FlatList, Dimensions } from 'react-native';
-import React, { useEffect, useRef } from 'react';
-import { useNavigation } from 'expo-router';
-import { Colors } from '../../../constants/Colors';
+import React from 'react';
+import { View, Text, Image, ScrollView, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 
-const { width } = Dimensions.get('window');
-
-const images = [
-  require('./../../../assets/images/logo1.jpeg'),
-  require('./../../../assets/images/logo2.jpeg'),
-  require('./../../../assets/images/logo.jpeg'),
+const astrologers = [
+  {
+    id: '1',
+    name: 'Ramyanasha',
+    expertise: 'Tarot, Life Coach',
+    languages: 'English, Hindi, Maithili',
+    experience: '3 Years',
+    orders: '4699',
+    price: '₹ 5/min',
+    originalPrice: '₹ 16/min',
+    imageUrl: 'https://path-to-image.jpg', // Replace with real image URL
+  },
+  {
+    id: '2',
+    name: 'Soumya',
+    expertise: 'Tarot',
+    languages: 'English, Hindi',
+    experience: '6 Years',
+    orders: '6770',
+    price: '₹ 5/min',
+    originalPrice: '₹ 44/min',
+    imageUrl: 'https://path-to-image.jpg', // Replace with real image URL
+  },
+  // Add more astrologers...
 ];
 
-export default function Games() {
-  const navigation = useNavigation();
-  const flatListRef = useRef(null);
-
-  useEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-    });
-  }, [navigation]);
-
-  const handleScrollEnd = (event) => {
-    const contentOffsetX = event.nativeEvent.contentOffset.x;
-    const index = Math.floor(contentOffsetX / width);
-
-    if (index === images.length - 1) {
-      flatListRef.current.scrollToIndex({ animated: false, index: 0 });
-    }
-  };
+export default function AstrologerScreen() {
+  const renderAstrologer = ({ item }) => (
+    <View style={styles.card}>
+      <Image source={{ uri: item.imageUrl }} style={styles.profileImage} />
+      <View style={styles.infoContainer}>
+        <Text style={styles.name}>{item.name}</Text>
+        <Text>{item.expertise}</Text>
+        <Text>{item.languages}</Text>
+        <Text>Exp: {item.experience}</Text>
+        <View style={styles.priceContainer}>
+          <Text style={styles.originalPrice}>{item.originalPrice}</Text>
+          <Text style={styles.price}>{item.price}</Text>
+        </View>
+      </View>
+      <TouchableOpacity style={styles.chatButton}>
+        <Text style={styles.chatText}>Chat</Text>
+      </TouchableOpacity>
+    </View>
+  );
 
   return (
     <View style={styles.container}>
-      <Text style={styles.headerText}>
-        Games (Matches)
-      </Text>
+      {/* Header */}
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Chat with Astrologer</Text>
+      </View>
 
+      {/* Categories */}
+      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={styles.categories}>
+        <TouchableOpacity style={styles.category}>
+          <Text>All</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.category}>
+          <Text>Offer</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.category}>
+          <Text>Love</Text>
+        </TouchableOpacity>
+        {/* Add more categories */}
+      </ScrollView>
+
+      {/* Astrologers List */}
       <FlatList
-        ref={flatListRef}
-        data={images}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        pagingEnabled
-        onMomentumScrollEnd={handleScrollEnd}
-        renderItem={({ item }) => (
-          <View style={styles.imageContainer}>
-            <Image
-              source={item}
-              style={styles.image}
-              resizeMode="cover"
-            />
-          </View>
-        )}
-        keyExtractor={(item, index) => index.toString()}
+        data={astrologers}
+        renderItem={renderAstrologer}
+        keyExtractor={(item) => item.id}
       />
+
+      {/* Bottom Navigation */}
+      <View style={styles.bottomNav}>
+        <TouchableOpacity>
+          <Text>Chat</Text>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Text>Live</Text>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Text>Call</Text>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Text>Remedies</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -61,25 +97,79 @@ export default function Games() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.WHITE,
+    backgroundColor: '#fff',
+  },
+  header: {
+    backgroundColor: '#FFEB3B',
+    padding: 20,
     alignItems: 'center',
-    justifyContent: 'flex-start', // Align items from the top
-    padding: 15, // Add padding to the container
   },
   headerText: {
+    fontSize: 18,
     fontWeight: 'bold',
-    fontSize: 24,
-    textAlign: 'center',
-    marginBottom: 20, // Space between text and image slider
   },
-  imageContainer: {
-    width: width,
-    justifyContent: 'center',
+  categories: {
+    flexDirection: 'row',
+    marginVertical: 10,
+  },
+  category: {
+    padding: 10,
+    marginHorizontal: 5,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 20,
+  },
+  card: {
+    flexDirection: 'row',
+    padding: 15,
+    backgroundColor: '#fff',
+    marginVertical: 8,
+    marginHorizontal: 10,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 5 },
+    shadowRadius: 10,
+    elevation: 5,
+  },
+  profileImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    marginRight: 15,
+  },
+  infoContainer: {
+    flex: 1,
+  },
+  name: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  priceContainer: {
+    flexDirection: 'row',
     alignItems: 'center',
   },
-  image: {
-    width: '100%', // Full width of the screen
-    height: undefined,
-    aspectRatio: 16 / 9, // Adjust based on your image aspect ratio
+  originalPrice: {
+    textDecorationLine: 'line-through',
+    marginRight: 10,
+    color: '#888',
+  },
+  price: {
+    color: 'red',
+    fontWeight: 'bold',
+  },
+  chatButton: {
+    backgroundColor: '#00E676',
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    borderRadius: 20,
+  },
+  chatText: {
+    color: '#fff',
+  },
+  bottomNav: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingVertical: 15,
+    backgroundColor: '#f0f0f0',
   },
 });

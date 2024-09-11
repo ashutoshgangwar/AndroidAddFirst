@@ -72,8 +72,8 @@ export default function SignIn() {
         const isDataSaved = await checkUserData(token);
   
         if (isDataSaved) {
-          console.log('User data exists, navigating to Profile');
-          router.replace("./../../Profile");
+          console.log('User data exists, navigating to main app');
+          router.replace("./../../Games");
         } else {
           console.log('No user data found, navigating to Journey');
           router.replace("./../../Journey");
