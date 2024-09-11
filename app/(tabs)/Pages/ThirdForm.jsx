@@ -6,28 +6,36 @@ import Foundation from '@expo/vector-icons/Foundation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ThirdForm() {
+  const navigation = useNavigation();
+  const router = useRouter();
+  
+  // State variables
+  const [previouscoaching, setPreviouscoaching] = useState(''); // State for coaching
+  const [coachingplace, setCoachingplace] = useState(''); // State for coaching place
+  const [coachingintrest, setCoachingintrest] = useState(''); // State for coaching interest
 
   // Hide the header when the component is mounted
   useEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, [navigation]);
 
-  const navigation = useNavigation();
-  const router = useRouter();
-  const [previouscoaching, setPreviouscoaching] = useState(''); // State for game type
-  const [coachingplace, setCoachingplace] = useState(''); // State for game played
-  const [coachingintrest, setCoachingintrest] = useState(''); // State for game stage
-
   const handleSubmit = async () => {
     try {
+      // Retrieve token and userId from AsyncStorage
       const token = await AsyncStorage.getItem('userToken');
       const userId = await AsyncStorage.getItem('userId');
 
-      // Fetch data from previous forms
+      // Fetch data from previous forms stored in AsyncStorage
       const personalData = JSON.parse(await AsyncStorage.getItem('personalData'));
       const gameDetails = JSON.parse(await AsyncStorage.getItem('gameDetails'));
 
-      // Submit all the data
+      // Ensure token and userId are available
+      if (!token || !userId) {
+        Alert.alert('Error', 'User authentication information is missing.');
+        return;
+      }
+
+      // Submit all the data to the API
       const response = await fetch('http://192.168.0.103:6000/userdata', {
         method: 'POST',
         headers: {
@@ -35,24 +43,30 @@ export default function ThirdForm() {
           'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
-          ...personalData,
-          ...gameDetails,
-          previouscoaching,
-          coachingplace,
-          coachingintrest,
-          userId,
+          ...personalData,    // Personal details from previous form
+          ...gameDetails,     // Game details from previous form
+          previouscoaching,   // Coaching info from current form
+          coachingplace,      // Coaching place info from current form
+          coachingintrest,    // Coaching interest info from current form
+          userId              // User ID from AsyncStorage
         }),
       });
 
+      // Parse response
       const data = await response.json();
+
       if (response.ok) {
         Alert.alert('Success', 'Data submitted successfully');
+        // After successful submission, navigate to the profile page
         router.push("./../(tab)/Profile");
       } else {
+        // Show the error message from the API response
         Alert.alert('Error', data.error || 'Failed to submit data');
       }
     } catch (error) {
-      Alert.alert('Error', 'Something went wrong');
+      // Catch any errors and alert the user
+      console.error('Error submitting user data:', error);
+      Alert.alert('Error', 'Something went wrong while submitting data');
     }
   };
 
@@ -64,7 +78,7 @@ export default function ThirdForm() {
           Game Carrier Information (3).
         </Text>
 
-        {/* Game type input field */}
+        {/* Coaching input field */}
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Did you get coaching</Text>
           <TextInput
@@ -75,9 +89,9 @@ export default function ThirdForm() {
           />
         </View>
 
-        {/* Game played input field */}
+        {/* Coaching place input field */}
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>Where do your practice</Text>
+          <Text style={styles.label}>Where do you practice</Text>
           <TextInput
             style={styles.input}
             value={coachingplace}
@@ -86,14 +100,14 @@ export default function ThirdForm() {
           />
         </View>
 
-        {/* Game stage input field */}
+        {/* Coaching interest input field */}
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>Are you intrested for further coaching</Text>
+          <Text style={styles.label}>Are you interested in further coaching?</Text>
           <TextInput
             style={styles.input}
             value={coachingintrest}
             onChangeText={setCoachingintrest}
-            placeholder="Enter your game stage (Yes/No)"
+            placeholder="Enter (Yes/No)"
           />
         </View>
 

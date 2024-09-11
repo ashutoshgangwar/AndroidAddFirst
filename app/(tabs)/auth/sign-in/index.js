@@ -15,45 +15,80 @@ export default function SignIn() {
     navigation.setOptions({ headerShown: false });
   }, [navigation]);
 
-  const handleSignIn = async () => {
-    setLoading(true);
+  async function checkUserData(token) {
     try {
-      const response = await fetch('http://192.168.0.103:6000/login', {
+      const response = await fetch('http://192.168.0.103:6000/userdata', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Fetched User Data:', data);
+  
+        if (data.message === "No data found") {
+          return false;
+        }
+  
+        return true;
+      } else {
+        console.error('Error fetching user data:', response.statusText);
+        return false;
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      return false;
+    }
+  }
+
+  async function handleSignIn() {
+    setLoading(true); // Start loading indicator
+    try {
+      // Log in and get the token
+      const loginResponse = await fetch('http://192.168.0.103:6000/login', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({ email, password }),
       });
   
-      const data = await response.json();
-      console.log('Response Data:', data);
+      const loginData = await loginResponse.json();
+      
+      if (loginResponse.ok && loginData.token && loginData.userId) {
+        const token = loginData.token;
+        const userId = loginData.userId;
+
+        // Save both token and userId in AsyncStorage
+        await AsyncStorage.setItem('userToken', token);
+        await AsyncStorage.setItem('userId', userId);
+
+        console.log('User token and ID saved:', { token, userId });
+        
+        // Check if user data is already saved
+        const isDataSaved = await checkUserData(token);
   
-      if (response.ok && data.token) {
-        // Save both token and userId to AsyncStorage
-        await AsyncStorage.setItem('userToken', data.token);
-        await AsyncStorage.setItem('userId', data.userId); // Save userId
-  
-        const storedToken = await AsyncStorage.getItem('userToken');
-        const storedUserId = await AsyncStorage.getItem('userId'); // Retrieve userId
-        console.log('Stored Token:', storedToken);
-        console.log('Stored User ID:', storedUserId);
-  
-        if (storedToken && storedUserId) {
-          router.replace("./../../Journey");
-          // router.replace("./../../(tab)/Profile");
+        if (isDataSaved) {
+          console.log('User data exists, navigating to Profile');
+          router.replace("./../../Profile");
         } else {
-          Alert.alert('Storage Error', 'Unable to store token or user ID');
+          console.log('No user data found, navigating to Journey');
+          router.replace("./../../Journey");
         }
       } else {
-        Alert.alert('Login failed', data.error || 'Invalid credentials');
+        console.error('Login failed:', loginData.message);
+        Alert.alert('Login Failed', loginData.message || 'Invalid credentials');
       }
     } catch (error) {
-      console.error('Error during login:', error);
-      Alert.alert('Network error', 'Please check your internet connection.');
+      console.error('Sign-in error:', error);
+      Alert.alert('Network Error', 'Please check your internet connection.');
     } finally {
-      setLoading(false);
+      setLoading(false); // Stop loading indicator
     }
-  };
-  
+  }
 
   return (
     <View style={styles.container}>
