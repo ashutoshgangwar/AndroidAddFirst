@@ -40,7 +40,7 @@ export default function Profile() {
         throw new Error("No token found, please login again.");
       }
 
-      const response = await fetch("http://192.168.0.103:6000/profile", {
+      const response = await fetch("http://192.168.29.45:6000/profile", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -91,7 +91,7 @@ export default function Profile() {
         });
       }
 
-      const response = await fetch("http://192.168.0.103:6000/profile/pic", {
+      const response = await fetch("http://192.168.29.45:6000/profile/pic", {
         method: "PUT",
         headers: {
           "Content-Type": "multipart/form-data",
