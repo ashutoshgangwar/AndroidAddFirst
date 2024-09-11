@@ -35,7 +35,7 @@ export default function SignIn() {
   
         return true;
       } else {
-        console.error('Error fetching user data:', response.statusText);
+        // console.error('Error fetching user data:', response.statusText);
         return false;
       }
     } catch (error) {
