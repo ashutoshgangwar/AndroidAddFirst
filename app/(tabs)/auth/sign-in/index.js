@@ -18,7 +18,7 @@ export default function SignIn() {
   const handleSignIn = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://192.168.29.45:6000/login', {
+      const response = await fetch('http://192.168.0.103:6000/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -38,8 +38,8 @@ export default function SignIn() {
         console.log('Stored User ID:', storedUserId);
   
         if (storedToken && storedUserId) {
-          // router.replace("./../../Journey");
-          router.replace("./../../(tab)/Profile");
+          router.replace("./../../Journey");
+          // router.replace("./../../(tab)/Profile");
         } else {
           Alert.alert('Storage Error', 'Unable to store token or user ID');
         }

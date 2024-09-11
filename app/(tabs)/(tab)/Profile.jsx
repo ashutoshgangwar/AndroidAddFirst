@@ -40,7 +40,7 @@ export default function Profile() {
         throw new Error("No token found, please login again.");
       }
 
-      const response = await fetch("http://192.168.29.45:6000/profile", {
+      const response = await fetch("http://192.168.0.103:6000/profile", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -91,7 +91,7 @@ export default function Profile() {
         });
       }
 
-      const response = await fetch("http://192.168.29.45:6000/profile/pic", {
+      const response = await fetch("http://192.168.0.103:6000/profile/pic", {
         method: "PUT",
         headers: {
           "Content-Type": "multipart/form-data",
@@ -144,13 +144,20 @@ export default function Profile() {
 
   const handleLogout = async () => {
     try {
-      await AsyncStorage.removeItem("userToken");
-      router.replace("auth/sign-in");
+      // Clear AsyncStorage data on logout
+      await AsyncStorage.removeItem('userToken');
+      await AsyncStorage.removeItem('userId');
+      await AsyncStorage.removeItem('isDataFilled');
+      
+
+      console.log('User token and related data removed from AsyncStorage.');
+      // Navigate to the SignIn page
+      router.replace('auth/sign-in');
     } catch (error) {
-      console.error("Error during logout:", error);
-      Alert.alert("Logout failed", "Something went wrong.");
+      console.error('Error during logout:', error);
     }
   };
+  
    
 
   if (loading) {
