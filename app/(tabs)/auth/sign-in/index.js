@@ -17,7 +17,7 @@ export default function SignIn() {
 
   async function checkUserData(token) {
     try {
-      const response = await fetch('http://192.168.0.103:6000/userdata', {
+      const response = await fetch('http://192.168.0.101:6000/userdata', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -48,7 +48,7 @@ export default function SignIn() {
     setLoading(true); // Start loading indicator
     try {
       // Log in and get the token
-      const loginResponse = await fetch('http://192.168.0.103:6000/login', {
+      const loginResponse = await fetch('http://192.168.0.101:6000/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -130,7 +130,7 @@ export default function SignIn() {
       </TouchableOpacity>
 
       <TouchableOpacity
-        onPress={() => router.replace("auth/sign-up")}
+        onPress={() => router.replace("./../sign-up/signuprole")}
         style={styles.createAccount}
       >
         <Text style={styles.createAccountText}>Create Account</Text>

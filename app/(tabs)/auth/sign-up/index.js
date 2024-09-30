@@ -31,7 +31,7 @@ export default function SignIn() {
     }
 
     try {
-      const response = await fetch('http://192.168.0.103:6000/signup', {
+      const response = await fetch('http://192.168.0.101:6000/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
