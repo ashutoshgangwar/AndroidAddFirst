@@ -1,22 +1,23 @@
-import React, {useEffect, useState } from 'react';
 import {
   View,
   Text,
-  TouchableOpacity,
+  TextInput,
   StyleSheet,
+  TouchableOpacity,
+  Alert,
   ScrollView,
-  KeyboardAvoidingView,
-  Platform,
-} from 'react-native';
-import { useNavigation } from "expo-router";
+} from "react-native";
+import React, { useEffect, useState } from "react";
+import { useNavigation, useRouter } from "expo-router";
+import { Colors } from "../../../../constants/Colors";
 
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import { Colors } from "@/constants/Colors";
+import Ionicons from '@expo/vector-icons/Ionicons';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
-const LoginUser = () => {
-  const [selectedRole, setSelectedRole] = useState('');
+export default function SignIn() {
   const navigation = useNavigation();
-
+  const router = useRouter();
 
   useEffect(() => {
     navigation.setOptions({
@@ -24,131 +25,66 @@ const LoginUser = () => {
     });
   }, []);
 
-  const roles = [
-    { title: 'Player', icon: 'sports-soccer' },
-    { title: 'Coach', icon: 'person-outline' },
-    { title: 'School/College', icon: 'school' },
-  ];
-
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      style={styles.keyboardView}
-    >
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        <View style={styles.container}>
-          <Text style={styles.header}>Sign up</Text>
-          {roles.map((role) => (
-            <RoleOption
-              key={role.title}
-              role={role}
-              isSelected={selectedRole === role.title}
-              onSelect={() => setSelectedRole(role.title)}
-            />
-          ))}
-          <TouchableOpacity style={styles.signUpButton}>
-            <Text style={styles.signUpButtonText}>SIGN UP</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
-  );
-};
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.headerText}>Let's Sign you Up</Text>
+      <Text style={styles.subHeaderText}>Welcome to you</Text>
 
-const RoleOption = ({ role, isSelected, onSelect }) => (
-  <TouchableOpacity
-    style={[styles.optionCard, isSelected && styles.selectedCard]}
-    onPress={onSelect}
-  >
-    <View style={styles.optionContent}>
-      <Icon name={role.icon} size={40} color={isSelected ? '#007AFF' : '#000'} />
-      <View style={styles.optionTextContainer}>
-        <Text style={styles.optionText}>Sign Up as</Text>
-        <Text style={[styles.optionTitle, isSelected && styles.selectedText]}>
-          {role.title}
-        </Text>
-      </View>
-    </View>
-    {isSelected && <Icon name="check-circle" size={24} color="green" style={styles.checkIcon} />}
-  </TouchableOpacity>
-);
+
+      <TouchableOpacity  onPress={() => router.replace("./indexP")} style={styles.submitButton}>
+      <Ionicons name="football-outline" size={50} color="white" />
+        <Text style={styles.submitButtonText}>Sign Up As Player</Text>
+       
+      </TouchableOpacity>
+      <TouchableOpacity  onPress={() => router.replace("./../sign-up/indexC")} style={styles.submitButton}>
+        <FontAwesome5 name="chalkboard-teacher" size={50} color="white" />
+        <Text style={styles.submitButtonText}>Sign Up As Coach</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity  onPress={() => router.replace("./../sign-up/indexS")} style={styles.submitButton}>
+        <MaterialCommunityIcons name="school-outline" size={50} color="white" />
+        <Text style={styles.submitButtonText}>Sign Up As School/College</Text>
+      </TouchableOpacity>
+    </ScrollView>
+  );
+}
 
 const styles = StyleSheet.create({
-  keyboardView: {
-    flex: 1,
-    backgroundColor: Colors.PRIMERY,
-  },
-  scrollContent: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    padding: 20,
-  },
   container: {
-    flex: 1,
-    alignItems: 'center',
-    marginTop: 90,
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: Colors.WHITE,
-    marginBottom: 60,
-  },
-  optionCard: {
-    width: '100%',
-    backgroundColor: '#fff',
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 15,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    elevation: 3,
-  },
-  selectedCard: {
-    borderColor: '#007AFF',
-    borderWidth: 2,
-  },
-  optionContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  optionTextContainer: {
-    marginLeft: 15,
-    marginTop:20
-  },
-  optionText: {
-    fontSize: 14,
-    color: '#666',
-  },
-  optionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#000',
-  },
-  selectedText: {
-    color: '#007AFF',
-  },
-  checkIcon: {
-    marginLeft: 10,
-  },
-  signUpButton: {
+    padding: 25,
     backgroundColor: Colors.WHITE,
-    paddingVertical: 15,
-    paddingHorizontal: 40,
-    borderRadius: 10,
-    alignItems: 'center',
-    marginTop: 20,
-    width: '100%',
+    flexGrow: 1, // Allow the ScrollView to expand
+    justifyContent: "center", // Center content vertically
   },
-  signUpButtonText: {
-    color: Colors.PRIMERY,
-    fontSize: 18,
-    fontWeight: 'bold',
+  headerText: {
+    fontSize: 30,
+    padding: 25,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  subHeaderText: {
+    fontSize: 25,
+    padding: 5,
+    color: Colors.GRAY,
+    marginLeft: 20,
+    marginTop: 10,
+    fontWeight: "bold",
+    textAlign: "center",
+    textDecorationLine: "underline",
+  },
+  submitButton: {
+    flexDirection: 'row', // Align items in a row
+    alignItems: 'center',  // Center items vertically
+    padding: 15,
+    backgroundColor: Colors.PRIMERY,
+    borderRadius: 15,
+    marginTop: 20,
+    borderWidth: 1,
+  },
+  submitButtonText: {
+    color: Colors.WHITE,
+    textAlign: "center",
+    fontSize: 20,
+    marginLeft: 10, // Space between icon and text
   },
 });
-
-export default LoginUser;
