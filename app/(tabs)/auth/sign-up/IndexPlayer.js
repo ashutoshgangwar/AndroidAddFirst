@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigation, useRouter } from "expo-router";
 import { Colors } from "../../../../constants/Colors";
 
-export default function SignIn() {
+export default function PlayerSignup() {
   const navigation = useNavigation();
   const router = useRouter();
 

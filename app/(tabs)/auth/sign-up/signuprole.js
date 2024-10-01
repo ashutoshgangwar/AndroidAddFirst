@@ -1,4 +1,4 @@
-import React, {useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -8,27 +8,38 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import { useNavigation } from "expo-router";
-
+import { useNavigation } from 'expo-router';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { Colors } from "@/constants/Colors";
+import { Colors } from '@/constants/Colors';
 
-const LoginUser = () => {
+const SignUpUser = () => {
   const [selectedRole, setSelectedRole] = useState('');
   const navigation = useNavigation();
-
 
   useEffect(() => {
     navigation.setOptions({
       headerShown: false,
     });
-  }, []);
+  }, [navigation]);
 
   const roles = [
-    { title: 'Player', icon: 'sports-soccer' },
-    { title: 'Coach', icon: 'person-outline' },
-    { title: 'School/College', icon: 'school' },
+    { title: 'Player', icon: 'sports-soccer', navigateTo: 'IndexPlayer' },
+    { title: 'Coach', icon: 'person-outline', navigateTo: 'IndexCoach' },
+    { title: 'School/College', icon: 'school', navigateTo: 'IndexCollege' },
   ];
+
+  const handleSignUp = () => {
+    if (selectedRole) {
+      // Find the role object based on the selected role
+      const selectedRoleObj = roles.find(role => role.title === selectedRole);
+      if (selectedRoleObj) {
+        // Navigate to the appropriate signup screen based on the selected role
+        navigation.navigate(selectedRoleObj.navigateTo);
+      }
+    } else {
+      alert('Please select a role to continue.');
+    }
+  };
 
   return (
     <KeyboardAvoidingView
@@ -49,7 +60,7 @@ const LoginUser = () => {
               onSelect={() => setSelectedRole(role.title)}
             />
           ))}
-          <TouchableOpacity style={styles.signUpButton}>
+          <TouchableOpacity style={styles.signUpButton} onPress={handleSignUp}>
             <Text style={styles.signUpButtonText}>SIGN UP</Text>
           </TouchableOpacity>
         </View>
@@ -118,7 +129,7 @@ const styles = StyleSheet.create({
   },
   optionTextContainer: {
     marginLeft: 15,
-    marginTop:20
+    marginTop: 20,
   },
   optionText: {
     fontSize: 14,
@@ -151,4 +162,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginUser;
+export default SignUpUser;
