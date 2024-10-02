@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigation, useRouter } from "expo-router";
 import { Colors } from "../../../../constants/Colors";
 
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+
 export default function SignIn() {
   const navigation = useNavigation();
   const router = useRouter();
@@ -55,6 +57,9 @@ export default function SignIn() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <TouchableOpacity  onPress={() => router.replace("./../sign-in")}>
+        <FontAwesome name="arrow-left" size={24} color="black" />
+      </TouchableOpacity>
       <Text style={styles.headerText}>Let's Sign Up</Text>
       <Text style={styles.headerTexttype}>As School/College</Text>
       <Text style={styles.subHeaderText}>Welcome to you</Text>
