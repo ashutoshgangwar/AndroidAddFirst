@@ -1,10 +1,252 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert, ScrollView } from "react-native";
+import React, { useEffect, useState } from "react";
+import { useNavigation, useRouter } from "expo-router";
+import { Colors } from "../../../../constants/Colors";
 
-export default function indexC() {
+export default function SignIn() {
+  const navigation = useNavigation();
+  const router = useRouter();
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
+  }, []);
+
+  const [registeras, setRegisteras] = useState('');
+  const [fullname, setFullname] = useState('');
+  const [email, setEmail] = useState('');
+  const [phonenumber, setPhonenumber] = useState('');
+  const [dob, setDob] = useState('');
+  const [gender, setGender] = useState('');
+  const [city, setCity] = useState('');
+  const [state, setState] = useState('');
+  const [gametype, setGametype] = useState('');
+  const [game, setGame] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSubmit = async () => {
+    if (!registeras || !fullname || !email || !phonenumber || !gender || !dob || !city || !state || !gametype || !game || !password) {
+      Alert.alert('Error', 'Please fill out all fields');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://192.168.0.101:6000/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ registeras, fullname, email, phonenumber, gender, dob, city, state, gametype, game, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        Alert.alert('Success', 'Congratulations, you have Signed-Up');
+        router.push("(tabs)/auth/sign-in");
+      } else {
+        Alert.alert('Error', data.message || 'Something went wrong');
+      }
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Error', 'Something went wrong');
+    }
+  };
+
   return (
-    <View>
-      <Text>indexC</Text>
-    </View>
-  )
+    <ScrollView contentContainerStyle={styles.container}>
+    <Text style={styles.headerText}>Let's Sign Up</Text>
+    <Text style={styles.headerTexttype}>As Coach/Trainer</Text>
+      <Text style={styles.subHeaderText}>Welcome to you</Text>
+
+      <View style={styles.formGroup}>
+        <Text style={styles.inputText}>Register As</Text>
+        <TextInput
+          style={styles.input}
+          value={registeras}
+          onChangeText={setRegisteras}
+          placeholder="You are Register As"
+        />
+      </View>
+      <View style={styles.formGroup}>
+        <Text style={styles.inputText}>Full Name</Text>
+        <TextInput
+          style={styles.input}
+          value={fullname}
+          onChangeText={setFullname}
+          placeholder="Enter your full name"
+        />
+      </View>
+
+      <View style={styles.formGroup}>
+        <Text style={styles.inputText}>Email</Text>
+        <TextInput
+          style={styles.input}
+          value={email}
+          onChangeText={setEmail}
+          placeholder="Enter your email address"
+        />
+      </View>
+
+      <View style={styles.doubleFormGroup}>
+        <View style={styles.halfWidth}>
+          <Text style={styles.inputText}>Gender</Text>
+          <TextInput
+            style={styles.input}
+            value={gender}
+            onChangeText={setGender}
+            placeholder="Male/Female"
+          />
+        </View>
+        <View style={styles.halfWidth}>
+          <Text style={styles.inputText}>Date of Birth</Text>
+          <TextInput
+            style={styles.input}
+            value={dob}
+            onChangeText={setDob}
+            placeholder="Enter your DOB"
+          />
+        </View>
+      </View>
+
+      <View style={styles.doubleFormGroup}>
+        <View style={styles.halfWidth}>
+          <Text style={styles.inputText}>City</Text>
+          <TextInput
+            style={styles.input}
+            value={city}
+            onChangeText={setCity}
+            placeholder="Enter your city"
+          />
+        </View>
+        <View style={styles.halfWidth}>
+          <Text style={styles.inputText}>State</Text>
+          <TextInput
+            style={styles.input}
+            value={state}
+            onChangeText={setState}
+            placeholder="Enter your State"
+          />
+        </View>
+      </View>
+
+
+      {/* Edited */}
+
+      <View style={styles.doubleFormGroup}>
+        <View style={styles.halfWidth}>
+          <Text style={styles.inputText}>Game Type</Text>
+          <TextInput
+            style={styles.input}
+            value={gametype}
+            onChangeText={setGametype}
+            placeholder="Game Type"
+          />
+        </View>
+        <View style={styles.halfWidth}>
+          <Text style={styles.inputText}>Game</Text>
+          <TextInput
+            style={styles.input}
+            value={game}
+            onChangeText={setGame}
+            placeholder="Enter your Game"
+          />
+        </View>
+      </View>
+
+      <View style={styles.formGroup}>
+          <Text style={styles.inputText}>Phone Number</Text>
+          <TextInput
+            style={styles.input}
+            value={phonenumber}
+            onChangeText={setPhonenumber}
+            placeholder="Enter your Contact Number"
+          />
+        </View>
+
+      <View style={styles.formGroup}>
+        <Text style={styles.inputText}>Password</Text>
+        <TextInput
+          secureTextEntry={true}
+          style={styles.input}
+          value={password}
+          onChangeText={setPassword}
+          placeholder="Enter your Password"
+        />
+      </View>
+
+      <TouchableOpacity
+        onPress={handleSubmit}
+        style={styles.submitButton}
+      >
+        <Text style={styles.submitButtonText}>Sign Up</Text>
+      </TouchableOpacity>
+    </ScrollView>
+  );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 25,
+    backgroundColor: Colors.WHITE,
+    flexGrow: 1,  // Allow the ScrollView to expand
+    justifyContent: 'center',  // Center content vertically
+  },
+  headerText: {
+    fontSize: 30,
+    padding: 10,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  headerTexttype: {
+    fontSize: 30,
+    padding: 1,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  subHeaderText: {
+    fontSize: 25,
+    padding: 5,
+    color: Colors.GRAY,
+    marginLeft: 20,
+    marginTop: 10,
+    fontWeight: 'bold',
+    textAlign: "center",
+    textDecorationLine: "underline",
+  },
+  formGroup: {
+    marginTop: 20,
+  },
+  doubleFormGroup: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+  },
+  halfWidth: {
+    width: '48%',
+  },
+  input: {
+    padding: 15,
+    borderWidth: 1,
+    borderRadius: 15,
+    borderColor: Colors.DIMMYGRAY,
+    marginTop: 10,
+  },
+  inputText: {
+    fontSize: 15,
+    fontWeight: "bold",
+  },
+  submitButton: {
+    padding: 15,
+    backgroundColor: Colors.PRIMERY,
+    borderRadius: 15,
+    marginTop: 20,
+    borderWidth: 1,
+  },
+  submitButtonText: {
+    color: Colors.WHITE,
+    textAlign: "center",
+    fontSize: 20,
+  },
+});

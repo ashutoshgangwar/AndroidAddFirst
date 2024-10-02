@@ -55,7 +55,8 @@ export default function SignIn() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.headerText}>Let's Sign you Up</Text>
+      <Text style={styles.headerText}>Let's Sign Up</Text>
+      <Text style={styles.headerTexttype}>As Player</Text>
       <Text style={styles.subHeaderText}>Welcome to you</Text>
 
       <View style={styles.formGroup}>
@@ -184,7 +185,13 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 30,
-    padding: 25,
+    padding: 10,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  headerTexttype: {
+    fontSize: 30,
+    padding: 1,
     fontWeight: "bold",
     textAlign: "center",
   },

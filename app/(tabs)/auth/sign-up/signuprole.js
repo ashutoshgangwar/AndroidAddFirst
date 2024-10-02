@@ -24,31 +24,34 @@ export default function SignIn() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Let's Start your Journey</Text>
-      <Text style={styles.subtitle}>Welcome to you</Text>
+      {/* <Text style={styles.subtitle}>Welcome to you</Text> */}
       
 
       <TouchableOpacity
         onPress={() => router.replace("./../sign-up/indexP")}
         style={styles.createAccount}
       >
-        <FontAwesome5 name="running" size={40} color="white" />
-        <Text style={styles.createAccountText}>Sign Up As Player</Text>
+        <Text style={styles.signup}>Sign Up</Text>
+        <FontAwesome5 name="running" size={50} color="white" />
+        <Text style={styles.createAccountText}>As Player</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         onPress={() => router.replace("./../sign-up/indexC")}
         style={styles.createAccount}
       >
-        <FontAwesome5 name="chalkboard-teacher" size={40} color="white" />
-        <Text style={styles.createAccountText}>Sign Up As Coach</Text>
+          <Text style={styles.signup}>Sign Up</Text>
+        <FontAwesome5 name="chalkboard-teacher" size={50} color="white" />
+        <Text style={styles.createAccountText}>Coach/Trainer</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         onPress={() => router.replace("./../sign-up/indexS")}
         style={styles.createAccount}
       >
-        <FontAwesome5 name="school" size={40} color="white" />
-        <Text style={styles.createAccountText}>Sign Up As School</Text>
+        <Text style={styles.signup}>Sign Up</Text>
+        <FontAwesome5 name="school" size={50} color="white" />
+        <Text style={styles.createAccountText}>As School/College</Text>
       </TouchableOpacity>
     </View>
   );
@@ -66,10 +69,10 @@ const styles = StyleSheet.create({
   },
 
   createAccount: {
-    padding:30,
+    padding:20,
     backgroundColor: Colors.PRIMERY,
     borderRadius: 15,
-    marginTop: 20,
+    marginTop: 15,
     borderWidth: 1,
     alignItems: "center",
   },
@@ -78,5 +81,14 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 20,
     fontWeight: "bold",
+    marginTop:10
+  },
+
+  signup: {
+    color: Colors.WHITE,
+    textAlign: "center",
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom:10
   },
 });
