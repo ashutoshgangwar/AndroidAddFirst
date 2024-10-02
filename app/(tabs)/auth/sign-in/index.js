@@ -133,7 +133,7 @@ export default function SignIn() {
         onPress={() => router.replace("./../sign-up/signuprole")}
         style={styles.createAccount}
       >
-        <Text style={styles.createAccountText}>Create Account</Text>
+        <Text style={styles.createAccountText}>Register Now</Text>
       </TouchableOpacity>
     </View>
   );
