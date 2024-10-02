@@ -33,11 +33,51 @@ export default function SignIn() {
   const [dob, setDob] = useState(null); // Set initial date as current date
   const [showDatePicker, setShowDatePicker] = useState(false); // Toggle date picker
   const [gender, setGender] = useState("");
+
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
+  const [districts, setDistricts] = useState([]);
+
   const [gametype, setGametype] = useState("");
   const [game, setGame] = useState("");
   const [password, setPassword] = useState("");
+
+  // State-to-district mapping
+  const stateDistricts = {
+    "Uttar Pradesh": [
+    "Agra", "Aligarh", "Ambedkar Nagar", "Amethi", "Amroha", "Auraiya", "Azamgarh", 
+    "Baghpat", "Bahraich", "Ballia", "Balrampur", "Banda", "Barabanki", "Bareilly", 
+    "Basti", "Bijnor", "Budaun", "Bulandshahr", "Chandauli", "Chitrakoot", "Deoria", 
+    "Etah", "Etawah", "Farrukhabad", "Fatehpur", "Firozabad", "Gautam Buddha Nagar", 
+    "Ghaziabad", "Gonda", "Gorakhpur", "Hamirpur", "Hapur", "Hardoi", "Hathras", 
+    "Jalaun", "Jaunpur", "Jhansi", "Kannauj", "Kanpur Dehat", "Kanpur Nagar", 
+    "Kanshiram Nagar", "Kaushambi", "Kheri", "Kushinagar", "Lakhimpur Kheri", 
+    "Lalitpur", "Lucknow", "Maharajganj", "Mahoba", "Mainpuri", "Mathura", "Mau", 
+    "Meerut", "Mirzapur", "Moradabad", "Muzaffarnagar", "Pilibhit", "Prayagraj", 
+    "Rae Bareli", "Rampur", "Saharanpur", "Sambhal", "Sant Kabir Nagar", "Shahjahanpur", 
+    "Shamli", "Shravasti", "Siddharthnagar", "Sitapur", "Sonbhadra", "Sultanpur", 
+    "Unnao", "Varanasi"
+  ],
+  "Delhi": ["Central Delhi", "East Delhi", "New Delhi", "North Delhi", "North East Delhi", 
+            "North West Delhi", "South Delhi", "South East Delhi", "South West Delhi", 
+            "West Delhi"],
+  "Haryana": [
+    "Ambala", "Bhiwani", "Faridabad", "Fatehabad", "Gurugram", "Hisar", "Jhajjar", 
+    "Jind", "Kaithal", "Karnal", "Kurukshetra", "Mahendragarh", "Nuh", "Palwal", 
+    "Panchkula", "Panipat", "Rewari", "Rohtak", "Sirsa", "Sonipat", "Yamunanagar"
+  ]
+    // Add more states and districts here
+  };
+
+  // Update districts when the state is selected
+  useEffect(() => {
+    if (state) {
+      setDistricts(stateDistricts[state] || []);
+    } else {
+      setDistricts([]); // Reset districts if no state is selected
+    }
+  }, [state]);
+  
 
   const handleSubmit = async () => {
     if (
@@ -183,22 +223,32 @@ export default function SignIn() {
 
       <View style={styles.doubleFormGroup}>
         <View style={styles.halfWidth}>
-          <Text style={styles.inputText}>City</Text>
-          <TextInput
-            style={styles.input}
-            value={city}
-            onChangeText={setCity}
-            placeholder="Enter your city"
-          />
+          <Text style={styles.inputText}>State</Text>
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={state}
+              onValueChange={(itemValue) => setState(itemValue)}
+            >
+              <Picker.Item label="Select State" value="" />
+              {Object.keys(stateDistricts).map((state) => (
+                <Picker.Item key={state} label={state} value={state} />
+              ))}
+            </Picker>
+          </View>
         </View>
         <View style={styles.halfWidth}>
-          <Text style={styles.inputText}>State</Text>
-          <TextInput
-            style={styles.input}
-            value={state}
-            onChangeText={setState}
-            placeholder="Enter your State"
-          />
+          <Text style={styles.inputText}>City/District</Text>
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={city}
+              onValueChange={(itemValue) => setCity(itemValue)}
+            >
+              <Picker.Item label="Select District" value="" />
+              {districts.map((district) => (
+                <Picker.Item key={district} label={district} value={district} />
+              ))}
+            </Picker>
+          </View>
         </View>
       </View>
 
