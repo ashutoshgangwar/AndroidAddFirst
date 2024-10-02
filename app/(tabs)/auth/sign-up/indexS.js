@@ -1,9 +1,18 @@
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+  ScrollView,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { useNavigation, useRouter } from "expo-router";
 import { Colors } from "../../../../constants/Colors";
+import { Picker } from "@react-native-picker/picker";
 
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 export default function SignIn() {
   const navigation = useNavigation();
@@ -15,49 +24,114 @@ export default function SignIn() {
     });
   }, []);
 
-  const [registeras, setRegisteras] = useState('');
-  const [instname, setInstname] = useState('');
-  const [address, setAddress] = useState('');
-  const [city, setCity] = useState('');
-  const [state, setState] = useState('');
-  const [email, setEmail] = useState('');
-  const [headname, setHeadname] = useState('');
-  const [headphone, setHeadphone] = useState('');
-  const [ptteachername, setPteachername] = useState('');
-  const [ptteacherphone, setPtteacherphone] = useState(''); 
-  const [password, setPassword] = useState('');
+  const [registeras, setRegisteras] = useState("");
+  const [instname, setInstname] = useState("");
+  const [address, setAddress] = useState("");
+ 
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [districts, setDistricts] = useState([]);
+  const [email, setEmail] = useState("");
+  const [headname, setHeadname] = useState("");
+  const [headphone, setHeadphone] = useState("");
+  const [ptteachername, setPteachername] = useState("");
+  const [ptteacherphone, setPtteacherphone] = useState("");
+  const [password, setPassword] = useState("");
+
+
+// State-to-district mapping
+const stateDistricts = {
+  "Uttar Pradesh": [
+  "Agra", "Aligarh", "Ambedkar Nagar", "Amethi", "Amroha", "Auraiya", "Azamgarh", 
+  "Baghpat", "Bahraich", "Ballia", "Balrampur", "Banda", "Barabanki", "Bareilly", 
+  "Basti", "Bijnor", "Budaun", "Bulandshahr", "Chandauli", "Chitrakoot", "Deoria", 
+  "Etah", "Etawah", "Farrukhabad", "Fatehpur", "Firozabad", "Gautam Buddha Nagar", 
+  "Ghaziabad", "Gonda", "Gorakhpur", "Hamirpur", "Hapur", "Hardoi", "Hathras", 
+  "Jalaun", "Jaunpur", "Jhansi", "Kannauj", "Kanpur Dehat", "Kanpur Nagar", 
+  "Kanshiram Nagar", "Kaushambi", "Kheri", "Kushinagar", "Lakhimpur Kheri", 
+  "Lalitpur", "Lucknow", "Maharajganj", "Mahoba", "Mainpuri", "Mathura", "Mau", 
+  "Meerut", "Mirzapur", "Moradabad", "Muzaffarnagar", "Pilibhit", "Prayagraj", 
+  "Rae Bareli", "Rampur", "Saharanpur", "Sambhal", "Sant Kabir Nagar", "Shahjahanpur", 
+  "Shamli", "Shravasti", "Siddharthnagar", "Sitapur", "Sonbhadra", "Sultanpur", 
+  "Unnao", "Varanasi"
+],
+"Delhi": ["Central Delhi", "East Delhi", "New Delhi", "North Delhi", "North East Delhi", 
+          "North West Delhi", "South Delhi", "South East Delhi", "South West Delhi", 
+          "West Delhi"],
+"Haryana": [
+  "Ambala", "Bhiwani", "Faridabad", "Fatehabad", "Gurugram", "Hisar", "Jhajjar", 
+  "Jind", "Kaithal", "Karnal", "Kurukshetra", "Mahendragarh", "Nuh", "Palwal", 
+  "Panchkula", "Panipat", "Rewari", "Rohtak", "Sirsa", "Sonipat", "Yamunanagar"
+]
+  // Add more states and districts here
+};
+
+// Update districts when the state is selected
+useEffect(() => {
+  if (state) {
+    setDistricts(stateDistricts[state] || []);
+  } else {
+    setDistricts([]); // Reset districts if no state is selected
+  }
+}, [state]);
+
+
   const handleSubmit = async () => {
-    if (!registeras || !instname|| !address || !city || !state || !email|| !headname ||  !headphone || !ptteachername|| ! ptteacherphone||    !password) {
-      Alert.alert('Error', 'Please fill out all fields');
+    if (
+      !registeras ||
+      !instname ||
+      !address ||
+      !city ||
+      !state ||
+      !email ||
+      !headname ||
+      !headphone ||
+      !ptteachername ||
+      !ptteacherphone ||
+      !password
+    ) {
+      Alert.alert("Error", "Please fill out all fields");
       return;
     }
 
     try {
-      const response = await fetch('http://192.168.0.101:6000/signup', {
-        method: 'POST',
+      const response = await fetch("http://192.168.0.101:6000/signup", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ registeras, instname, address, email, headname,  headphone, ptteachername, ptteacherphone, city, state,  password }),
+        body: JSON.stringify({
+          registeras,
+          instname,
+          address,
+          email,
+          headname,
+          headphone,
+          ptteachername,
+          ptteacherphone,
+          city,
+          state,
+          password,
+        }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        Alert.alert('Success', 'Congratulations, you have Signed-Up');
+        Alert.alert("Success", "Congratulations, you have Signed-Up");
         router.push("(tabs)/auth/sign-in");
       } else {
-        Alert.alert('Error', data.message || 'Something went wrong');
+        Alert.alert("Error", data.message || "Something went wrong");
       }
     } catch (error) {
       console.error(error);
-      Alert.alert('Error', 'Something went wrong');
+      Alert.alert("Error", "Something went wrong");
     }
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <TouchableOpacity  onPress={() => router.replace("./../sign-in")}>
+      <TouchableOpacity onPress={() => router.replace("./../sign-in")}>
         <FontAwesome name="arrow-left" size={24} color="black" />
       </TouchableOpacity>
       <Text style={styles.headerText}>Let's Sign Up</Text>
@@ -66,13 +140,19 @@ export default function SignIn() {
 
       <View style={styles.formGroup}>
         <Text style={styles.inputText}>Register As</Text>
-        <TextInput
-          style={styles.input}
-          value={registeras}
-          onChangeText={setRegisteras}
-          placeholder="You are Register As"
-        />
+        <View style={styles.pickerContainer}>
+          <Picker
+            selectedValue={registeras}
+            onValueChange={(itemValue) => setRegisteras(itemValue)}
+          >
+            <Picker.Item label="Select Role" value="" />
+
+            <Picker.Item label="School" value="School" />
+            <Picker.Item label="College" value="College" />
+          </Picker>
+        </View>
       </View>
+
       <View style={styles.formGroup}>
         <Text style={styles.inputText}>College or School Name</Text>
         <TextInput
@@ -94,22 +174,32 @@ export default function SignIn() {
       </View>
       <View style={styles.doubleFormGroup}>
         <View style={styles.halfWidth}>
-          <Text style={styles.inputText}>City</Text>
-          <TextInput
-            style={styles.input}
-            value={city}
-            onChangeText={setCity}
-            placeholder="Enter your city"
-          />
+          <Text style={styles.inputText}>State</Text>
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={state}
+              onValueChange={(itemValue) => setState(itemValue)}
+            >
+              <Picker.Item label="Select State" value="" />
+              {Object.keys(stateDistricts).map((state) => (
+                <Picker.Item key={state} label={state} value={state} />
+              ))}
+            </Picker>
+          </View>
         </View>
         <View style={styles.halfWidth}>
-          <Text style={styles.inputText}>State</Text>
-          <TextInput
-            style={styles.input}
-            value={state}
-            onChangeText={setState}
-            placeholder="Enter your State"
-          />
+          <Text style={styles.inputText}>City/District</Text>
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={city}
+              onValueChange={(itemValue) => setCity(itemValue)}
+            >
+              <Picker.Item label="Select District" value="" />
+              {districts.map((district) => (
+                <Picker.Item key={district} label={district} value={district} />
+              ))}
+            </Picker>
+          </View>
         </View>
       </View>
 
@@ -128,7 +218,7 @@ export default function SignIn() {
           <Text style={styles.inputText}>Principal Name</Text>
           <TextInput
             style={styles.input}
-            value={ headname}
+            value={headname}
             onChangeText={setHeadname}
             placeholder="Principal Name"
           />
@@ -163,11 +253,8 @@ export default function SignIn() {
           />
         </View>
       </View>
-      
-
 
       {/* Edited */}
-
 
       <View style={styles.formGroup}>
         <Text style={styles.inputText}>Password</Text>
@@ -180,10 +267,7 @@ export default function SignIn() {
         />
       </View>
 
-      <TouchableOpacity
-        onPress={handleSubmit}
-        style={styles.submitButton}
-      >
+      <TouchableOpacity onPress={handleSubmit} style={styles.submitButton}>
         <Text style={styles.submitButtonText}>Sign Up</Text>
       </TouchableOpacity>
     </ScrollView>
@@ -194,8 +278,8 @@ const styles = StyleSheet.create({
   container: {
     padding: 25,
     backgroundColor: Colors.WHITE,
-    flexGrow: 1,  // Allow the ScrollView to expand
-    justifyContent: 'center',  // Center content vertically
+    flexGrow: 1,
+    justifyContent: "center",
   },
   headerText: {
     fontSize: 30,
@@ -215,7 +299,7 @@ const styles = StyleSheet.create({
     color: Colors.GRAY,
     marginLeft: 20,
     marginTop: 10,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     textAlign: "center",
     textDecorationLine: "underline",
   },
@@ -223,18 +307,18 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   doubleFormGroup: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: 20,
   },
   halfWidth: {
-    width: '48%',
+    width: "48%",
   },
   input: {
-    padding: 15,
+    padding: 12,
     borderWidth: 1,
     borderRadius: 15,
-    borderColor: Colors.DIMMYGRAY,
+    borderColor: Colors.PRIMERY,
     marginTop: 10,
   },
   inputText: {
@@ -242,15 +326,26 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   submitButton: {
-    padding: 15,
     backgroundColor: Colors.PRIMERY,
-    borderRadius: 15,
-    marginTop: 20,
-    borderWidth: 1,
+    padding: 15,
+    borderRadius: 20,
+    marginTop: 25,
   },
   submitButtonText: {
+    fontSize: 18,
     color: Colors.WHITE,
+    fontWeight: "bold",
     textAlign: "center",
-    fontSize: 20,
+  },
+  pickerContainer: {
+    borderWidth: 1,
+    borderColor: Colors.PRIMERY,
+    borderRadius: 15,
+    marginTop: 10,
+    backgroundColor: Colors.WHITE, // Ensures the picker has a white background
+    paddingLeft: 10, // Padding for better readability
+  },
+  selectedDateText: {
+    color: Colors.PRIMERY,
   },
 });
