@@ -37,108 +37,187 @@ export default function SignIn() {
   const [gametype, setGametype] = useState("");
   const [game, setGame] = useState([]);
   const [selectedGame, setSelectedGame] = useState("");
- 
 
   const [password, setPassword] = useState("");
 
-   // State-to-district mapping
-   const stateDistricts = {
+  // State-to-district mapping
+  const stateDistricts = {
     "Uttar Pradesh": [
-    "Agra", "Aligarh", "Ambedkar Nagar", "Amethi", "Amroha", "Auraiya", "Azamgarh", 
-    "Baghpat", "Bahraich", "Ballia", "Balrampur", "Banda", "Barabanki", "Bareilly", 
-    "Basti", "Bijnor", "Budaun", "Bulandshahr", "Chandauli", "Chitrakoot", "Deoria", 
-    "Etah", "Etawah", "Farrukhabad", "Fatehpur", "Firozabad", "Gautam Buddha Nagar", 
-    "Ghaziabad", "Gonda", "Gorakhpur", "Hamirpur", "Hapur", "Hardoi", "Hathras", 
-    "Jalaun", "Jaunpur", "Jhansi", "Kannauj", "Kanpur Dehat", "Kanpur Nagar", 
-    "Kanshiram Nagar", "Kaushambi", "Kheri", "Kushinagar", "Lakhimpur Kheri", 
-    "Lalitpur", "Lucknow", "Maharajganj", "Mahoba", "Mainpuri", "Mathura", "Mau", 
-    "Meerut", "Mirzapur", "Moradabad", "Muzaffarnagar", "Pilibhit", "Prayagraj", 
-    "Rae Bareli", "Rampur", "Saharanpur", "Sambhal", "Sant Kabir Nagar", "Shahjahanpur", 
-    "Shamli", "Shravasti", "Siddharthnagar", "Sitapur", "Sonbhadra", "Sultanpur", 
-    "Unnao", "Varanasi"
-  ],
-  "Delhi": ["Central Delhi", "East Delhi", "New Delhi", "North Delhi", "North East Delhi", 
-            "North West Delhi", "South Delhi", "South East Delhi", "South West Delhi", 
-            "West Delhi"],
-  "Haryana": [
-    "Ambala", "Bhiwani", "Faridabad", "Fatehabad", "Gurugram", "Hisar", "Jhajjar", 
-    "Jind", "Kaithal", "Karnal", "Kurukshetra", "Mahendragarh", "Nuh", "Palwal", 
-    "Panchkula", "Panipat", "Rewari", "Rohtak", "Sirsa", "Sonipat", "Yamunanagar"
-  ]
+      "Agra",
+      "Aligarh",
+      "Ambedkar Nagar",
+      "Amethi",
+      "Amroha",
+      "Auraiya",
+      "Azamgarh",
+      "Baghpat",
+      "Bahraich",
+      "Ballia",
+      "Balrampur",
+      "Banda",
+      "Barabanki",
+      "Bareilly",
+      "Basti",
+      "Bijnor",
+      "Budaun",
+      "Bulandshahr",
+      "Chandauli",
+      "Chitrakoot",
+      "Deoria",
+      "Etah",
+      "Etawah",
+      "Farrukhabad",
+      "Fatehpur",
+      "Firozabad",
+      "Gautam Buddha Nagar",
+      "Ghaziabad",
+      "Gonda",
+      "Gorakhpur",
+      "Hamirpur",
+      "Hapur",
+      "Hardoi",
+      "Hathras",
+      "Jalaun",
+      "Jaunpur",
+      "Jhansi",
+      "Kannauj",
+      "Kanpur Dehat",
+      "Kanpur Nagar",
+      "Kanshiram Nagar",
+      "Kaushambi",
+      "Kheri",
+      "Kushinagar",
+      "Lakhimpur Kheri",
+      "Lalitpur",
+      "Lucknow",
+      "Maharajganj",
+      "Mahoba",
+      "Mainpuri",
+      "Mathura",
+      "Mau",
+      "Meerut",
+      "Mirzapur",
+      "Moradabad",
+      "Muzaffarnagar",
+      "Pilibhit",
+      "Prayagraj",
+      "Rae Bareli",
+      "Rampur",
+      "Saharanpur",
+      "Sambhal",
+      "Sant Kabir Nagar",
+      "Shahjahanpur",
+      "Shamli",
+      "Shravasti",
+      "Siddharthnagar",
+      "Sitapur",
+      "Sonbhadra",
+      "Sultanpur",
+      "Unnao",
+      "Varanasi",
+    ],
+    Delhi: [
+      "Central Delhi",
+      "East Delhi",
+      "New Delhi",
+      "North Delhi",
+      "North East Delhi",
+      "North West Delhi",
+      "South Delhi",
+      "South East Delhi",
+      "South West Delhi",
+      "West Delhi",
+    ],
+    Haryana: [
+      "Ambala",
+      "Bhiwani",
+      "Faridabad",
+      "Fatehabad",
+      "Gurugram",
+      "Hisar",
+      "Jhajjar",
+      "Jind",
+      "Kaithal",
+      "Karnal",
+      "Kurukshetra",
+      "Mahendragarh",
+      "Nuh",
+      "Palwal",
+      "Panchkula",
+      "Panipat",
+      "Rewari",
+      "Rohtak",
+      "Sirsa",
+      "Sonipat",
+      "Yamunanagar",
+    ],
     // Add more states and districts here
   };
 
- 
+  // Game Type and Game Mapping
+  const gamemapping = {
+    IndoorGames: [
+      "Badminton",
+      "Basketball (3x3)",
+      "Boxing",
+      "Fencing",
+      "Gymnastics",
+      "Judo",
+      "Karate",
+      "Table Tennis",
+      "Taekwondo",
+      "Volleyball (Indoor)",
+      "Weightlifting",
+      "Wrestling",
+      "Rhythmic Gymnastics",
+      "Trampoline",
+      "Shooting",
+      "Handball (Indoor)",
+      "Wrestling (Greco-Roman & Freestyle)",
+    ],
 
-// Game Type and Game Mapping
-const gamemapping ={
-"IndoorGames" : [
-  "Badminton",
-  "Basketball (3x3)",
-  "Boxing",
-  "Fencing",
-  "Gymnastics",
-  "Judo",
-  "Karate",
-  "Table Tennis",
-  "Taekwondo",
-  "Volleyball (Indoor)",
-  "Weightlifting",
-  "Wrestling",
-  "Rhythmic Gymnastics",
-  "Trampoline",
-  "Shooting",
-  "Handball (Indoor)",
-  "Wrestling (Greco-Roman & Freestyle)"
-],
+    OutdoorGames: [
+      "Athletics (Track and Field)",
+      "Archery",
+      "Beach Volleyball",
+      "Canoeing",
+      "Cycling (Road, Mountain Bike, BMX)",
+      "Equestrian",
+      "Football (Soccer)",
+      "Golf",
+      "Hockey",
+      "Rugby Sevens",
+      "Sailing",
+      "Skateboarding",
+      "Surfing",
+      "Swimming",
+      "Tennis",
+      "Triathlon",
+      "Water Polo",
+      "Rowing",
+      "Diving",
+      "Marathon Swimming",
+      "Synchronized Swimming",
+      "Modern Pentathlon",
+    ],
+  };
+  // Update districts when the state is selected
+  useEffect(() => {
+    if (state) {
+      setDistricts(stateDistricts[state] || []);
+    } else {
+      setDistricts([]); // Reset districts if no state is selected
+    }
+  }, [state]);
 
-"OutdoorGames": [
-  "Athletics (Track and Field)",
-  "Archery",
-  "Beach Volleyball",
-  "Canoeing",
-  "Cycling (Road, Mountain Bike, BMX)",
-  "Equestrian",
-  "Football (Soccer)",
-  "Golf",
-  "Hockey",
-  "Rugby Sevens",
-  "Sailing",
-  "Skateboarding",
-  "Surfing",
-  "Swimming",
-  "Tennis",
-  "Triathlon",
-  "Water Polo",
-  "Rowing",
-  "Diving",
-  "Marathon Swimming",
-  "Synchronized Swimming",
-  "Modern Pentathlon"
-]
-
-};
- // Update districts when the state is selected
- useEffect(() => {
-  if (state) {
-    setDistricts(stateDistricts[state] || []);
-  } else {
-    setDistricts([]); // Reset districts if no state is selected
-  }
-}, [state]);
-
-
-// Correct mapping logic for Game based on Game Type
-useEffect(() => {
-  if (gametype) {
-    setGame(gamemapping[gametype] || []); // Use setGame to update the list of games
-  } else {
-    setGame([]); // Reset games if no game type is selected
-  }
-}, [gametype]);
-
-
-
+  // Correct mapping logic for Game based on Game Type
+  useEffect(() => {
+    if (gametype) {
+      setGame(gamemapping[gametype] || []); // Use setGame to update the list of games
+    } else {
+      setGame([]); // Reset games if no game type is selected
+    }
+  }, [gametype]);
 
   const handleSubmit = async () => {
     if (
@@ -301,7 +380,7 @@ useEffect(() => {
         <View style={styles.halfWidth}>
           <Text style={styles.inputText}>Game Type</Text>
           <View style={styles.pickerContainer}>
-          <Picker
+            <Picker
               selectedValue={gametype}
               onValueChange={(itemValue) => setGametype(itemValue)}
             >
@@ -310,21 +389,22 @@ useEffect(() => {
                 <Picker.Item key={gametype} label={gametype} value={gametype} />
               ))}
             </Picker>
-            </View>
+          </View>
         </View>
         <View style={styles.halfWidth}>
           <Text style={styles.inputText}>Game</Text>
           <View style={styles.pickerContainer}>
-          <Picker
-  selectedValue={selectedGame}
-  onValueChange={(itemValue) => setSelectedGame(itemValue)} // Update selectedGame, not game array
->
-  <Picker.Item label="Select Game" value="" />
-  {Array.isArray(game) && game.map((game) => (
-    <Picker.Item key={game} label={game} value={game} />
-  ))}
-</Picker>
-            </View>
+            <Picker
+              selectedValue={selectedGame}
+              onValueChange={(itemValue) => setSelectedGame(itemValue)} // Update selectedGame, not game array
+            >
+              <Picker.Item label="Select Game" value="" />
+              {Array.isArray(game) &&
+                game.map((game) => (
+                  <Picker.Item key={game} label={game} value={game} />
+                ))}
+            </Picker>
+          </View>
         </View>
       </View>
 
@@ -426,7 +506,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   selectedDateText: {
-    
-    color: Colors.PRIMERY
+    color: Colors.PRIMERY,
   },
 });
