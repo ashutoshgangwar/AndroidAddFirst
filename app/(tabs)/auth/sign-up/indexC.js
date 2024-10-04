@@ -39,7 +39,9 @@ export default function SignIn() {
   const [districts, setDistricts] = useState([]);
 
   const [gametype, setGametype] = useState("");
-  const [game, setGame] = useState("");
+  const [game, setGame] = useState([]);
+  const [selectedGame, setSelectedGame] = useState("");
+
   const [password, setPassword] = useState("");
 
   // State-to-district mapping
@@ -69,6 +71,56 @@ export default function SignIn() {
     // Add more states and districts here
   };
 
+
+  // Game Type and Game Mapping
+const gamemapping ={
+  "IndoorGames" : [
+    "Badminton",
+    "Basketball (3x3)",
+    "Boxing",
+    "Fencing",
+    "Gymnastics",
+    "Judo",
+    "Karate",
+    "Table Tennis",
+    "Taekwondo",
+    "Volleyball (Indoor)",
+    "Weightlifting",
+    "Wrestling",
+    "Rhythmic Gymnastics",
+    "Trampoline",
+    "Shooting",
+    "Handball (Indoor)",
+    "Wrestling (Greco-Roman & Freestyle)"
+  ],
+  
+  "OutdoorGames": [
+    "Athletics (Track and Field)",
+    "Archery",
+    "Beach Volleyball",
+    "Canoeing",
+    "Cycling (Road, Mountain Bike, BMX)",
+    "Equestrian",
+    "Football (Soccer)",
+    "Golf",
+    "Hockey",
+    "Rugby Sevens",
+    "Sailing",
+    "Skateboarding",
+    "Surfing",
+    "Swimming",
+    "Tennis",
+    "Triathlon",
+    "Water Polo",
+    "Rowing",
+    "Diving",
+    "Marathon Swimming",
+    "Synchronized Swimming",
+    "Modern Pentathlon"
+  ]
+  
+  };
+
   // Update districts when the state is selected
   useEffect(() => {
     if (state) {
@@ -77,6 +129,15 @@ export default function SignIn() {
       setDistricts([]); // Reset districts if no state is selected
     }
   }, [state]);
+
+  // Correct mapping logic for Game based on Game Type
+useEffect(() => {
+  if (gametype) {
+    setGame(gamemapping[gametype] || []); // Use setGame to update the list of games
+  } else {
+    setGame([]); // Reset games if no game type is selected
+  }
+}, [gametype]);
   
 
   const handleSubmit = async () => {
@@ -255,21 +316,32 @@ export default function SignIn() {
       <View style={styles.doubleFormGroup}>
         <View style={styles.halfWidth}>
           <Text style={styles.inputText}>Game Type</Text>
-          <TextInput
-            style={styles.input}
-            value={gametype}
-            onChangeText={setGametype}
-            placeholder="Game Type"
-          />
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={gametype}
+              onValueChange={(itemValue) => setGametype(itemValue)}
+            >
+              <Picker.Item label="Select Game Type" value="" />
+              {Object.keys(gamemapping).map((gametype) => (
+                <Picker.Item key={gametype} label={gametype} value={gametype} />
+              ))}
+            </Picker>
+          </View>
         </View>
         <View style={styles.halfWidth}>
           <Text style={styles.inputText}>Game</Text>
-          <TextInput
-            style={styles.input}
-            value={game}
-            onChangeText={setGame}
-            placeholder="Enter your Game"
-          />
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={selectedGame}
+              onValueChange={(itemValue) => setSelectedGame(itemValue)} // Update selectedGame, not game array
+            >
+              <Picker.Item label="Select Game" value="" />
+              {Array.isArray(game) &&
+                game.map((game) => (
+                  <Picker.Item key={game} label={game} value={game} />
+                ))}
+            </Picker>
+          </View>
         </View>
       </View>
 
