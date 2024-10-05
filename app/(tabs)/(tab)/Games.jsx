@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -12,12 +12,16 @@ import { Colors } from "@/constants/Colors";
 
 const screenWidth = Dimensions.get("window").width;
 
+// Calculate image height based on screen width to maintain aspect ratio
+const imageHeight = screenWidth * 0.5625; // 16:9 aspect ratio
+
 export default function Gamedetails() {
   const [activeSlide, setActiveSlide] = useState(0); // Tracks the current slide
-  
+  const scrollViewRef = useRef(null); // Reference to the ScrollView
+
   const images = [
     require("./../../../assets/images/news.jpeg"),
-    require("./../../../assets/images/rank.jpeg"),
+    require("./../../../assets/images/news3.jpeg"),
     require("./../../../assets/images/rank.jpeg"),
     require("./../../../assets/images/rank.jpeg"),
     require("./../../../assets/images/news1.jpeg"),
@@ -30,6 +34,24 @@ export default function Gamedetails() {
     setActiveSlide(slide);
   };
 
+  // Auto-slide functionality using useEffect
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const nextSlide = (activeSlide + 1) % images.length; // Moves to the next slide, loops back to 0 at the end
+      setActiveSlide(nextSlide);
+      
+      // Scroll to the next slide
+      if (scrollViewRef.current) {
+        scrollViewRef.current.scrollTo({
+          x: nextSlide * screenWidth,
+          animated: true,
+        });
+      }
+    }, 3000); // Change slide every 3 seconds
+
+    return () => clearInterval(intervalId); // Cleanup interval on component unmount
+  }, [activeSlide]);
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -38,6 +60,7 @@ export default function Gamedetails() {
       <ScrollView>
         {/* Image Slider */}
         <ScrollView
+          ref={scrollViewRef} // Attach reference to ScrollView
           horizontal
           pagingEnabled
           showsHorizontalScrollIndicator={false}
@@ -129,26 +152,26 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   sliderContainer: {
-    height: 200,
+    height: imageHeight,
     marginTop: 5,
     marginBottom: 1,
   },
   bannerImage: {
     width: screenWidth,
-    height: 200,
+    height: imageHeight, // Responsive height
     resizeMode: "cover",
   },
   pagination: {
     flexDirection: "row",
     justifyContent: "center",
-    marginTop: 10,
+    marginTop: 5,
   },
   dot: {
     height: 10,
     width: 10,
     backgroundColor: Colors.PRIMERY,
     marginHorizontal: 5,
-    borderRadius: 5,
+    borderRadius: 10,
   },
   content: {
     flex: 1,
