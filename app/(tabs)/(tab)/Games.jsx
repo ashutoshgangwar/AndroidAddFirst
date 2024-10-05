@@ -94,7 +94,7 @@ export default function Gamedetails() {
               <Text style={styles.rankText}>Winner</Text>
               <TouchableOpacity
                 style={styles.categoryButton}
-                onPress={() => router.push("./../../../Components/winner.jsx")} 
+                onPress={() => router.push("/(tabs)/Pages/Gamemiddle/Winner")} 
               >
                 <Image
                   source={require("./../../../assets/images/trophy.png")}
@@ -105,7 +105,10 @@ export default function Gamedetails() {
 
             <View style={styles.rankContainer}>
               <Text style={styles.rankText}>Rank</Text>
-              <TouchableOpacity style={styles.categoryButton}>
+              <TouchableOpacity style={styles.categoryButton}
+               onPress={() => router.push("/(tabs)/Pages/Gamemiddle/Rank")}
+              >
+                
                 <Image
                   source={require("./../../../assets/images/rank.jpeg")}
                   style={styles.icon}
@@ -115,7 +118,9 @@ export default function Gamedetails() {
 
             <View style={styles.rankContainer}>
               <Text style={styles.rankText}>Other</Text>
-              <TouchableOpacity style={styles.categoryButton}>
+              <TouchableOpacity style={styles.categoryButton}
+              onPress={() => router.push("/(tabs)/Pages/Gamemiddle/Other")}
+              >
                 <Image
                   source={require("./../../../assets/images/score.png")}
                   style={styles.icon}
@@ -127,11 +132,12 @@ export default function Gamedetails() {
           <Text style={styles.categoryHeader}>Categories:</Text>
           {[
             "Current Affairs",
-            "Science Quiz",
-            "Technology",
+            "Olympic News",
+            "College Games",
+            "School Games",
+            "State Games",
             "General Knowledge",
-            "General Knowledge",
-            "General Knowledge",
+            
           ].map((category, index) => (
             <TouchableOpacity key={index} style={styles.categoryItem}>
               <Text style={styles.categoryText}>{category}</Text>

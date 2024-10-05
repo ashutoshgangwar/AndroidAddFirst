@@ -1,10 +1,10 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-export default function winner() {
+export default function Other() {
   return (
     <View>
-      <Text>winner</Text>
+      <Text>Other</Text>
     </View>
   )
 }
