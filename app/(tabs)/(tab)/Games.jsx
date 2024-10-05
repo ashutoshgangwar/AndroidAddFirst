@@ -9,6 +9,7 @@ import {
   Dimensions,
 } from "react-native";
 import { Colors } from "@/constants/Colors";
+import { useRouter } from "expo-router";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -18,6 +19,7 @@ const imageHeight = screenWidth * 0.5625; // 16:9 aspect ratio
 export default function Gamedetails() {
   const [activeSlide, setActiveSlide] = useState(0); // Tracks the current slide
   const scrollViewRef = useRef(null); // Reference to the ScrollView
+  const router = useRouter();
 
   const images = [
     require("./../../../assets/images/news.jpeg"),
@@ -39,7 +41,7 @@ export default function Gamedetails() {
     const intervalId = setInterval(() => {
       const nextSlide = (activeSlide + 1) % images.length; // Moves to the next slide, loops back to 0 at the end
       setActiveSlide(nextSlide);
-      
+
       // Scroll to the next slide
       if (scrollViewRef.current) {
         scrollViewRef.current.scrollTo({
@@ -90,7 +92,10 @@ export default function Gamedetails() {
           <View style={styles.categories}>
             <View style={styles.rankContainer}>
               <Text style={styles.rankText}>Winner</Text>
-              <TouchableOpacity style={styles.categoryButton}>
+              <TouchableOpacity
+                style={styles.categoryButton}
+                onPress={() => router.push("./../../../Components/winner.jsx")} 
+              >
                 <Image
                   source={require("./../../../assets/images/trophy.png")}
                   style={styles.icon}
@@ -124,6 +129,8 @@ export default function Gamedetails() {
             "Current Affairs",
             "Science Quiz",
             "Technology",
+            "General Knowledge",
+            "General Knowledge",
             "General Knowledge",
           ].map((category, index) => (
             <TouchableOpacity key={index} style={styles.categoryItem}>
