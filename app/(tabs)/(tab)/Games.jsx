@@ -1,5 +1,4 @@
-// App.js
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -7,74 +6,108 @@ import {
   ScrollView,
   StyleSheet,
   Image,
+  Dimensions,
 } from "react-native";
 import { Colors } from "@/constants/Colors";
 
+const screenWidth = Dimensions.get("window").width;
+
 export default function Gamedetails() {
+  const [activeSlide, setActiveSlide] = useState(0); // Tracks the current slide
+  
+  const images = [
+    require("./../../../assets/images/news.jpeg"),
+    require("./../../../assets/images/rank.jpeg"),
+    require("./../../../assets/images/rank.jpeg"),
+    require("./../../../assets/images/rank.jpeg"),
+    require("./../../../assets/images/news1.jpeg"),
+    require("./../../../assets/images/news2.jpeg"),
+  ];
+
+  // Function to handle the current slide change
+  const onScroll = (event) => {
+    const slide = Math.ceil(event.nativeEvent.contentOffset.x / screenWidth);
+    setActiveSlide(slide);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Explore the World</Text>
       </View>
+      <ScrollView>
+        {/* Image Slider */}
+        <ScrollView
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          onScroll={onScroll} // Detects slide change
+          scrollEventThrottle={16}
+          style={styles.sliderContainer}
+        >
+          {images.map((image, index) => (
+            <Image key={index} source={image} style={styles.bannerImage} />
+          ))}
+        </ScrollView>
 
-      <View style={styles.banner}>
-        <Text style={styles.bannerText}>LET'S SEE WHO IS THE KING OF GAME</Text>
-      </View>
-
-      <ScrollView style={styles.content}>
-        <View style={styles.categories}>
-          <View style={styles.rankContainer}>
-            <Text style={styles.rankText}>Winner</Text>
-            <TouchableOpacity style={styles.categoryButton}>
-              <Image
-                source={require("./../../../assets/images/trophy.png")}
-                style={styles.icon}
-              />
-            </TouchableOpacity>
-          </View>
-
-          {/* <View style={styles.rankContainer}>
-            <Text style={styles.rankText}>Score</Text>
-            <TouchableOpacity style={styles.categoryButton}>
-              <Image
-                source={require("./../../../assets/images/score.png")}
-                style={styles.icon}
-              />
-            </TouchableOpacity>
-          </View> */}
-
-          <View style={styles.rankContainer}>
-            <Text style={styles.rankText}>Rank</Text>
-            <TouchableOpacity style={styles.categoryButton}>
-              <Image
-                source={require("./../../../assets/images/rank.png")}
-                style={styles.icon}
-              />
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.rankContainer}>
-            <Text style={styles.rankText}>Other</Text>
-            <TouchableOpacity style={styles.categoryButton}>
-              <Image
-                source={require("./../../../assets/images/score.png")}
-                style={styles.icon}
-              />
-            </TouchableOpacity>
-          </View>
+        {/* Pagination Dots */}
+        <View style={styles.pagination}>
+          {images.map((_, index) => (
+            <View
+              key={index}
+              style={[
+                styles.dot,
+                { opacity: activeSlide === index ? 1 : 0.3 }, // Active slide highlighted
+              ]}
+            />
+          ))}
         </View>
 
-        <Text style={styles.categoryHeader}>Categories:</Text>
-        {[
-          "Current Affairs",
-          "Science Quiz",
-          "Technology",
-          "General Knowledge",
-        ].map((category, index) => (
-          <TouchableOpacity key={index} style={styles.categoryItem}>
-            <Text style={styles.categoryText}>{category}</Text>
-          </TouchableOpacity>
-        ))}
+        <ScrollView style={styles.content}>
+          <View style={styles.categories}>
+            <View style={styles.rankContainer}>
+              <Text style={styles.rankText}>Winner</Text>
+              <TouchableOpacity style={styles.categoryButton}>
+                <Image
+                  source={require("./../../../assets/images/trophy.png")}
+                  style={styles.icon}
+                />
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.rankContainer}>
+              <Text style={styles.rankText}>Rank</Text>
+              <TouchableOpacity style={styles.categoryButton}>
+                <Image
+                  source={require("./../../../assets/images/rank.jpeg")}
+                  style={styles.icon}
+                />
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.rankContainer}>
+              <Text style={styles.rankText}>Other</Text>
+              <TouchableOpacity style={styles.categoryButton}>
+                <Image
+                  source={require("./../../../assets/images/score.png")}
+                  style={styles.icon}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <Text style={styles.categoryHeader}>Categories:</Text>
+          {[
+            "Current Affairs",
+            "Science Quiz",
+            "Technology",
+            "General Knowledge",
+          ].map((category, index) => (
+            <TouchableOpacity key={index} style={styles.categoryItem}>
+              <Text style={styles.categoryText}>{category}</Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
       </ScrollView>
     </View>
   );
@@ -95,22 +128,31 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
   },
-  banner: {
-    backgroundColor: "#fbafaf",
-    padding: 10,
-    alignItems: "center",
-    marginTop: 20,
+  sliderContainer: {
     height: 200,
-    width: 380,
+    marginTop: 5,
+    marginBottom: 1,
   },
-  bannerText: {
-    color: Colors.PRIMERY,
-    fontSize: 18,
-    fontWeight: "bold",
+  bannerImage: {
+    width: screenWidth,
+    height: 200,
+    resizeMode: "cover",
+  },
+  pagination: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: 10,
+  },
+  dot: {
+    height: 10,
+    width: 10,
+    backgroundColor: Colors.PRIMERY,
+    marginHorizontal: 5,
+    borderRadius: 5,
   },
   content: {
     flex: 1,
-    padding: 20,
+    padding: 10,
   },
   categories: {
     flexDirection: "row",
@@ -118,18 +160,15 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   rankContainer: {
-    alignItems: "center", // Center the rank text and icon
-    justifyContent: "center", // Center vertically
-    // backgroundColor: "#1ff715",
-    borderRadius: 30
+    alignItems: "center",
+    justifyContent: "center",
   },
   rankText: {
     fontSize: 20,
     fontWeight: "bold",
-    marginBottom: 10, // Space between text and icon
-    marginTop:12,
-    color:"#f71f15"
-
+    marginBottom: 10,
+    marginTop: 12,
+    color: "#f71f15",
   },
   categoryButton: {
     alignItems: "center",
