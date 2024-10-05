@@ -9,7 +9,7 @@ import {
   Dimensions,
 } from "react-native";
 import { Colors } from "@/constants/Colors";
-import { useRouter } from "expo-router";
+import { useRouter, useNavigation } from "expo-router";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -19,15 +19,24 @@ const imageHeight = screenWidth * 0.5625; // 16:9 aspect ratio
 export default function Gamedetails() {
   const [activeSlide, setActiveSlide] = useState(0); // Tracks the current slide
   const scrollViewRef = useRef(null); // Reference to the ScrollView
+  const navigation = useNavigation();
   const router = useRouter();
 
+  useEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
+   
+  });
+  
+
+
   const images = [
+    require("./../../../assets/images/rank.jpeg"),
     require("./../../../assets/images/news.jpeg"),
-    require("./../../../assets/images/news3.jpeg"),
-    require("./../../../assets/images/rank.jpeg"),
-    require("./../../../assets/images/rank.jpeg"),
     require("./../../../assets/images/news1.jpeg"),
     require("./../../../assets/images/news2.jpeg"),
+    require("./../../../assets/images/news3.jpeg"),
   ];
 
   // Function to handle the current slide change
@@ -117,12 +126,12 @@ export default function Gamedetails() {
             </View>
 
             <View style={styles.rankContainer}>
-              <Text style={styles.rankText}>Other</Text>
+              <Text style={styles.rankText}>Live Score</Text>
               <TouchableOpacity style={styles.categoryButton}
               onPress={() => router.push("/(tabs)/Pages/Gamemiddle/Other")}
               >
                 <Image
-                  source={require("./../../../assets/images/score.png")}
+                  source={require("./../../../assets/images/other.png")}
                   style={styles.icon}
                 />
               </TouchableOpacity>

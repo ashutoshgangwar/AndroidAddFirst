@@ -1,8 +1,8 @@
 import { Text, View } from "react-native";
 
 import Login from "./../../Components/Login";
-import Gamedetails from "./../(tabs)/(tab)/Games"
-// import LoginUser from "./../../Components/LoginUser";
+// import Gamedetails from "./../(tabs)/(tab)/Games"
+
 
 
 
@@ -17,7 +17,8 @@ export default function HomeScreen() {
       }}
     >
      
-      <Gamedetails/>
+      {/* <Gamedetails/> */}
+      <Login/>
    
     </View>
     

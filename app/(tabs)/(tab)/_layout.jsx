@@ -6,7 +6,8 @@ import { useNavigation, useRouter } from "expo-router";
 // for profile icon
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 // for journey and games
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+
+import Entypo from '@expo/vector-icons/Entypo';
 
 export default function TabLayout() {
   const navigation = useNavigation();
@@ -41,15 +42,11 @@ export default function TabLayout() {
         name="Games" 
         options={{
           tabBarIcon: ({ focused }) => (
-            <MaterialCommunityIcons 
-              name="biathlon" 
-              size={24} 
-              color={focused ? 'black' : 'gray'} 
-            />
+            <Entypo name="home" size={24} color={focused ? 'black' : 'gray'} />
           ),
           tabBarLabel: ({ focused }) => (
             <Text style={{ color: focused ? 'black' : 'gray', fontWeight: focused ? 'bold' : 'normal' }}>
-              Games
+              Home
             </Text>
           ),
         }} 
