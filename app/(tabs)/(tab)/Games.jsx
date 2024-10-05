@@ -17,8 +17,8 @@ const screenWidth = Dimensions.get("window").width;
 const imageHeight = screenWidth * 0.5625; // 16:9 aspect ratio
 
 export default function Gamedetails() {
-  const [activeSlide, setActiveSlide] = useState(0); // Tracks the current slide
-  const scrollViewRef = useRef(null); // Reference to the ScrollView
+  const [activeNews, setActiveNews] = useState(0); // Tracks the current news item
+  const scrollViewRef = useRef(null); // Reference to the ScrollView for news items
   const navigation = useNavigation();
   const router = useRouter();
 
@@ -26,10 +26,7 @@ export default function Gamedetails() {
     navigation.setOptions({
       headerShown: false,
     });
-   
-  });
-  
-
+  }, []);
 
   const images = [
     require("./../../../assets/images/rank.jpeg"),
@@ -39,29 +36,31 @@ export default function Gamedetails() {
     require("./../../../assets/images/news3.jpeg"),
   ];
 
-  // Function to handle the current slide change
+  const newsItems = [
+    "News 1: Economy Update",
+    "News 2: Sports Highlights",
+    "News 3: Political Debate",
+    "News 4: Weather Forecast",
+  ];
+
+  // Function to handle the current news change
   const onScroll = (event) => {
     const slide = Math.ceil(event.nativeEvent.contentOffset.x / screenWidth);
-    setActiveSlide(slide);
+    setActiveNews(slide);
   };
 
-  // Auto-slide functionality using useEffect
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      const nextSlide = (activeSlide + 1) % images.length; // Moves to the next slide, loops back to 0 at the end
-      setActiveSlide(nextSlide);
+  // Function to handle news navigation
+  const nextNews = () => {
+    const nextSlide = (activeNews + 1) % newsItems.length;
+    setActiveNews(nextSlide);
 
-      // Scroll to the next slide
-      if (scrollViewRef.current) {
-        scrollViewRef.current.scrollTo({
-          x: nextSlide * screenWidth,
-          animated: true,
-        });
-      }
-    }, 3000); // Change slide every 3 seconds
-
-    return () => clearInterval(intervalId); // Cleanup interval on component unmount
-  }, [activeSlide]);
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollTo({
+        x: nextSlide * screenWidth,
+        animated: true,
+      });
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -71,11 +70,11 @@ export default function Gamedetails() {
       <ScrollView>
         {/* Image Slider */}
         <ScrollView
-          ref={scrollViewRef} // Attach reference to ScrollView
+          ref={scrollViewRef}
           horizontal
           pagingEnabled
           showsHorizontalScrollIndicator={false}
-          onScroll={onScroll} // Detects slide change
+          onScroll={onScroll}
           scrollEventThrottle={16}
           style={styles.sliderContainer}
         >
@@ -91,7 +90,7 @@ export default function Gamedetails() {
               key={index}
               style={[
                 styles.dot,
-                { opacity: activeSlide === index ? 1 : 0.3 }, // Active slide highlighted
+                { opacity: activeNews === index ? 1 : 0.3 },
               ]}
             />
           ))}
@@ -103,7 +102,7 @@ export default function Gamedetails() {
               <Text style={styles.rankText}>Winner</Text>
               <TouchableOpacity
                 style={styles.categoryButton}
-                onPress={() => router.push("/(tabs)/Pages/Gamemiddle/Winner")} 
+                onPress={() => router.push("/(tabs)/Pages/Gamemiddle/Winner")}
               >
                 <Image
                   source={require("./../../../assets/images/trophy.png")}
@@ -114,10 +113,10 @@ export default function Gamedetails() {
 
             <View style={styles.rankContainer}>
               <Text style={styles.rankText}>Rank</Text>
-              <TouchableOpacity style={styles.categoryButton}
-               onPress={() => router.push("/(tabs)/Pages/Gamemiddle/Rank")}
+              <TouchableOpacity
+                style={styles.categoryButton}
+                onPress={() => router.push("/(tabs)/Pages/Gamemiddle/Rank")}
               >
-                
                 <Image
                   source={require("./../../../assets/images/rank.jpeg")}
                   style={styles.icon}
@@ -127,8 +126,9 @@ export default function Gamedetails() {
 
             <View style={styles.rankContainer}>
               <Text style={styles.rankText}>Live Score</Text>
-              <TouchableOpacity style={styles.categoryButton}
-              onPress={() => router.push("/(tabs)/Pages/Gamemiddle/Other")}
+              <TouchableOpacity
+                style={styles.categoryButton}
+                onPress={() => router.push("/(tabs)/Pages/Gamemiddle/Other")}
               >
                 <Image
                   source={require("./../../../assets/images/other.png")}
@@ -138,20 +138,39 @@ export default function Gamedetails() {
             </View>
           </View>
 
-          <Text style={styles.categoryHeader}>Categories:</Text>
-          {[
-            "Current Affairs",
-            "Olympic News",
-            "College Games",
-            "School Games",
-            "State Games",
-            "General Knowledge",
-            
-          ].map((category, index) => (
+          
+          {/* Current Affairs Section */}
+          <Text style={styles.categoryHeader}>Current Affairs:</Text>
+
+          {/* News Items Slider */}
+          <ScrollView
+            ref={scrollViewRef}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            style={styles.newsSlider}
+          >
+            {newsItems.map((news, index) => (
+              <View key={index} style={styles.newsItem}>
+                <Text style={styles.newsText}>{news}</Text>
+              </View>
+            ))}
+          </ScrollView>
+
+          {/* Navigation Arrow */}
+          <View style={styles.arrowContainer}>
+            <TouchableOpacity onPress={nextNews}>
+              <Text style={styles.arrow}>➡️</Text>
+            </TouchableOpacity>
+          </View>
+
+          <Text style={styles.categoryHeader}>Game Details:</Text>
+          {[ "Olympic News", "College Games", "School Games", "State Games", "General Knowledge" ].map((category, index) => (
             <TouchableOpacity key={index} style={styles.categoryItem}>
               <Text style={styles.categoryText}>{category}</Text>
             </TouchableOpacity>
           ))}
+
         </ScrollView>
       </ScrollView>
     </View>
@@ -180,7 +199,7 @@ const styles = StyleSheet.create({
   },
   bannerImage: {
     width: screenWidth,
-    height: imageHeight, // Responsive height
+    height: imageHeight,
     resizeMode: "cover",
   },
   pagination: {
@@ -238,4 +257,27 @@ const styles = StyleSheet.create({
   categoryText: {
     fontSize: 16,
   },
+  newsSlider: {
+    marginVertical: 10,
+  },
+  newsItem: {
+    width: screenWidth, // Full width for the news item
+    padding: 20,
+    backgroundColor: "#f9f9f9",
+    borderRadius: 5,
+  },
+  newsText: {
+    fontSize: 18,
+    color: "#333",
+    fontWeight: "bold",
+  },
+  arrowContainer: {
+    marginTop: 20,
+    alignItems: "center",
+  },
+  arrow: {
+    fontSize: 30,
+    color: Colors.PRIMERY,
+  },
 });
+
