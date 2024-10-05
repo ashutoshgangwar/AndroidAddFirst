@@ -7,18 +7,20 @@ import {
   StyleSheet,
   Image,
   Dimensions,
+  Modal,
 } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { useRouter, useNavigation } from "expo-router";
 
 const screenWidth = Dimensions.get("window").width;
-
-// Calculate image height based on screen width to maintain aspect ratio
 const imageHeight = screenWidth * 0.5625; // 16:9 aspect ratio
 
 export default function Gamedetails() {
-  const [activeNews, setActiveNews] = useState(0); // Tracks the current news item
-  const scrollViewRef = useRef(null); // Reference to the ScrollView for news items
+  const [activeNews, setActiveNews] = useState(0);
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupContent, setPopupContent] = useState("");
+  const [tableData, setTableData] = useState([]); // For managing table data
+  const scrollViewRef = useRef(null);
   const navigation = useNavigation();
   const router = useRouter();
 
@@ -37,19 +39,17 @@ export default function Gamedetails() {
   ];
 
   const newsItems = [
-    "News 1: Economy Update",
-    "News 2: Sports Highlights",
-    "News 3: Political Debate",
-    "News 4: Weather Forecast",
+    "Economy Update",
+    "Sports Highlights",
+    "Political Debate",
+    "Weather Forecast",
   ];
 
-  // Function to handle the current news change
   const onScroll = (event) => {
     const slide = Math.ceil(event.nativeEvent.contentOffset.x / screenWidth);
     setActiveNews(slide);
   };
 
-  // Function to handle news navigation
   const nextNews = () => {
     const nextSlide = (activeNews + 1) % newsItems.length;
     setActiveNews(nextSlide);
@@ -62,13 +62,42 @@ export default function Gamedetails() {
     }
   };
 
+  // Static table data for each category
+  const categoryTableData = {
+    "Olympic Games": [
+      { date: "2024-09-01", sport: "Basketball", institution: "Olympic High" },
+      { date: "2024-09-05", sport: "Swimming", institution: "Olympic College" },
+    ],
+    "College Games": [
+      { date: "2024-08-15", sport: "Soccer", institution: "Harvard" },
+      { date: "2024-08-20", sport: "Tennis", institution: "Stanford" },
+    ],
+    "School Games": [
+      { date: "2024-07-10", sport: "Track & Field", institution: "Riverdale High" },
+      { date: "2024-07-12", sport: "Volleyball", institution: "Westview School" },
+    ],
+    "State Games": [
+      { date: "2024-06-20", sport: "Cricket", institution: "California State University" },
+      { date: "2024-06-25", sport: "Hockey", institution: "Texas State" },
+    ],
+  };
+
+  const handleCategoryClick = (category) => {
+    setPopupContent(category); // Set the category name as popup title
+    setTableData(categoryTableData[category] || []); // Load the respective table data
+    setShowPopup(true); // Show the popup
+  };
+
+  const closePopup = () => {
+    setShowPopup(false); // Close the popup
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Explore the World</Text>
       </View>
       <ScrollView>
-        {/* Image Slider */}
         <ScrollView
           ref={scrollViewRef}
           horizontal
@@ -83,15 +112,11 @@ export default function Gamedetails() {
           ))}
         </ScrollView>
 
-        {/* Pagination Dots */}
         <View style={styles.pagination}>
           {images.map((_, index) => (
             <View
               key={index}
-              style={[
-                styles.dot,
-                { opacity: activeNews === index ? 1 : 0.3 },
-              ]}
+              style={[styles.dot, { opacity: activeNews === index ? 1 : 0.3 }]}
             />
           ))}
         </View>
@@ -138,11 +163,8 @@ export default function Gamedetails() {
             </View>
           </View>
 
-          
-          {/* Current Affairs Section */}
           <Text style={styles.categoryHeader}>Current Affairs:</Text>
 
-          {/* News Items Slider */}
           <ScrollView
             ref={scrollViewRef}
             horizontal
@@ -157,7 +179,6 @@ export default function Gamedetails() {
             ))}
           </ScrollView>
 
-          {/* Navigation Arrow */}
           <View style={styles.arrowContainer}>
             <TouchableOpacity onPress={nextNews}>
               <Text style={styles.arrow}>➡️</Text>
@@ -165,12 +186,55 @@ export default function Gamedetails() {
           </View>
 
           <Text style={styles.categoryHeader}>Game Details:</Text>
-          {[ "Olympic News", "College Games", "School Games", "State Games", "General Knowledge" ].map((category, index) => (
-            <TouchableOpacity key={index} style={styles.categoryItem}>
+          {[
+            "Olympic Games",
+            "College Games",
+            "School Games",
+            "State Games",
+            "Others",
+          ].map((category, index) => (
+            <TouchableOpacity
+              key={index}
+              style={styles.categoryItem}
+              onPress={() => handleCategoryClick(category)}
+            >
               <Text style={styles.categoryText}>{category}</Text>
             </TouchableOpacity>
           ))}
 
+          {/* Popup Modal for Categories */}
+          <Modal
+            visible={showPopup}
+            animationType="slide"
+            transparent={true}
+            onRequestClose={closePopup}
+          >
+            <View style={styles.popupContainer}>
+              <View style={styles.popupContent}>
+                <Text style={styles.popupTitle}>{popupContent}</Text>
+
+                {/* Static Table */}
+                <View style={styles.tableContainer}>
+                  <View style={styles.tableRow}>
+                    <Text style={styles.tableHeader}>Date</Text>
+                    <Text style={styles.tableHeader}>Sport Name</Text>
+                    <Text style={styles.tableHeader}>Organization Name</Text>
+                  </View>
+                  {tableData.map((row, index) => (
+                    <View key={index} style={styles.tableRow}>
+                      <Text style={styles.tableCell}>{row.date}</Text>
+                      <Text style={styles.tableCell}>{row.sport}</Text>
+                      <Text style={styles.tableCell}>{row.institution}</Text>
+                    </View>
+                  ))}
+                </View>
+
+                <TouchableOpacity style={styles.closeButton} onPress={closePopup}>
+                  <Text style={styles.closeButtonText}>Close</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
         </ScrollView>
       </ScrollView>
     </View>
@@ -261,7 +325,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   newsItem: {
-    width: screenWidth, // Full width for the news item
+    width: screenWidth,
     padding: 20,
     backgroundColor: "#f9f9f9",
     borderRadius: 5,
@@ -279,5 +343,52 @@ const styles = StyleSheet.create({
     fontSize: 30,
     color: Colors.PRIMERY,
   },
+  popupContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
+  },
+  popupContent: {
+    width: "80%",
+    padding: 20,
+    backgroundColor: Colors.WHITE,
+    borderRadius: 10,
+    elevation: 5,
+  },
+  popupTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  tableContainer: {
+    marginBottom: 20,
+  },
+  tableRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingVertical: 5,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+  },
+  tableHeader: {
+    fontWeight: "bold",
+    flex: 1,
+    textAlign: "center",
+  },
+  tableCell: {
+    flex: 1,
+    textAlign: "center",
+  },
+  closeButton: {
+    backgroundColor: Colors.PRIMERY,
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
+  },
+  closeButtonText: {
+    color: Colors.WHITE,
+    fontSize: 16,
+    fontWeight: "bold",
+  },
 });
-
