@@ -1,95 +1,81 @@
-import React from 'react';
-import { View, Text, Image, ScrollView, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+// App.js
+import React from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+  Image,
+} from "react-native";
+import { Colors } from "@/constants/Colors";
 
-const astrologers = [
-  {
-    id: '1',
-    name: 'Ramyanasha',
-    expertise: 'Tarot, Life Coach',
-    languages: 'English, Hindi, Maithili',
-    experience: '3 Years',
-    orders: '4699',
-    price: '₹ 5/min',
-    originalPrice: '₹ 16/min',
-    imageUrl: 'https://path-to-image.jpg', // Replace with real image URL
-  },
-  {
-    id: '2',
-    name: 'Soumya',
-    expertise: 'Tarot',
-    languages: 'English, Hindi',
-    experience: '6 Years',
-    orders: '6770',
-    price: '₹ 5/min',
-    originalPrice: '₹ 44/min',
-    imageUrl: 'https://path-to-image.jpg', // Replace with real image URL
-  },
-  // Add more astrologers...
-];
-
-export default function AstrologerScreen() {
-  const renderAstrologer = ({ item }) => (
-    <View style={styles.card}>
-      <Image source={{ uri: item.imageUrl }} style={styles.profileImage} />
-      <View style={styles.infoContainer}>
-        <Text style={styles.name}>{item.name}</Text>
-        <Text>{item.expertise}</Text>
-        <Text>{item.languages}</Text>
-        <Text>Exp: {item.experience}</Text>
-        <View style={styles.priceContainer}>
-          <Text style={styles.originalPrice}>{item.originalPrice}</Text>
-          <Text style={styles.price}>{item.price}</Text>
-        </View>
-      </View>
-      <TouchableOpacity style={styles.chatButton}>
-        <Text style={styles.chatText}>Chat</Text>
-      </TouchableOpacity>
-    </View>
-  );
-
+export default function Gamedetails() {
   return (
     <View style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerText}>Chat with Astrologer</Text>
+        <Text style={styles.headerText}>Explore the World</Text>
       </View>
 
-      {/* Categories */}
-      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={styles.categories}>
-        <TouchableOpacity style={styles.category}>
-          <Text>All</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.category}>
-          <Text>Offer</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.category}>
-          <Text>Love</Text>
-        </TouchableOpacity>
-        {/* Add more categories */}
+      <View style={styles.banner}>
+        <Text style={styles.bannerText}>LET'S SEE WHO IS THE KING OF GAME</Text>
+      </View>
+
+      <ScrollView style={styles.content}>
+        <View style={styles.categories}>
+          <View style={styles.rankContainer}>
+            <Text style={styles.rankText}>Winner</Text>
+            <TouchableOpacity style={styles.categoryButton}>
+              <Image
+                source={require("./../../../assets/images/trophy.png")}
+                style={styles.icon}
+              />
+            </TouchableOpacity>
+          </View>
+
+          {/* <View style={styles.rankContainer}>
+            <Text style={styles.rankText}>Score</Text>
+            <TouchableOpacity style={styles.categoryButton}>
+              <Image
+                source={require("./../../../assets/images/score.png")}
+                style={styles.icon}
+              />
+            </TouchableOpacity>
+          </View> */}
+
+          <View style={styles.rankContainer}>
+            <Text style={styles.rankText}>Rank</Text>
+            <TouchableOpacity style={styles.categoryButton}>
+              <Image
+                source={require("./../../../assets/images/rank.png")}
+                style={styles.icon}
+              />
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.rankContainer}>
+            <Text style={styles.rankText}>Other</Text>
+            <TouchableOpacity style={styles.categoryButton}>
+              <Image
+                source={require("./../../../assets/images/score.png")}
+                style={styles.icon}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <Text style={styles.categoryHeader}>Categories:</Text>
+        {[
+          "Current Affairs",
+          "Science Quiz",
+          "Technology",
+          "General Knowledge",
+        ].map((category, index) => (
+          <TouchableOpacity key={index} style={styles.categoryItem}>
+            <Text style={styles.categoryText}>{category}</Text>
+          </TouchableOpacity>
+        ))}
       </ScrollView>
-
-      {/* Astrologers List */}
-      <FlatList
-        data={astrologers}
-        renderItem={renderAstrologer}
-        keyExtractor={(item) => item.id}
-      />
-
-      {/* Bottom Navigation */}
-      <View style={styles.bottomNav}>
-        <TouchableOpacity>
-          <Text>Chat</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Text>Live</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Text>Call</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Text>Remedies</Text>
-        </TouchableOpacity>
-      </View>
     </View>
   );
 }
@@ -97,79 +83,75 @@ export default function AstrologerScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.WHITE,
   },
   header: {
-    backgroundColor: '#FFEB3B',
+    backgroundColor: Colors.WHITE,
     padding: 20,
-    alignItems: 'center',
+    alignItems: "center",
   },
   headerText: {
+    color: Colors.PRIMERY,
+    fontSize: 24,
+    fontWeight: "bold",
+  },
+  banner: {
+    backgroundColor: "#fbafaf",
+    padding: 10,
+    alignItems: "center",
+    marginTop: 20,
+    height: 200,
+    width: 380,
+  },
+  bannerText: {
+    color: Colors.PRIMERY,
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
+  },
+  content: {
+    flex: 1,
+    padding: 20,
   },
   categories: {
-    flexDirection: 'row',
-    marginVertical: 10,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginBottom: 20,
   },
-  category: {
-    padding: 10,
-    marginHorizontal: 5,
-    backgroundColor: '#f0f0f0',
-    borderRadius: 20,
+  rankContainer: {
+    alignItems: "center", // Center the rank text and icon
+    justifyContent: "center", // Center vertically
+    // backgroundColor: "#1ff715",
+    borderRadius: 30
   },
-  card: {
-    flexDirection: 'row',
+  rankText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10, // Space between text and icon
+    marginTop:12,
+    color:"#f71f15"
+
+  },
+  categoryButton: {
+    alignItems: "center",
+  },
+  icon: {
+    width: 100,
+    height: 100,
+    marginTop: 5,
+  },
+  categoryHeader: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  categoryItem: {
     padding: 15,
-    backgroundColor: '#fff',
-    marginVertical: 8,
-    marginHorizontal: 10,
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 5 },
-    shadowRadius: 10,
-    elevation: 5,
+    backgroundColor: "#ffffff",
+    marginVertical: 5,
+    borderRadius: 5,
+    elevation: 1,
   },
-  profileImage: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    marginRight: 15,
-  },
-  infoContainer: {
-    flex: 1,
-  },
-  name: {
+  categoryText: {
     fontSize: 16,
-    fontWeight: 'bold',
-  },
-  priceContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  originalPrice: {
-    textDecorationLine: 'line-through',
-    marginRight: 10,
-    color: '#888',
-  },
-  price: {
-    color: 'red',
-    fontWeight: 'bold',
-  },
-  chatButton: {
-    backgroundColor: '#00E676',
-    paddingVertical: 8,
-    paddingHorizontal: 15,
-    borderRadius: 20,
-  },
-  chatText: {
-    color: '#fff',
-  },
-  bottomNav: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: 15,
-    backgroundColor: '#f0f0f0',
   },
 });
