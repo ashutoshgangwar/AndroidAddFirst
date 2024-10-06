@@ -229,13 +229,13 @@ export default function SignIn() {
       !city ||
       !state ||
       !gametype ||
-      !game ||
+      !selectedGame ||  // Ensure selectedGame is filled
       !password
     ) {
       Alert.alert("Error", "Please fill out all fields");
       return;
     }
-
+  
     try {
       const response = await fetch("http://192.168.0.101:6000/signup", {
         method: "POST",
@@ -251,13 +251,13 @@ export default function SignIn() {
           city,
           state,
           gametype,
-          game,
+          game: selectedGame,  // Send selected game, not the entire array
           password,
         }),
       });
-
+  
       const data = await response.json();
-
+  
       if (response.ok) {
         Alert.alert("Success", "Congratulations, you have Signed-Up");
         router.push("(tabs)/auth/sign-in");
@@ -269,6 +269,7 @@ export default function SignIn() {
       Alert.alert("Error", "Something went wrong");
     }
   };
+  
 
   const onChangeDate = (event, selectedDate) => {
     const currentDate = selectedDate || dob;
@@ -392,20 +393,20 @@ export default function SignIn() {
           </View>
         </View>
         <View style={styles.halfWidth}>
-          <Text style={styles.inputText}>Game</Text>
-          <View style={styles.pickerContainer}>
-            <Picker
-              selectedValue={selectedGame}
-              onValueChange={(itemValue) => setSelectedGame(itemValue)} // Update selectedGame, not game array
-            >
-              <Picker.Item label="Select Game" value="" />
-              {Array.isArray(game) &&
-                game.map((game) => (
-                  <Picker.Item key={game} label={game} value={game} />
-                ))}
-            </Picker>
-          </View>
-        </View>
+  <Text style={styles.inputText}>Game</Text>
+  <View style={styles.pickerContainer}>
+    <Picker
+      selectedValue={selectedGame}
+      onValueChange={(itemValue) => setSelectedGame(itemValue)} // Update selectedGame
+    >
+      <Picker.Item label="Select Game" value="" />
+      {game.map((gameItem) => (
+        <Picker.Item key={gameItem} label={gameItem} value={gameItem} />
+      ))}
+    </Picker>
+  </View>
+</View>
+
       </View>
 
       <View style={styles.formGroup}>
