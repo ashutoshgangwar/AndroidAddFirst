@@ -156,7 +156,7 @@ export default function SignIn() {
 
   // Game Type and Game Mapping
   const gamemapping = {
-    IndoorGames: [
+    Indoor_Games: [
       "Badminton",
       "Basketball (3x3)",
       "Boxing",
@@ -176,7 +176,7 @@ export default function SignIn() {
       "Wrestling (Greco-Roman & Freestyle)",
     ],
 
-    OutdoorGames: [
+    Outdoor_Games: [
       "Athletics (Track and Field)",
       "Archery",
       "Beach Volleyball",
@@ -229,13 +229,13 @@ export default function SignIn() {
       !city ||
       !state ||
       !gametype ||
-      !selectedGame ||  // Ensure selectedGame is filled
+      !selectedGame || // Ensure selectedGame is filled
       !password
     ) {
       Alert.alert("Error", "Please fill out all fields");
       return;
     }
-  
+
     try {
       const response = await fetch("http://192.168.0.101:6000/signup", {
         method: "POST",
@@ -251,13 +251,13 @@ export default function SignIn() {
           city,
           state,
           gametype,
-          game: selectedGame,  // Send selected game, not the entire array
+          game: selectedGame, // Send selected game, not the entire array
           password,
         }),
       });
-  
+
       const data = await response.json();
-  
+
       if (response.ok) {
         Alert.alert("Success", "Congratulations, you have Signed-Up");
         router.push("(tabs)/auth/sign-in");
@@ -269,12 +269,21 @@ export default function SignIn() {
       Alert.alert("Error", "Something went wrong");
     }
   };
-  
+
+  // Function to format date in DD-MM-YYYY
+  const formatDate = (date) => {
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // getMonth is 0-based
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  };
 
   const onChangeDate = (event, selectedDate) => {
-    const currentDate = selectedDate || dob;
+    if (selectedDate) {
+      const formattedDate = formatDate(selectedDate);
+      setDob(formattedDate); // Set formatted date
+    }
     setShowDatePicker(false); // Close the picker after selecting a date
-    setDob(currentDate); // Update the DOB state with the selected date
   };
 
   return (
@@ -323,20 +332,18 @@ export default function SignIn() {
 
         <View style={styles.halfWidth}>
           <Text style={styles.inputText}>Date of Birth</Text>
+          
           <TouchableOpacity onPress={() => setShowDatePicker(true)}>
             <TextInput
-              style={[
-                styles.input,
-                dob ? styles.selectedDateText : null, // Apply bold style if a date is selected
-              ]}
-              value={dob ? dob.toLocaleDateString() : ""} // Ensure dob is a valid Date before calling toLocaleDateString
+              style={[styles.input, dob ? styles.selectedDateText : null]} // Apply bold style if a date is selected
+              value={dob || ""} // Display the formatted date
               editable={false} // Prevent manual input
               placeholder="Select your DOB"
             />
           </TouchableOpacity>
           {showDatePicker && (
             <DateTimePicker
-              value={dob || new Date()} // Use current date as fallback if dob is null
+              value={new Date()} // Use current date as default
               mode="date"
               display="default"
               onChange={onChangeDate}
@@ -393,20 +400,19 @@ export default function SignIn() {
           </View>
         </View>
         <View style={styles.halfWidth}>
-  <Text style={styles.inputText}>Game</Text>
-  <View style={styles.pickerContainer}>
-    <Picker
-      selectedValue={selectedGame}
-      onValueChange={(itemValue) => setSelectedGame(itemValue)} // Update selectedGame
-    >
-      <Picker.Item label="Select Game" value="" />
-      {game.map((gameItem) => (
-        <Picker.Item key={gameItem} label={gameItem} value={gameItem} />
-      ))}
-    </Picker>
-  </View>
-</View>
-
+          <Text style={styles.inputText}>Game</Text>
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={selectedGame}
+              onValueChange={(itemValue) => setSelectedGame(itemValue)} // Update selectedGame
+            >
+              <Picker.Item label="Select Game" value="" />
+              {game.map((gameItem) => (
+                <Picker.Item key={gameItem} label={gameItem} value={gameItem} />
+              ))}
+            </Picker>
+          </View>
+        </View>
       </View>
 
       <View style={styles.formGroup}>
