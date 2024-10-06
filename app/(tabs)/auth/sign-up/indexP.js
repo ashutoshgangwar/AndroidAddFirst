@@ -220,6 +220,13 @@ export default function SignIn() {
   }, [gametype]);
 
   const handleSubmit = async () => {
+    // Validate the phone number
+    const phoneNumberPattern = /^[0-9]{10}$/; // Regex to check for exactly 10 digits
+    if (!phoneNumberPattern.test(phonenumber)) {
+      Alert.alert("Error", "Contact number is invalid. It must be a 10-digit number.");
+      return;
+    }
+  
     if (
       !fullname ||
       !email ||
@@ -235,28 +242,26 @@ export default function SignIn() {
       Alert.alert("Error", "Please fill out all fields");
       return;
     }
-
-
-
-    
+  
     try {
       // Check if the email exists
-    const emailCheckResponse = await fetch(
-      `http://192.168.0.101:6000/check-email?email=${email}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
+      const emailCheckResponse = await fetch(
+        `http://192.168.0.101:6000/check-email?email=${email}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+  
+      const emailCheckData = await emailCheckResponse.json();
+  
+      if (emailCheckResponse.ok && emailCheckData.exists) {
+        Alert.alert("Oops", "User already exists, register with another Email ID");
+        return; // Stop the sign-up process if the email exists
       }
-    );
-
-    const emailCheckData = await emailCheckResponse.json();
-
-    if (emailCheckResponse.ok && emailCheckData.exists) {
-      Alert.alert("Opps", "User already exist, Register with another Email id");
-      return; // Stop the sign-up process if the email exists
-    }
+      
       const response = await fetch("http://192.168.0.101:6000/signup", {
         method: "POST",
         headers: {
@@ -275,11 +280,11 @@ export default function SignIn() {
           password,
         }),
       });
-
+  
       const data = await response.json();
-
+  
       if (response.ok) {
-        Alert.alert("Success", "Congratulations, you have Signed-Up");
+        Alert.alert("Success", "Congratulations, you have signed up");
         router.push("(tabs)/auth/sign-in");
       } else {
         Alert.alert("Error", data.message || "Something went wrong");
@@ -289,6 +294,7 @@ export default function SignIn() {
       Alert.alert("Error", "Something went wrong");
     }
   };
+  
 
   // Function to format date in DD-MM-YYYY
   const formatDate = (date) => {

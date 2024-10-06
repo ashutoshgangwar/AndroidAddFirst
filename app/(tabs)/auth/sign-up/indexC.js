@@ -225,6 +225,14 @@ export default function SignIn() {
 }, [gametype]);
 
 const handleSubmit = async () => {
+
+  // Validate the phone number
+  const phoneNumberPattern = /^[0-9]{10}$/; // Regex to check for exactly 10 digits
+  if (!phoneNumberPattern.test(phonenumber)) {
+    Alert.alert("Error", "Contact number is invalid. It must be a 10-digit number.");
+    return;
+  }
+  
   if (
     !registeras ||
     !fullname ||

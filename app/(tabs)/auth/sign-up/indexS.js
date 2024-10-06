@@ -76,26 +76,41 @@ useEffect(() => {
 }, [state]);
 
 
-  const handleSubmit = async () => {
-    if (
-      !registeras ||
-      !instname ||
-      !address ||
-      !city ||
-      !state ||
-      !email ||
-      !headname ||
-      !headphone ||
-      !ptteachername ||
-      !ptteacherphone ||
-      !password
-    ) {
-      Alert.alert("Error", "Please fill out all fields");
-      return;
-    }
+const handleSubmit = async () => {
+  // Validate the phone numbers
+  const phoneNumberPattern = /^[0-9]{10}$/; // Regex to check for exactly 10 digits
 
-    try {
-      // Check if the email exists
+  // Check headphone number
+  if (!phoneNumberPattern.test(headphone)) {
+    Alert.alert("Error", "Principal contact number is invalid. It must be a 10-digit number.");
+    return;
+  }
+
+  // Check ptteacherphone number
+  if (!phoneNumberPattern.test(ptteacherphone)) {
+    Alert.alert("Error", "PT Teacher contact number is invalid. It must be a 10-digit number.");
+    return;
+  }
+
+  if (
+    !registeras ||
+    !instname ||
+    !address ||
+    !city ||
+    !state ||
+    !email ||
+    !headname ||
+    !headphone ||
+    !ptteachername ||
+    !ptteacherphone ||
+    !password
+  ) {
+    Alert.alert("Error", "Please fill out all fields");
+    return;
+  }
+
+  try {
+    // Check if the email exists
     const emailCheckResponse = await fetch(
       `http://192.168.0.101:6000/check-email?email=${email}`,
       {
@@ -109,44 +124,44 @@ useEffect(() => {
     const emailCheckData = await emailCheckResponse.json();
 
     if (emailCheckResponse.ok && emailCheckData.exists) {
-      Alert.alert("Opps", "User already exist, Register with another Email id");
+      Alert.alert("Opps", "User already exists, Register with another Email id");
       return; // Stop the sign-up process if the email exists
     }
 
     // Signup API
-      const response = await fetch("http://192.168.0.101:6000/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          registeras,
-          instname,
-          address,
-          email,
-          headname,
-          headphone,
-          ptteachername,
-          ptteacherphone,
-          city,
-          state,
-          password,
-        }),
-      });
+    const response = await fetch("http://192.168.0.101:6000/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        registeras,
+        instname,
+        address,
+        email,
+        headname,
+        headphone,
+        ptteachername,
+        ptteacherphone,
+        city,
+        state,
+        password,
+      }),
+    });
 
-      const data = await response.json();
+    const data = await response.json();
 
-      if (response.ok) {
-        Alert.alert("Success", "Congratulations, you have Signed-Up");
-        router.push("(tabs)/auth/sign-in");
-      } else {
-        Alert.alert("Error", data.message || "Something went wrong");
-      }
-    } catch (error) {
-      console.error(error);
-      Alert.alert("Error", "Something went wrong");
+    if (response.ok) {
+      Alert.alert("Success", "Congratulations, you have Signed-Up");
+      router.push("(tabs)/auth/sign-in");
+    } else {
+      Alert.alert("Error", data.message || "Something went wrong");
     }
-  };
+  } catch (error) {
+    console.error(error);
+    Alert.alert("Error", "Something went wrong");
+  }
+};
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
