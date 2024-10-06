@@ -236,7 +236,27 @@ export default function SignIn() {
       return;
     }
 
+
+
+    
     try {
+      // Check if the email exists
+    const emailCheckResponse = await fetch(
+      `http://192.168.0.101:6000/check-email?email=${email}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const emailCheckData = await emailCheckResponse.json();
+
+    if (emailCheckResponse.ok && emailCheckData.exists) {
+      Alert.alert("Opps", "User already exist, Register with another Email id");
+      return; // Stop the sign-up process if the email exists
+    }
       const response = await fetch("http://192.168.0.101:6000/signup", {
         method: "POST",
         headers: {

@@ -224,59 +224,79 @@ export default function SignIn() {
   }
 }, [gametype]);
 
-  const handleSubmit = async () => {
-    if (
-      !registeras ||
-      !fullname ||
-      !email ||
-      !phonenumber ||
-      !gender ||
-      !dob ||
-      !city ||
-      !state ||
-      !gametype ||
-      !selectedGame || // Ensure selectedGame is filled
-      !game ||
-      !password
-    ) {
-      Alert.alert("Error", "Please fill out all fields");
-      return;
-    }
+const handleSubmit = async () => {
+  if (
+    !registeras ||
+    !fullname ||
+    !email ||
+    !phonenumber ||
+    !gender ||
+    !dob ||
+    !city ||
+    !state ||
+    !gametype ||
+    !selectedGame ||
+    !password
+  ) {
+    Alert.alert("Error", "Please fill out all fields");
+    return;
+  }
 
-    try {
-      const response = await fetch("http://192.168.0.101:6000/signup", {
-        method: "POST",
+  try {
+    // Check if the email exists
+    const emailCheckResponse = await fetch(
+      `http://192.168.0.101:6000/check-email?email=${email}`,
+      {
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          registeras,
-          fullname,
-          email,
-          phonenumber,
-          gender,
-          dob,
-          city,
-          state,
-          gametype,
-          game: selectedGame, // Send selected game, not the entire array
-          password,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        Alert.alert("Success", "Congratulations, you have Signed-Up");
-        router.push("(tabs)/auth/sign-in");
-      } else {
-        Alert.alert("Error", data.message || "Something went wrong");
       }
-    } catch (error) {
-      console.error(error);
-      Alert.alert("Error", "Something went wrong");
+    );
+
+    const emailCheckData = await emailCheckResponse.json();
+
+    if (emailCheckResponse.ok && emailCheckData.exists) {
+      Alert.alert("Opps", "User already exist, Register with another Email id");
+      return; // Stop the sign-up process if the email exists
     }
-  };
+
+    
+    // Signup API
+    const response = await fetch("http://192.168.0.101:6000/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        registeras,
+        fullname,
+        email,
+        phonenumber,
+        gender,
+        dob,
+        city,
+        state,
+        gametype,
+        game: selectedGame,
+        password,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      Alert.alert("Success", "Congratulations, you have Signed-Up");
+      router.push("(tabs)/auth/sign-in");
+    } else {
+      Alert.alert("Error", data.message || "Something went wrong");
+    }
+  } catch (error) {
+    console.error(error);
+    Alert.alert("Error", "Something went wrong");
+  }
+};
+
 
    // Function to format date in DD-MM-YYYY
    const formatDate = (date) => {
