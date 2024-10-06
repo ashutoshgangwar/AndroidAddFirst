@@ -160,7 +160,7 @@ export default function SignIn() {
 
   // Game Type and Game Mapping
   const gamemapping = {
-    IndoorGames: [
+    Indoor_Games: [
       "Badminton",
       "Basketball (3x3)",
       "Boxing",
@@ -180,7 +180,7 @@ export default function SignIn() {
       "Wrestling (Greco-Roman & Freestyle)",
     ],
 
-    OutdoorGames: [
+    Outdoor_Games: [
       "Athletics (Track and Field)",
       "Archery",
       "Beach Volleyball",
@@ -215,14 +215,14 @@ export default function SignIn() {
     }
   }, [state]);
 
-  // Correct mapping logic for Game based on Game Type
-  useEffect(() => {
-    if (gametype) {
-      setGame(gamemapping[gametype] || []); // Use setGame to update the list of games
-    } else {
-      setGame([]); // Reset games if no game type is selected
-    }
-  }, [gametype]);
+ // Correct mapping logic for Game based on Game Type
+ useEffect(() => {
+  if (gametype) {
+    setGame(gamemapping[gametype] || []); // Use setGame to update the list of games
+  } else {
+    setGame([]); // Reset games if no game type is selected
+  }
+}, [gametype]);
 
   const handleSubmit = async () => {
     if (
@@ -235,6 +235,7 @@ export default function SignIn() {
       !city ||
       !state ||
       !gametype ||
+      !selectedGame || // Ensure selectedGame is filled
       !game ||
       !password
     ) {
@@ -258,7 +259,7 @@ export default function SignIn() {
           city,
           state,
           gametype,
-          game,
+          game: selectedGame, // Send selected game, not the entire array
           password,
         }),
       });
@@ -277,10 +278,20 @@ export default function SignIn() {
     }
   };
 
+   // Function to format date in DD-MM-YYYY
+   const formatDate = (date) => {
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // getMonth is 0-based
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  };
+
   const onChangeDate = (event, selectedDate) => {
-    const currentDate = selectedDate || dob;
-    setShowDatePicker(Platform.OS === "ios"); // Close the picker on Android after selection
-    setDob(currentDate); // Update the DOB state
+    if (selectedDate) {
+      const formattedDate = formatDate(selectedDate);
+      setDob(formattedDate); // Set formatted date
+    }
+    setShowDatePicker(false); // Close the picker after selecting a date
   };
 
   return (
@@ -343,20 +354,18 @@ export default function SignIn() {
 
         <View style={styles.halfWidth}>
           <Text style={styles.inputText}>Date of Birth</Text>
+          
           <TouchableOpacity onPress={() => setShowDatePicker(true)}>
             <TextInput
-              style={[
-                styles.input,
-                dob ? styles.selectedDateText : null, // Apply bold style if a date is selected
-              ]}
-              value={dob ? dob.toLocaleDateString() : ""} // Ensure dob is a valid Date before calling toLocaleDateString
+              style={[styles.input, dob ? styles.selectedDateText : null]} // Apply bold style if a date is selected
+              value={dob || ""} // Display the formatted date
               editable={false} // Prevent manual input
               placeholder="Select your DOB"
             />
           </TouchableOpacity>
           {showDatePicker && (
             <DateTimePicker
-              value={dob || new Date()} // Use current date as fallback if dob is null
+              value={new Date()} // Use current date as default
               mode="date"
               display="default"
               onChange={onChangeDate}
@@ -417,13 +426,12 @@ export default function SignIn() {
           <View style={styles.pickerContainer}>
             <Picker
               selectedValue={selectedGame}
-              onValueChange={(itemValue) => setSelectedGame(itemValue)} // Update selectedGame, not game array
+              onValueChange={(itemValue) => setSelectedGame(itemValue)} // Update selectedGame
             >
               <Picker.Item label="Select Game" value="" />
-              {Array.isArray(game) &&
-                game.map((game) => (
-                  <Picker.Item key={game} label={game} value={game} />
-                ))}
+              {game.map((gameItem) => (
+                <Picker.Item key={gameItem} label={gameItem} value={gameItem} />
+              ))}
             </Picker>
           </View>
         </View>
