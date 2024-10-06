@@ -73,11 +73,23 @@ export default function Gamedetails() {
       { date: "2024-08-20", sport: "Tennis", institution: "Stanford" },
     ],
     "School Games": [
-      { date: "2024-07-10", sport: "Track & Field", institution: "Riverdale High" },
-      { date: "2024-07-12", sport: "Volleyball", institution: "Westview School" },
+      {
+        date: "2024-07-10",
+        sport: "Track & Field",
+        institution: "Riverdale High",
+      },
+      {
+        date: "2024-07-12",
+        sport: "Volleyball",
+        institution: "Westview School",
+      },
     ],
     "State Games": [
-      { date: "2024-06-20", sport: "Cricket", institution: "California State University" },
+      {
+        date: "2024-06-20",
+        sport: "Cricket",
+        institution: "California State University",
+      },
       { date: "2024-06-25", sport: "Hockey", institution: "Texas State" },
     ],
   };
@@ -162,28 +174,29 @@ export default function Gamedetails() {
               </TouchableOpacity>
             </View>
           </View>
+          
+            <Text style={styles.categoryHeader}>Current Affairs:</Text>
 
-          <Text style={styles.categoryHeader}>Current Affairs:</Text>
+            <ScrollView
+              ref={scrollViewRef}
+              horizontal
+              pagingEnabled
+              showsHorizontalScrollIndicator={false}
+              style={styles.newsSlider}
+            >
+              {newsItems.map((news, index) => (
+                <View key={index} style={styles.newsItem}>
+                  <Text style={styles.newsText}>{news}</Text>
+                </View>
+              ))}
+            </ScrollView>
 
-          <ScrollView
-            ref={scrollViewRef}
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
-            style={styles.newsSlider}
-          >
-            {newsItems.map((news, index) => (
-              <View key={index} style={styles.newsItem}>
-                <Text style={styles.newsText}>{news}</Text>
-              </View>
-            ))}
-          </ScrollView>
-
-          <View style={styles.arrowContainer}>
-            <TouchableOpacity onPress={nextNews}>
-              <Text style={styles.arrow}>➡️</Text>
-            </TouchableOpacity>
-          </View>
+            <View style={styles.arrowContainer}>
+              <TouchableOpacity onPress={nextNews}>
+                <Text style={styles.arrow}>➡️</Text>
+              </TouchableOpacity>
+            </View>
+          
 
           <Text style={styles.categoryHeader}>Game Details:</Text>
           {[
@@ -229,7 +242,10 @@ export default function Gamedetails() {
                   ))}
                 </View>
 
-                <TouchableOpacity style={styles.closeButton} onPress={closePopup}>
+                <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={closePopup}
+                >
                   <Text style={styles.closeButtonText}>Close</Text>
                 </TouchableOpacity>
               </View>
@@ -285,7 +301,7 @@ const styles = StyleSheet.create({
   categories: {
     flexDirection: "row",
     justifyContent: "space-around",
-    marginBottom: 20,
+    marginBottom: 40,
   },
   rankContainer: {
     alignItems: "center",
@@ -310,6 +326,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 10,
+  
   },
   categoryItem: {
     padding: 15,
@@ -318,6 +335,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     elevation: 1,
   },
+  
   categoryText: {
     fontSize: 16,
   },
