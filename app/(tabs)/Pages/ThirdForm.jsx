@@ -76,7 +76,7 @@ export default function ThirdForm() {
       if (response.ok) {
         Alert.alert("Success", "Data submitted successfully");
         // After successful submission, navigate to the profile page
-        router.push("./../(tab)/Profile");
+        router.push("./../(tab)/Games");
       } else {
         // Show the error message from the API response
         Alert.alert("Error", data.error || "Failed to submit data");
