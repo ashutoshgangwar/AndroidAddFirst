@@ -447,7 +447,7 @@ export default function SignIn() {
           style={styles.input}
           value={phonenumber}
           onChangeText={setPhonenumber}
-          placeholder="Enter your Contact Number"
+          placeholder="+91xxxxxxx11"
         />
       </View>
 

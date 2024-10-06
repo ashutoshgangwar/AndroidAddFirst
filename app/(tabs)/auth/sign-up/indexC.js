@@ -232,7 +232,7 @@ const handleSubmit = async () => {
     Alert.alert("Error", "Contact number is invalid. It must be a 10-digit number.");
     return;
   }
-  
+
   if (
     !registeras ||
     !fullname ||
@@ -471,7 +471,7 @@ const handleSubmit = async () => {
           style={styles.input}
           value={phonenumber}
           onChangeText={setPhonenumber}
-          placeholder="Enter your Contact Number"
+          placeholder="+91xxxxxxx11"
         />
       </View>
 
