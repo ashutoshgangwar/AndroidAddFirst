@@ -4,6 +4,7 @@ import { useNavigation, useRouter } from "expo-router";
 import { Colors } from "../../../constants/Colors";
 import Foundation from '@expo/vector-icons/Foundation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 export default function ThirdForm() {
   const navigation = useNavigation();
@@ -72,6 +73,9 @@ export default function ThirdForm() {
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity onPress={() => router.replace("./SecondForm")}>
+        <FontAwesome name="arrow-left" size={24} color="black" />
+      </TouchableOpacity>
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <Text style={styles.title}>
           <Foundation name="target-two" size={50} color="black" />
