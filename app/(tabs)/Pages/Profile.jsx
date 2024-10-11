@@ -15,6 +15,7 @@ import { Colors } from "../../../constants/Colors";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import * as ImagePicker from "expo-image-picker";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+// import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 export default function Profile() {
   const [profileData, setProfileData] = useState(null);
@@ -181,6 +182,9 @@ export default function Profile() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+        {/* <TouchableOpacity onPress={() => router.replace("./../(tab)/Games")}>
+        <FontAwesome name="arrow-left" size={24} color="black"  style={styles.menuIcon}/>
+      </TouchableOpacity> */}
       <View style={styles.header}>
         <TouchableOpacity onPress={pickImage}>
           {imageUri || profileData?.profilePic ? (
@@ -200,7 +204,7 @@ export default function Profile() {
         <Text style={styles.name}>{profileData?.fullname}</Text>
         <TouchableOpacity
           style={styles.backButton}
-          onPress={() => router.push("/")}
+          onPress={() => router.push("./../(tab)/Home")}
         >
           <Text style={styles.backButtonText}>Back to Home</Text>
         </TouchableOpacity>
@@ -277,6 +281,9 @@ const styles = StyleSheet.create({
   header: {
     alignItems: "center",
     marginBottom: 30,
+  },
+  menuIcon: {
+    marginLeft:-20, // Adds space between the icon and the text
   },
   profilePic: {
     width: 100,

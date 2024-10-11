@@ -73,7 +73,7 @@ export default function SignIn() {
   
         if (isDataSaved) {
           console.log('User data exists, navigating to main app');
-          router.replace("./../../Games");
+          router.replace("./../../Home");
         } else {
           console.log('No user data found, navigating to Journey');
           router.replace("./../../Journey");

@@ -7,7 +7,8 @@ import { useNavigation, useRouter } from "expo-router";
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 // for journey and games
 
-import Entypo from '@expo/vector-icons/Entypo';
+
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
 export default function TabLayout() {
   const navigation = useNavigation();
@@ -22,18 +23,14 @@ export default function TabLayout() {
   return (
     <Tabs>
       <Tabs.Screen 
-        name="Profile" 
+        name="Home" 
         options={{
           tabBarIcon: ({ focused }) => (
-            <FontAwesome 
-              name="user-circle-o" 
-              size={24} 
-              color={focused ? 'black' : 'gray'} 
-            />
+            <FontAwesome name="home" size={24} color="black" />
           ),
           tabBarLabel: ({ focused }) => (
             <Text style={{ color: focused ? 'black' : 'gray', fontWeight: focused ? 'bold' : 'normal' }}>
-              Profile
+              Home
             </Text>
           ),
         }} 
@@ -42,11 +39,11 @@ export default function TabLayout() {
         name="Games" 
         options={{
           tabBarIcon: ({ focused }) => (
-            <Entypo name="home" size={24} color={focused ? 'black' : 'gray'} />
+            <FontAwesome name="gamepad" size={24} color="black" />
           ),
           tabBarLabel: ({ focused }) => (
             <Text style={{ color: focused ? 'black' : 'gray', fontWeight: focused ? 'bold' : 'normal' }}>
-              Home
+              Game
             </Text>
           ),
         }} 
