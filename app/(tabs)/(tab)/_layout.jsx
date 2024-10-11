@@ -8,7 +8,7 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 // for journey and games
 
 
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+// import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
 export default function TabLayout() {
   const navigation = useNavigation();
@@ -26,7 +26,8 @@ export default function TabLayout() {
         name="Home" 
         options={{
           tabBarIcon: ({ focused }) => (
-            <FontAwesome name="home" size={24} color="black" />
+            < 
+              FontAwesome name="home" size={30} color={focused ? 'black' : 'gray'}  />
           ),
           tabBarLabel: ({ focused }) => (
             <Text style={{ color: focused ? 'black' : 'gray', fontWeight: focused ? 'bold' : 'normal' }}>
@@ -39,7 +40,7 @@ export default function TabLayout() {
         name="Games" 
         options={{
           tabBarIcon: ({ focused }) => (
-            <FontAwesome name="gamepad" size={24} color="black" />
+            <FontAwesome name="gamepad" size={30} color={focused ? 'black' : 'gray'}/>
           ),
           tabBarLabel: ({ focused }) => (
             <Text style={{ color: focused ? 'black' : 'gray', fontWeight: focused ? 'bold' : 'normal' }}>
