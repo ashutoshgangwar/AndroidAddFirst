@@ -5,11 +5,13 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
-  RefreshControl, // Import RefreshControl
+  RefreshControl,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Colors } from "./../../../constants/Colors";
 import { useNavigation, useRouter } from "expo-router";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 export default function Games() {
   const [games, setGames] = useState([]); // State to store fetched games
@@ -29,9 +31,11 @@ export default function Games() {
       }
 
       const data = await response.json();
+      console.log("Fetched data:", data); // Log the fetched data
       setGames(data); // Set the fetched games data in state
     } catch (error) {
-      console.error("Error fetching game details:", error.message);
+      // Log error to console; do not set any UI state or message
+      // console.error("Error fetching game details:", error.message);
     }
   };
 
@@ -54,52 +58,61 @@ export default function Games() {
     <View style={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.headerText}>Welcome to game zone</Text>
+        <TouchableOpacity onPress={() => router.push("./../Pages/Addevent")}>
+          <Ionicons name="add-circle" size={35} color="black" marginTop={10} />
+        </TouchableOpacity>
       </View>
       <ScrollView
         contentContainerStyle={styles.scrollContainer}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        } // Add RefreshControl to ScrollView
+        }
       >
-        {games.map((game, index) => (
-          <View key={index} style={styles.card}>
-            <View style={styles.header}>
-              <Text style={styles.title}>{game.gamename}</Text>
-            </View>
-
-            <Text style={styles.level}>Level: {game.gamelevel}</Text>
-            <Image
-              source={require("./../../../assets/images/game1.jpeg")} // Change this if you want dynamic images
-              style={styles.icon}
-            />
-
-            {/* Age Group and Location in the same line */}
-            <View style={styles.infoRow}>
-              <Text style={styles.agegroup}>Age Group: {game.agegroup}</Text>
-              <Text style={styles.venue}>Venue: {game.venue}</Text>
-            </View>
-            <View style={styles.infoRow}>
-              <Text style={styles.agegroup}>Date: {game.date}</Text>
-              <Text style={styles.time}>Time: {game.time}</Text>
-            </View>
-
-            <Text style={styles.description}>{game.details}</Text>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => router.push("./../Pages/Gameform")}
-            >
-              <Text
-                style={{
-                  color: Colors.WHITE,
-                  textAlign: "center",
-                  fontSize: 17,
-                }}
-              >
-                Enroll Now
-              </Text>
-            </TouchableOpacity>
+        {games.length === 0 ? ( // Check if the games array is empty
+          <View style={styles.noEventsContainer}>
+            <AntDesign name="closecircle" size={80} color="black" marginBottom={20} />
+            <Text style={styles.noEventsText}>No events are available</Text>
           </View>
-        ))}
+        ) : (
+          games.map((game, index) => (
+            <View key={index} style={styles.card}>
+              <View style={styles.header}>
+                <Text style={styles.title}>{game.gamename}</Text>
+              </View>
+
+              <Text style={styles.level}>Level: {game.gamelevel}</Text>
+              <Image
+                source={{ uri: game.imageUrl }} // Ensure image URL is correct
+                style={styles.icon}
+              />
+
+              <View style={styles.infoRow}>
+                <Text style={styles.agegroup}>Age Group: {game.agegroup}</Text>
+                <Text style={styles.venue}>Venue: {game.venue}</Text>
+              </View>
+              <View style={styles.infoRow}>
+                <Text style={styles.agegroup}>Date: {game.date}</Text>
+                <Text style={styles.time}>Time: {game.time}</Text>
+              </View>
+
+              <Text style={styles.description}>{game.details}</Text>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => router.push("./../Pages/Gameform")}
+              >
+                <Text
+                  style={{
+                    color: Colors.WHITE,
+                    textAlign: "center",
+                    fontSize: 17,
+                  }}
+                >
+                  Enroll Now
+                </Text>
+              </TouchableOpacity>
+            </View>
+          ))
+        )}
       </ScrollView>
     </View>
   );
@@ -116,18 +129,29 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.WHITE,
   },
   headerContainer: {
-    flexDirection: "row", // Puts items in a row
-    alignItems: "center", // Vertically aligns them in the center
-    justifyContent: "space-between", // Distributes space between the icon and the text
-    paddingHorizontal: 60, // Adds some space on the left and right
-    paddingVertical: 20, // Adds space on the top and bottom
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 60,
+    paddingVertical: 20,
     backgroundColor: Colors.WHITE,
   },
   headerText: {
     color: Colors.PRIMERY,
     fontSize: 24,
     fontWeight: "bold",
-    marginRight: 10,
+    marginRight: 20,
+  },
+  noEventsContainer: {
+    padding: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 100,
+  },
+  noEventsText: {
+    fontSize: 24,
+    color: Colors.PRIMERY,
+    fontWeight: "bold",
   },
   card: {
     borderRadius: 10,
@@ -141,9 +165,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   header: {
-    flexDirection: "row", // Align elements horizontally
-    justifyContent: "space-between", // Space between title and icon
-    alignItems: "center", // Align vertically in the center
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 10,
   },
   title: {
@@ -172,8 +196,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   infoRow: {
-    flexDirection: "row", // Puts age group and location in a row
-    justifyContent: "space-between", // Adds space between them
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: 10,
   },
   description: {
