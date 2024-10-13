@@ -1,69 +1,85 @@
-import React, { useState, useEffect, useRef } from "react";
-import { View, ScrollView, StyleSheet, Image, Dimensions, Animated } from "react-native";
-import { Colors } from "@/constants/Colors";
-import { useNavigation } from "expo-router";
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
+import {React,useEffect} from 'react';
+import { Colors } from './../../../constants/Colors';
+import {useNavigation } from "expo-router";
 
-const screenWidth = Dimensions.get("window").width;
-const screenHeight = Dimensions.get("window").height;
+import Entypo from '@expo/vector-icons/Entypo';
 
-export default function Gamedetails() {
-  const [activeNews, setActiveNews] = useState(0);
-  const scrollViewRef = useRef(null);
+
+
+
+export default function Games() {
+
   const navigation = useNavigation();
-  const progressAnim = useRef(new Animated.Value(0)).current; // Animated value for progress
 
   useEffect(() => {
     navigation.setOptions({
       headerShown: false,
     });
   }, []);
+  
 
-  const images = [
-    require("./../../../assets/images/status.jpeg"),
-    require("./../../../assets/images/status1.jpeg"),
-    require("./../../../assets/images/news.jpeg"),
-    require("./../../../assets/images/news1.jpeg"),
-    require("./../../../assets/images/news2.jpeg"),
-    require("./../../../assets/images/news3.jpeg"),
-  ];
 
-  const onScroll = (event) => {
-    const slide = Math.ceil(event.nativeEvent.contentOffset.x / screenWidth);
-    setActiveNews(slide);
-    // Animate progress bar based on current slide
-    Animated.timing(progressAnim, {
-      toValue: slide, // Set target value
-      duration: 500, // Animation duration
-      useNativeDriver: false, // Use native driver
-    }).start();
-  };
-
-  // Calculate the width of the animated progress bar
-  const progressBarWidth = progressAnim.interpolate({
-    inputRange: [0, images.length - 1],
-    outputRange: [0, screenWidth], // Full width of the screen
-  });
 
   return (
     <View style={styles.container}>
-      {/* Status Bar */}
-      <View style={styles.statusContainer}>
-        <Animated.View style={[styles.statusBar, { width: progressBarWidth }]} />
+    <View style={styles.headerContainer}>
+       
+        <Text style={styles.headerText}>Welcome to game zone</Text>
       </View>
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+    
+
+      <View style={styles.card}>
+        <View style={styles.header}>
+          <Text style={styles.title}>Game Title</Text>
+          <TouchableOpacity>
+          <Entypo name="circle-with-plus" size={30} color="black" />
+          </TouchableOpacity>
+        </View>
+        <Image
+          source={require('./../../../assets/images/game.jpeg')}
+          style={styles.icon}
+        />
+        <Text style={styles.description}>
+          This is a brief description of the game. You can add more details like genre, rating, etc.
+        </Text>
+      </View>
+
+      <View style={styles.card}>
+        <View style={styles.header}>
+          <Text style={styles.title}>Game Title</Text>
+          <TouchableOpacity>
+          <Entypo name="circle-with-plus" size={30} color="black" />
+          </TouchableOpacity>
+        </View>
+        <Image
+          source={require('./../../../assets/images/game.jpeg')}
+          style={styles.icon}
+        />
+        <Text style={styles.description}>
+          This is a brief description of the game. You can add more details like genre, rating, etc.
+        </Text>
+      </View>
+
+      <View style={styles.card}>
+        <View style={styles.header}>
+          <Text style={styles.title}>Game Title</Text>
+          <TouchableOpacity>
+          <Entypo name="circle-with-plus" size={30} color="black" />
+          </TouchableOpacity>
+        </View>
+        <Image
+          source={require('./../../../assets/images/game.jpeg')}
+          style={styles.icon}
+        />
+        <Text style={styles.description}>
+          This is a brief description of the game. You can add more details like genre, rating, etc.
+        </Text>
+      </View>
+
       
-      <ScrollView
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        onScroll={onScroll}
-        scrollEventThrottle={16}
-        style={styles.sliderContainer}
-        ref={scrollViewRef}
-      >
-        {images.map((image, index) => (
-          <Image key={index} source={image} style={styles.bannerImage} />
-        ))}
-      </ScrollView>
+    </ScrollView>
     </View>
   );
 }
@@ -73,27 +89,58 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.WHITE,
   },
-  statusContainer: {
-    height: 5, // Height of the status bar
-    backgroundColor: '#e0e0e0', // Background color of the status bar
-    width: '100%', // Full width
-    overflow: 'hidden', // Hide overflow to keep the bar contained
-    position: 'absolute', // Position at the top
-    top: 0, // Align to the top
+  scrollContainer: {
+    paddingVertical: 20,
+    alignItems: 'center',
+    backgroundColor: Colors.WHITE,
   },
-  statusBar: {
-    height: '100%', // Full height of the status container
-    backgroundColor: Colors.PRIMERY, // Color of the animated progress bar
+  headerContainer: {
+    flexDirection: "row", // Puts items in a row
+    alignItems: "center", // Vertically aligns them in the center
+    justifyContent: "space-between", // Distributes space between the icon and the text
+    paddingHorizontal: 60, // Adds some space on the left and right
+    paddingVertical: 20, // Adds space on the top and bottom
+    backgroundColor: Colors.WHITE,
   },
-  sliderContainer: {
-    height: screenHeight, // Full screen height
-    marginTop: 5, // Space between the status bar and the image slider
+ 
+  headerText: {
+    color: Colors.PRIMERY,
+    fontSize: 24,
+    fontWeight: "bold",
+    marginRight:10
   },
-  bannerImage: {
-    width: screenWidth,
-    height: screenHeight, // Full screen height
-    resizeMode: "cover",
-    marginTop:10,
-    marginBottom:10
+  card: {
+    // backgroundColor: Colors.Rosy_Brown,
+    borderRadius: 10,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 10, height: 20 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
+    width: '90%',
+    marginBottom: 20,
+  },
+  header: {
+    flexDirection: 'row',  // Align elements horizontally
+    justifyContent: 'space-between',  // Space between title and icon
+    alignItems: 'center',  // Align vertically in the center
+    marginBottom: 10,
+  },
+
+  title: {
+    fontSize: 25,
+    fontWeight: 'bold',
+  },
+  description: {
+    fontSize: 14,
+    color: Colors.PRIMERY,
+    marginTop:15
+  },
+  icon: {
+    width: '100%',
+    height: 100,
+    marginTop: 5,
+    borderRadius: 10,
   },
 });

@@ -12,6 +12,8 @@ export const Colors = {
   GRAY:'#808080',
   DIMMYGRAY: '#a6a6a6',
   RED:'#f71f15',
+  LIGHTBLUE:'#43abb6',
+  Rosy_Brown:'#bc8f8f',
   light: {
     text: '#11181C',
     background: '#fff',
