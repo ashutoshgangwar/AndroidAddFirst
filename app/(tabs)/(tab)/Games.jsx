@@ -5,21 +5,49 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  RefreshControl, // Import RefreshControl
 } from "react-native";
-import { React, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Colors } from "./../../../constants/Colors";
-import { useNavigation,useRouter } from "expo-router";
-
-import Entypo from "@expo/vector-icons/Entypo";
+import { useNavigation, useRouter } from "expo-router";
 
 export default function Games() {
+  const [games, setGames] = useState([]); // State to store fetched games
+  const [refreshing, setRefreshing] = useState(false); // State for pull-down-to-refresh
   const navigation = useNavigation();
   const router = useRouter();
+
+  // Fetch game details from the backend
+  const fetchGameDetails = async () => {
+    try {
+      const response = await fetch("http://192.168.0.101:6000/gamedetail", {
+        method: "GET",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch game details");
+      }
+
+      const data = await response.json();
+      setGames(data); // Set the fetched games data in state
+    } catch (error) {
+      console.error("Error fetching game details:", error.message);
+    }
+  };
+
+  // Handle pull-down-to-refresh
+  const onRefresh = async () => {
+    setRefreshing(true); // Start the refresh animation
+    await fetchGameDetails(); // Re-fetch the data
+    setRefreshing(false); // Stop the refresh animation
+  };
 
   useEffect(() => {
     navigation.setOptions({
       headerShown: false,
     });
+
+    fetchGameDetails(); // Call the function to fetch data when the component mounts
   }, []);
 
   return (
@@ -27,93 +55,51 @@ export default function Games() {
       <View style={styles.headerContainer}>
         <Text style={styles.headerText}>Welcome to game zone</Text>
       </View>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View style={styles.card}>
-          <View style={styles.header}>
-            <Text style={styles.title}>Hockey</Text>
-            <TouchableOpacity onPress={() => router.push("./../Pages/Gameform")}>
-              <Entypo name="circle-with-plus" size={30} color="black" />
+      <ScrollView
+        contentContainerStyle={styles.scrollContainer}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        } // Add RefreshControl to ScrollView
+      >
+        {games.map((game, index) => (
+          <View key={index} style={styles.card}>
+            <View style={styles.header}>
+              <Text style={styles.title}>{game.gamename}</Text>
+            </View>
+
+            <Text style={styles.level}>Level: {game.gamelevel}</Text>
+            <Image
+              source={require("./../../../assets/images/game1.jpeg")} // Change this if you want dynamic images
+              style={styles.icon}
+            />
+
+            {/* Age Group and Location in the same line */}
+            <View style={styles.infoRow}>
+              <Text style={styles.agegroup}>Age Group: {game.agegroup}</Text>
+              <Text style={styles.venue}>Venue: {game.venue}</Text>
+            </View>
+            <View style={styles.infoRow}>
+              <Text style={styles.agegroup}>Date: {game.date}</Text>
+              <Text style={styles.time}>Time: {game.time}</Text>
+            </View>
+
+            <Text style={styles.description}>{game.details}</Text>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => router.push("./../Pages/Gameform")}
+            >
+              <Text
+                style={{
+                  color: Colors.WHITE,
+                  textAlign: "center",
+                  fontSize: 17,
+                }}
+              >
+                Enroll Now
+              </Text>
             </TouchableOpacity>
           </View>
-
-          <Text style={styles.level}>Level: School</Text>
-          <Image
-            source={require("./../../../assets/images/game1.jpeg")}
-            style={styles.icon}
-          />
-
-          {/* Age Group and Location in the same line */}
-          <View style={styles.infoRow}>
-            <Text style={styles.agegroup}>Age Group: 20</Text>
-            <Text style={styles.location}>Location: North Campus</Text>
-          </View>
-
-          <Text style={styles.description}>
-            This is a brief description of the game. You can add more details
-            like genre, rating, etc.
-          </Text>
-        </View>
-
-        <View style={styles.card}>
-          <View style={styles.header}>
-            <Text style={styles.title}>Track & Field</Text>
-        
-          </View>
-
-          <Text style={styles.level}>Level: School</Text>
-          <Image
-            source={require("./../../../assets/images/game.jpeg")}
-            style={styles.icon}
-          />
-
-          {/* Age Group and Location in the same line */}
-          <View style={styles.infoRow}>
-            <Text style={styles.agegroup}>Age Group: 14</Text>
-            <Text style={styles.location}>Location: G D Goenka</Text>
-          </View>
-
-          <Text style={styles.description}>
-            This is a brief description of the game. You can add more details
-            like genre, rating, etc.
-          </Text>
-          <TouchableOpacity
-          style={styles.button}
-          onPress={() => router.push("./../Pages/Gameform")}
-        >
-          <Text
-            style={{ color: Colors.WHITE, textAlign: "center", fontSize: 17 }}
-          >
-            Enroll Now
-          </Text>
-        </TouchableOpacity>
-        </View>
-
-        <View style={styles.card}>
-          <View style={styles.header}>
-            <Text style={styles.title}>Chess</Text>
-            <TouchableOpacity onPress={() => router.push("./../Pages/Gameform")}>
-              <Entypo name="circle-with-plus" size={30} color="black" />
-            </TouchableOpacity>
-          </View>
-
-          <Text style={styles.level}>Level: College</Text>
-          <Image
-            source={require("./../../../assets/images/game2.jpeg")}
-            style={styles.icon}
-          />
-
-          {/* Age Group and Location in the same line */}
-          <View style={styles.infoRow}>
-            <Text style={styles.agegroup}>Age Group: 15</Text>
-            <Text style={styles.location}>Location: South Campus</Text>
-          </View>
-
-          <Text style={styles.description}>
-            This is a brief description of the game. You can add more details
-            like genre, rating, etc.
-          </Text>
-         
-        </View>
+        ))}
       </ScrollView>
     </View>
   );
@@ -137,7 +123,6 @@ const styles = StyleSheet.create({
     paddingVertical: 20, // Adds space on the top and bottom
     backgroundColor: Colors.WHITE,
   },
-
   headerText: {
     color: Colors.PRIMERY,
     fontSize: 24,
@@ -161,7 +146,6 @@ const styles = StyleSheet.create({
     alignItems: "center", // Align vertically in the center
     marginBottom: 10,
   },
-
   title: {
     fontSize: 25,
     fontWeight: "bold",
@@ -175,7 +159,15 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "bold",
   },
-  location: {
+  venue: {
+    fontSize: 15,
+    fontWeight: "bold",
+  },
+  date: {
+    fontSize: 15,
+    fontWeight: "bold",
+  },
+  time: {
     fontSize: 15,
     fontWeight: "bold",
   },
@@ -200,6 +192,5 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.PRIMERY,
     borderRadius: 10,
     marginTop: 25,
-    
   },
 });
