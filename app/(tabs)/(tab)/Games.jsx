@@ -57,9 +57,7 @@ export default function Games() {
         <View style={styles.card}>
           <View style={styles.header}>
             <Text style={styles.title}>Track & Field</Text>
-            <TouchableOpacity onPress={() => router.push("./../Pages/Gameform")}>
-              <Entypo name="circle-with-plus" size={30} color="black" />
-            </TouchableOpacity>
+        
           </View>
 
           <Text style={styles.level}>Level: School</Text>
@@ -78,6 +76,16 @@ export default function Games() {
             This is a brief description of the game. You can add more details
             like genre, rating, etc.
           </Text>
+          <TouchableOpacity
+          style={styles.button}
+          onPress={() => router.push("./../Pages/Gameform")}
+        >
+          <Text
+            style={{ color: Colors.WHITE, textAlign: "center", fontSize: 17 }}
+          >
+            Enroll Now
+          </Text>
+        </TouchableOpacity>
         </View>
 
         <View style={styles.card}>
@@ -104,6 +112,7 @@ export default function Games() {
             This is a brief description of the game. You can add more details
             like genre, rating, etc.
           </Text>
+         
         </View>
       </ScrollView>
     </View>
@@ -185,5 +194,12 @@ const styles = StyleSheet.create({
     height: 100,
     marginTop: 5,
     borderRadius: 10,
+  },
+  button: {
+    padding: 15,
+    backgroundColor: Colors.PRIMERY,
+    borderRadius: 10,
+    marginTop: 25,
+    
   },
 });
