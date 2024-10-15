@@ -6,17 +6,68 @@ import {
   StyleSheet,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import { useNavigation, useRouter,  } from "expo-router";
-import { Colors } from "./../../../constants/Colors";
+import { useNavigation, useRouter } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage"; // Added import for AsyncStorage
+import { Colors } from "../../../constants/Colors"; // Adjusted the import path for Colors
 
-export default function Profile_details() {
+export default function ProfileDetails() {
+  const [profileData, setProfileData] = useState(null);
+  const [error, setError] = useState(null); // Added error state
+  const [loading, setLoading] = useState(true); // Added loading state
   const navigation = useNavigation();
   const router = useRouter();
-  
-  // Hide the header when the component is mounted
+
   useEffect(() => {
-    navigation.setOptions({ headerShown: false });
-  })
+    navigation.setOptions({
+      headerShown: false,
+    });
+    fetchProfileData();
+  }, []);
+
+  const fetchProfileData = async () => {
+    try {
+      const token = await AsyncStorage.getItem("userToken");
+      if (!token) {
+        throw new Error("No token found, please login again.");
+      }
+
+      const response = await fetch("http://192.168.0.101:6000/profile", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to fetch profile data.");
+      }
+
+      const data = await response.json();
+      setProfileData(data);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.container}>
+        <Text>Error: {error}</Text>
+      </View>
+    );
+  }
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View>
@@ -29,11 +80,11 @@ export default function Profile_details() {
       <View style={styles.doubleFormGroup}>
         <View style={styles.halfWidth}>
           <Text style={styles.inputText}>Player Name</Text>
-          <Text style={styles.input}></Text>
+          <Text style={styles.input}>{profileData?.fullname}</Text>
         </View>
         <View style={styles.halfWidth}>
           <Text style={styles.inputText}>Date of Birth</Text>
-          <Text style={styles.input}></Text>
+          <Text style={styles.input}>{profileData?.dob}</Text>
         </View>
       </View>
 
@@ -51,7 +102,7 @@ export default function Profile_details() {
       <View style={styles.doubleFormGroup}>
         <View style={styles.halfWidth}>
           <Text style={styles.inputText}>Gender</Text>
-          <Text style={styles.input}></Text>
+          <Text style={styles.input}>{profileData?.gender}</Text>
         </View>
         <View style={styles.halfWidth}>
           <Text style={styles.inputText}>Blood Group</Text>
@@ -62,7 +113,7 @@ export default function Profile_details() {
       <View style={styles.doubleFormGroup}>
         <View style={styles.halfWidth}>
           <Text style={styles.inputText}>Game</Text>
-          <Text style={styles.input}></Text>
+          <Text style={styles.input}>{profileData?.game}</Text>
         </View>
         <View style={styles.halfWidth}>
           <Text style={styles.inputText}>Age Group</Text>
@@ -84,7 +135,7 @@ export default function Profile_details() {
       <View style={styles.doubleFormGroup}>
         <View style={styles.halfWidth}>
           <Text style={styles.inputText}>City</Text>
-          <Text style={styles.input}></Text>
+          <Text style={styles.input}>{profileData?.city}</Text>
         </View>
         <View style={styles.halfWidth}>
           <Text style={styles.inputText}>Game Stage</Text>
@@ -92,7 +143,15 @@ export default function Profile_details() {
         </View>
       </View>
 
-      <TouchableOpacity style={styles.updateButton} onPress={() => router.push("./../(tab)/Games")}>
+      <View style={styles.formGroup}>
+        <Text style={styles.inputText}>Contact Number</Text>
+        <Text style={styles.input}>{profileData?.phonenumber}</Text>
+      </View>
+
+      <TouchableOpacity
+        style={styles.updateButton}
+        onPress={() => router.push("./../(tab)/Games")}
+      >
         <Text style={styles.detailsButtonText}>Update Details</Text>
       </TouchableOpacity>
     </ScrollView>
@@ -111,11 +170,11 @@ const styles = StyleSheet.create({
     padding: 25,
     fontWeight: "bold",
     textAlign: "center",
-    textDecorationLine:"underline"
+    textDecorationLine: "underline",
   },
   editButton: {
     alignSelf: "center",
-    backgroundColor: Colors.PRIMERY,
+    backgroundColor: Colors.PRIMARY, // Corrected spelling of PRIMERY to PRIMARY
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 10,
@@ -149,7 +208,7 @@ const styles = StyleSheet.create({
   },
   updateButton: {
     alignItems: "center",
-    backgroundColor: Colors.PRIMERY,
+    backgroundColor: Colors.PRIMARY, // Corrected spelling of PRIMERY to PRIMARY
     paddingVertical: 15,
     paddingHorizontal: 15,
     borderRadius: 25,
