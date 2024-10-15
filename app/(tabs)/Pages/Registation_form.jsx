@@ -12,6 +12,7 @@ import { Colors } from "../../../constants/Colors"; // Adjusted the import path 
 
 export default function ProfileDetails() {
   const [profileData, setProfileData] = useState(null);
+  const [userData, setUserdata] = useState(null);
   const [error, setError] = useState(null); // Added error state
   const [loading, setLoading] = useState(true); // Added loading state
   const navigation = useNavigation();
@@ -22,6 +23,7 @@ export default function ProfileDetails() {
       headerShown: false,
     });
     fetchProfileData();
+    fetchUserdata();
   }, []);
 
   const fetchProfileData = async () => {
@@ -45,6 +47,34 @@ export default function ProfileDetails() {
 
       const data = await response.json();
       setProfileData(data);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchUserdata = async () => {
+    try {
+      const token = await AsyncStorage.getItem("userToken");
+      if (!token) {
+        throw new Error("No token found, please login again.");
+      }
+
+      const response = await fetch("http://192.168.0.101:6000/userdata", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to fetch profile data.");
+      }
+
+      const data = await response.json();
+      setUserdata(data);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -91,11 +121,11 @@ export default function ProfileDetails() {
       <View style={styles.doubleFormGroup}>
         <View style={styles.halfWidth}>
           <Text style={styles.inputText}>Player Height</Text>
-          <Text style={styles.input}></Text>
+          <Text style={styles.input}>{userData?.height}</Text>
         </View>
         <View style={styles.halfWidth}>
           <Text style={styles.inputText}>Player Weight</Text>
-          <Text style={styles.input}></Text>
+          <Text style={styles.input}>{userData?.weight}</Text>
         </View>
       </View>
 
@@ -106,7 +136,7 @@ export default function ProfileDetails() {
         </View>
         <View style={styles.halfWidth}>
           <Text style={styles.inputText}>Blood Group</Text>
-          <Text style={styles.input}></Text>
+          <Text style={styles.input}>{userData?.bloodgroup}</Text>
         </View>
       </View>
 
@@ -138,8 +168,8 @@ export default function ProfileDetails() {
           <Text style={styles.input}>{profileData?.city}</Text>
         </View>
         <View style={styles.halfWidth}>
-          <Text style={styles.inputText}>Game Stage</Text>
-          <Text style={styles.input}></Text>
+          <Text style={styles.inputText}>Player Stage</Text>
+          <Text style={styles.input}>{userData?.gamelevel}</Text>
         </View>
       </View>
 
@@ -208,7 +238,7 @@ const styles = StyleSheet.create({
   },
   updateButton: {
     alignItems: "center",
-    backgroundColor: Colors.PRIMARY, // Corrected spelling of PRIMERY to PRIMARY
+    backgroundColor: Colors.PRIMERY, // Corrected spelling of PRIMERY to PRIMARY
     paddingVertical: 15,
     paddingHorizontal: 15,
     borderRadius: 25,
