@@ -26,52 +26,70 @@ export default function Profile_details() {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.formGroup}>
-        <Text style={styles.inputText}>Your Game</Text>
-        <Text style={styles.input}></Text>
-      </View>
-
-      <View style={styles.formGroup}>
-        <Text style={styles.inputText}>Game Age Group</Text>
-        <Text style={styles.input}></Text>
-      </View>
-
       <View style={styles.doubleFormGroup}>
         <View style={styles.halfWidth}>
-          <Text style={styles.inputText}>Your Height</Text>
+          <Text style={styles.inputText}>Player Name</Text>
           <Text style={styles.input}></Text>
         </View>
         <View style={styles.halfWidth}>
-          <Text style={styles.inputText}>Your Weight</Text>
+          <Text style={styles.inputText}>Date of Birth</Text>
           <Text style={styles.input}></Text>
         </View>
       </View>
 
       <View style={styles.doubleFormGroup}>
         <View style={styles.halfWidth}>
-          <Text style={styles.inputText}>Your Level</Text>
+          <Text style={styles.inputText}>Player Height</Text>
           <Text style={styles.input}></Text>
         </View>
         <View style={styles.halfWidth}>
-          <Text style={styles.inputText}>Best Performance</Text>
+          <Text style={styles.inputText}>Player Weight</Text>
           <Text style={styles.input}></Text>
         </View>
       </View>
 
       <View style={styles.doubleFormGroup}>
         <View style={styles.halfWidth}>
-          <Text style={styles.inputText}>Acedemy Name</Text>
+          <Text style={styles.inputText}>Gender</Text>
           <Text style={styles.input}></Text>
         </View>
         <View style={styles.halfWidth}>
-          <Text style={styles.inputText}>Academy City</Text>
+          <Text style={styles.inputText}>Blood Group</Text>
           <Text style={styles.input}></Text>
         </View>
       </View>
 
-      <View style={styles.formGroup}>
-        <Text style={styles.inputText}>Coach Name</Text>
-        <Text style={styles.input}></Text>
+      <View style={styles.doubleFormGroup}>
+        <View style={styles.halfWidth}>
+          <Text style={styles.inputText}>Game</Text>
+          <Text style={styles.input}></Text>
+        </View>
+        <View style={styles.halfWidth}>
+          <Text style={styles.inputText}>Age Group</Text>
+          <Text style={styles.input}></Text>
+        </View>
+      </View>
+
+      <View style={styles.doubleFormGroup}>
+        <View style={styles.halfWidth}>
+          <Text style={styles.inputText}>Date</Text>
+          <Text style={styles.input}></Text>
+        </View>
+        <View style={styles.halfWidth}>
+          <Text style={styles.inputText}>Time</Text>
+          <Text style={styles.input}></Text>
+        </View>
+      </View>
+
+      <View style={styles.doubleFormGroup}>
+        <View style={styles.halfWidth}>
+          <Text style={styles.inputText}>City</Text>
+          <Text style={styles.input}></Text>
+        </View>
+        <View style={styles.halfWidth}>
+          <Text style={styles.inputText}>Game Stage</Text>
+          <Text style={styles.input}></Text>
+        </View>
       </View>
 
       <TouchableOpacity style={styles.updateButton} onPress={() => router.push("./../(tab)/Games")}>
