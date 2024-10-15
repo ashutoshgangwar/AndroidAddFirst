@@ -100,7 +100,7 @@ export default function Games() {
               <Text style={styles.description}>{game.details}</Text>
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => router.push("./../Pages/Gameform")}
+                onPress={() => router.push("./../Pages/Registation_form")}
               >
                 <Text
                   style={{
