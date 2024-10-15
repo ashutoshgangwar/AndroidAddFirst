@@ -16,6 +16,7 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 export default function Games() {
   const [games, setGames] = useState([]); // State to store fetched games
   const [refreshing, setRefreshing] = useState(false); // State for pull-down-to-refresh
+
   const navigation = useNavigation();
   const router = useRouter();
 
@@ -31,7 +32,7 @@ export default function Games() {
       }
 
       const data = await response.json();
-      console.log("Fetched data:", data); // Log the fetched data
+      // console.log("Fetched data:", data); // Log the fetched data
       setGames(data); // Set the fetched games data in state
     } catch (error) {
       // Log error to console; do not set any UI state or message
@@ -53,6 +54,7 @@ export default function Games() {
 
     fetchGameDetails(); // Call the function to fetch data when the component mounts
   }, []);
+
 
   return (
     <View style={styles.container}>
