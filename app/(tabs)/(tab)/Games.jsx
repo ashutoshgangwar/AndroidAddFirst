@@ -79,8 +79,12 @@ export default function Games() {
           games.map((game, index) => (
             <View key={index} style={styles.card}>
               <View style={styles.header}>
+                <Text style={styles.agegroup}>Event Id: {game.formNumber}</Text>
+              </View>
+              <View style={styles.header}>
                 <Text style={styles.title}>{game.gamename}</Text>
               </View>
+              
 
               <Text style={styles.level}>Level: {game.gamelevel}</Text>
               <Image

@@ -26,6 +26,7 @@ export default function AddEvent() {
   const [imageUrl, setImageUrl] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
+  const [formNumber, setFormNumber] = useState("");
   const navigation = useNavigation();
   const router = useRouter();
 
@@ -82,6 +83,26 @@ export default function AddEvent() {
     });
   }, [navigation]);
 
+  const generateFormNumber = () => {
+    // Generate a random form number using a combination of the current date and a random number
+    const randomNumber = Math.floor(1000 + Math.random() * 9000); // 4-digit random number
+    
+    // Get the current date
+    const currentDate = new Date();
+    
+    // Format the date as YYYY-MM-DD
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    
+    // Create the formatted timestamp
+    const formattedDate = `${year}${month}${day}`;
+    
+    // Return the form number
+    return `${formattedDate}-${randomNumber}`;
+  };
+  
+
   const handleSave = async () => {
     // Validate fields
     if (
@@ -100,8 +121,10 @@ export default function AddEvent() {
     try {
       const formattedDate = date.toISOString().split("T")[0]; // Format date to YYYY-MM-DD
       const formattedTime = time.toTimeString().split(" ")[0]; // Format time to HH:MM:SS
+      const formNumber = generateFormNumber(); 
 
       const newGame = {
+        formNumber,
         gametype,
         gamename,
         gamelevel,
@@ -131,9 +154,12 @@ export default function AddEvent() {
       console.log("Response data:", responseData); // Inspect the response
 
       if (response.ok) {
-        Alert.alert("Success", "Game added successfully");
+        // Alert.alert("Success", "Game added successfully");
+        Alert.alert("Success", `Game added successfully with Form No: ${formNumber}`)
+
         router.push("./../(tab)/Home");
         // Clear the form
+        setFormNumber("");
         setGametype("");
         setGameName("");
         setGameLevel("");
