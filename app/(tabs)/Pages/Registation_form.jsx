@@ -4,6 +4,7 @@ import {
   ScrollView,
   TouchableOpacity,
   StyleSheet,
+  Alert,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useNavigation, useRouter, useLocalSearchParams } from "expo-router";
@@ -57,6 +58,53 @@ export default function ProfileDetails() {
       setError(error.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleUpdateDetails = async () => {
+    const token = await AsyncStorage.getItem("userToken");
+
+    if (!token) {
+      Alert.alert("Error", "No token found, please login again.");
+      return;
+    }
+
+    const registrationData = {
+      fullname: profileData?.fullname,
+      dob: profileData?.dob,
+      height: userData?.height,
+      weight: userData?.weight,
+      gender: profileData?.gender,
+      bloodgroup: userData?.bloodgroup,
+      gamename,
+      agegroup,
+      date,
+      time,
+      city: profileData?.city,
+      gamelevel: userData?.gamelevel,
+      phonenumber: profileData?.phonenumber,
+    };
+
+    try {
+      const response = await fetch("http://192.168.0.101:6000/registationform", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(registrationData),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        Alert.alert("Success", "Regstation Succesfull");
+        router.push("./../(tab)/Games"); // Navigate to Games screen
+      } else {
+        throw new Error(result.error || "Failed to update profile details.");
+      }
+    } catch (error) {
+      Alert.alert("Error", error.message);
     }
   };
 
@@ -157,11 +205,8 @@ export default function ProfileDetails() {
         <Text style={styles.input}>{profileData?.phonenumber}</Text>
       </View>
 
-      <TouchableOpacity
-        style={styles.updateButton}
-        onPress={() => router.push("./../(tab)/Games")}
-      >
-        <Text style={styles.detailsButtonText}>Update Details</Text>
+      <TouchableOpacity style={styles.updateButton} onPress={handleUpdateDetails}>
+        <Text style={styles.detailsButtonText}>Submit Details</Text>
       </TouchableOpacity>
     </ScrollView>
   );
