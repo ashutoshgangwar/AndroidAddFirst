@@ -17,7 +17,7 @@ export default function ProfileDetails() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const { gamename, agegroup, date, time } = useLocalSearchParams();
+  const { gamename, agegroup, date, time, formNumber } = useLocalSearchParams();
   const navigation = useNavigation();
   const router = useRouter();
 
@@ -80,6 +80,7 @@ export default function ProfileDetails() {
       agegroup,
       date,
       time,
+      formNumber,
       city: profileData?.city,
       gamelevel: userData?.gamelevel,
       phonenumber: profileData?.phonenumber,
@@ -128,12 +129,14 @@ export default function ProfileDetails() {
     <ScrollView contentContainerStyle={styles.container}>
       <View>
         <Text style={styles.headerText}>Your Profile Details</Text>
-        <TouchableOpacity style={styles.editButton}>
+        <Text style={styles.headerTextEvent}>Event Id: {formNumber}</Text>
+        {/* <TouchableOpacity style={styles.editButton}>
           <Text style={styles.editButtonText}>Edit Details</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       <View style={styles.doubleFormGroup}>
+     
         <View style={styles.halfWidth}>
           <Text style={styles.inputText}>Player Name</Text>
           <Text style={styles.input}>{profileData?.fullname}</Text>
@@ -226,18 +229,26 @@ const styles = StyleSheet.create({
     textAlign: "center",
     textDecorationLine: "underline",
   },
-  editButton: {
-    alignSelf: "center",
-    backgroundColor: Colors.PRIMARY,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderRadius: 10,
-    marginTop: 10,
+  headerTextEvent:{
+    fontSize: 20,
+    padding: 10,
+    fontWeight: "bold",
+    textAlign: "center",
+    textDecorationLine: "underline",
+
   },
-  editButtonText: {
-    color: "#fff",
-    fontSize: 16,
-  },
+  // editButton: {
+  //   alignSelf: "center",
+  //   backgroundColor: Colors.PRIMERY,
+  //   paddingVertical: 10,
+  //   paddingHorizontal: 15,
+  //   borderRadius: 10,
+  //   marginTop: 10,
+  // },
+  // editButtonText: {
+  //   color: "#fff",
+  //   fontSize: 16,
+  // },
   formGroup: {
     marginTop: 20,
   },

@@ -79,7 +79,7 @@ export default function Games() {
           games.map((game, index) => (
             <View key={index} style={styles.card}>
               <View style={styles.header}>
-                <Text style={styles.agegroup}>Event Id:{game.formNumber}</Text>
+                <Text style={styles.formnumber}>Event Id:{game.formNumber}</Text>
               </View>
               <View style={styles.header}>
                 <Text style={styles.title}>{game.gamename}</Text>
@@ -113,6 +113,8 @@ export default function Games() {
         agegroup: game.agegroup,
         date: game.date,
         time: game.time,
+        formNumber:game.formNumber
+        
       },
     });
   }}
@@ -194,6 +196,11 @@ const styles = StyleSheet.create({
   agegroup: {
     fontSize: 15,
     fontWeight: "bold",
+  },
+  formnumber:{
+    fontSize: 15,
+    fontWeight: "bold",
+
   },
   venue: {
     fontSize: 15,
