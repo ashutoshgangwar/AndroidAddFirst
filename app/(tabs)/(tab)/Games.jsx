@@ -99,19 +99,25 @@ export default function Games() {
 
               <Text style={styles.description}>{game.details}</Text>
               <TouchableOpacity
-                style={styles.button}
-                onPress={() => router.push("./../Pages/Registation_form")}
-              >
-                <Text
-                  style={{
-                    color: Colors.WHITE,
-                    textAlign: "center",
-                    fontSize: 17,
-                  }}
-                >
-                  Enroll Now
-                </Text>
-              </TouchableOpacity>
+  style={styles.button}
+  onPress={() => {
+    // Pass selected game details via route params
+    router.push({
+      pathname: './../Pages/Registation_form',
+      params: {
+        gamename: game.gamename,
+        agegroup: game.agegroup,
+        date: game.date,
+        time: game.time,
+      },
+    });
+  }}
+>
+  <Text style={{ color: Colors.WHITE, textAlign: "center", fontSize: 17 }}>
+    Enroll Now
+  </Text>
+</TouchableOpacity>
+
             </View>
           ))
         )}

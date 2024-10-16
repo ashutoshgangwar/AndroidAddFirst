@@ -6,75 +6,53 @@ import {
   StyleSheet,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import { useNavigation, useRouter } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage"; // Added import for AsyncStorage
-import { Colors } from "../../../constants/Colors"; // Adjusted the import path for Colors
+import { useNavigation, useRouter, useLocalSearchParams } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Colors } from "../../../constants/Colors";
 
 export default function ProfileDetails() {
   const [profileData, setProfileData] = useState(null);
-  const [userData, setUserdata] = useState(null);
-  const [error, setError] = useState(null); // Added error state
-  const [loading, setLoading] = useState(true); // Added loading state
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const { gamename, agegroup, date, time } = useLocalSearchParams();
   const navigation = useNavigation();
   const router = useRouter();
 
   useEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-    });
-    fetchProfileData();
-    fetchUserdata();
+    navigation.setOptions({ headerShown: false });
+    fetchData();
   }, []);
 
-  const fetchProfileData = async () => {
+  const fetchData = async () => {
     try {
       const token = await AsyncStorage.getItem("userToken");
       if (!token) {
         throw new Error("No token found, please login again.");
       }
 
-      const response = await fetch("http://192.168.0.101:6000/profile", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const [profileResponse, userResponse] = await Promise.all([
+        fetch("http://192.168.0.101:6000/profile", {
+          method: "GET",
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+        fetch("http://192.168.0.101:6000/userdata", {
+          method: "GET",
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+      ]);
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to fetch profile data.");
+      if (!profileResponse.ok || !userResponse.ok) {
+        const errorMessage = `Profile: ${profileResponse.statusText}, User: ${userResponse.statusText}`;
+        throw new Error(errorMessage || "Failed to fetch data.");
       }
 
-      const data = await response.json();
-      setProfileData(data);
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+      const profileData = await profileResponse.json();
+      const userData = await userResponse.json();
 
-  const fetchUserdata = async () => {
-    try {
-      const token = await AsyncStorage.getItem("userToken");
-      if (!token) {
-        throw new Error("No token found, please login again.");
-      }
-
-      const response = await fetch("http://192.168.0.101:6000/userdata", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to fetch profile data.");
-      }
-
-      const data = await response.json();
-      setUserdata(data);
+      setProfileData(profileData);
+      setUserData(userData);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -140,25 +118,26 @@ export default function ProfileDetails() {
         </View>
       </View>
 
+      {/* Game, Age Group, Date, and Time from useSearchParams */}
       <View style={styles.doubleFormGroup}>
         <View style={styles.halfWidth}>
           <Text style={styles.inputText}>Game</Text>
-          <Text style={styles.input}>{profileData?.game}</Text>
+          <Text style={styles.input}>{gamename}</Text>
         </View>
         <View style={styles.halfWidth}>
           <Text style={styles.inputText}>Age Group</Text>
-          <Text style={styles.input}></Text>
+          <Text style={styles.input}>{agegroup}</Text>
         </View>
       </View>
 
       <View style={styles.doubleFormGroup}>
         <View style={styles.halfWidth}>
           <Text style={styles.inputText}>Date</Text>
-          <Text style={styles.input}></Text>
+          <Text style={styles.input}>{date}</Text>
         </View>
         <View style={styles.halfWidth}>
           <Text style={styles.inputText}>Time</Text>
-          <Text style={styles.input}></Text>
+          <Text style={styles.input}>{time}</Text>
         </View>
       </View>
 
@@ -204,11 +183,11 @@ const styles = StyleSheet.create({
   },
   editButton: {
     alignSelf: "center",
-    backgroundColor: Colors.PRIMARY, // Corrected spelling of PRIMERY to PRIMARY
+    backgroundColor: Colors.PRIMARY,
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 10,
-    marginTop: 10, // To add space between the text and button
+    marginTop: 10,
   },
   editButtonText: {
     color: "#fff",
@@ -238,7 +217,7 @@ const styles = StyleSheet.create({
   },
   updateButton: {
     alignItems: "center",
-    backgroundColor: Colors.PRIMERY, // Corrected spelling of PRIMERY to PRIMARY
+    backgroundColor: Colors.PRIMERY,
     paddingVertical: 15,
     paddingHorizontal: 15,
     borderRadius: 25,
