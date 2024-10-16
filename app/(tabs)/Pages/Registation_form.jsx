@@ -70,7 +70,14 @@ export default function ProfileDetails() {
     }
 
     // Generate Application ID
-    const applicationno = `APP-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+     // Extract the year from DOB (assuming DOB is in the format 'YYYY-MM-DD')
+     const year = profileData?.dob.split('-')[2]; // Get the first part (year) of the DOB
+     // Extract the last 3 digits from formNumber
+     const lastThreeDigits = formNumber.slice(-3);
+     // Generate a random number between 0 and 99
+     const randomNumber = Math.floor(Math.random() * 1000);
+     // Construct applicationno including gamename and year
+     const applicationno = `${gamename}${year}${lastThreeDigits}${randomNumber}`;
 
     const registrationData = {
         applicationno, // Include the application ID here
