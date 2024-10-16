@@ -86,7 +86,7 @@ export default function ProfileDetails() {
     };
 
     try {
-      const response = await fetch("http://192.168.0.101:6000/registationform", {
+      const response = await fetch("http://192.168.0.101:6000/registrationform", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
