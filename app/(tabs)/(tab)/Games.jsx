@@ -23,7 +23,7 @@ export default function Games() {
   // Fetch game details from the backend
   const fetchGameDetails = async () => {
     try {
-      const response = await fetch("http://192.168.0.101:6000/gamedetail", {
+      const response = await fetch("http://192.168.1.4:6000/gamedetail", {
         method: "GET",
       });
 
@@ -79,7 +79,7 @@ export default function Games() {
           games.map((game, index) => (
             <View key={index} style={styles.card}>
               <View style={styles.header}>
-                <Text style={styles.agegroup}>Event Id: {game.formNumber}</Text>
+                <Text style={styles.agegroup}>Event Id:{game.formNumber}</Text>
               </View>
               <View style={styles.header}>
                 <Text style={styles.title}>{game.gamename}</Text>

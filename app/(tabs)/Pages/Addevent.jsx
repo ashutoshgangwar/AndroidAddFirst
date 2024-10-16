@@ -141,7 +141,7 @@ export default function AddEvent() {
       const token = await AsyncStorage.getItem("userToken");
       console.log("User Token:", token); // Debug log
 
-      const response = await fetch("http://192.168.0.101:6000/addgame", {
+      const response = await fetch("http://192.168.1.4:6000/addgame", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

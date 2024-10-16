@@ -34,11 +34,11 @@ export default function ProfileDetails() {
       }
 
       const [profileResponse, userResponse] = await Promise.all([
-        fetch("http://192.168.0.101:6000/profile", {
+        fetch("http://192.168.1.4:6000/profile", {
           method: "GET",
           headers: { Authorization: `Bearer ${token}` },
         }),
-        fetch("http://192.168.0.101:6000/userdata", {
+        fetch("http://192.168.1.4:6000/userdata", {
           method: "GET",
           headers: { Authorization: `Bearer ${token}` },
         }),
@@ -86,7 +86,7 @@ export default function ProfileDetails() {
     };
 
     try {
-      const response = await fetch("http://192.168.0.101:6000/registrationform", {
+      const response = await fetch("http://192.168.1.4:6000/registrationform", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
