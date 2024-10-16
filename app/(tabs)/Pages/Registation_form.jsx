@@ -65,49 +65,55 @@ export default function ProfileDetails() {
     const token = await AsyncStorage.getItem("userToken");
 
     if (!token) {
-      Alert.alert("Error", "No token found, please login again.");
-      return;
+        Alert.alert("Error", "No token found, please login again.");
+        return;
     }
 
+    // Generate Application ID
+    const applicationno = `APP-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+
     const registrationData = {
-      fullname: profileData?.fullname,
-      dob: profileData?.dob,
-      height: userData?.height,
-      weight: userData?.weight,
-      gender: profileData?.gender,
-      bloodgroup: userData?.bloodgroup,
-      gamename,
-      agegroup,
-      date,
-      time,
-      formNumber,
-      city: profileData?.city,
-      gamelevel: userData?.gamelevel,
-      phonenumber: profileData?.phonenumber,
+        applicationno, // Include the application ID here
+        fullname: profileData?.fullname,
+        dob: profileData?.dob,
+        height: userData?.height,
+        weight: userData?.weight,
+        gender: profileData?.gender,
+        bloodgroup: userData?.bloodgroup,
+        gamename,
+        agegroup,
+        date,
+        time,
+        formNumber,
+        city: profileData?.city,
+        gamelevel: userData?.gamelevel,
+        phonenumber: profileData?.phonenumber,
     };
 
     try {
-      const response = await fetch("http://192.168.1.4:6000/registrationform", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(registrationData),
-      });
+        const response = await fetch("http://192.168.1.4:6000/registrationform", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(registrationData),
+        });
 
-      const result = await response.json();
+        const result = await response.json();
 
-      if (response.ok) {
-        Alert.alert("Success", "Regstation Succesfull");
-        router.push("./../(tab)/Games"); // Navigate to Games screen
-      } else {
-        throw new Error(result.error || "Failed to update profile details.");
-      }
+        if (response.ok) {
+            Alert.alert("Success", "Registration Successful. Application ID: " + applicationno);
+            router.push("./../(tab)/Games"); // Navigate to Games screen
+        } else {
+            // Handle server errors specifically
+            throw new Error(result.error || "Failed to update profile details.");
+        }
     } catch (error) {
-      Alert.alert("Error", error.message);
+        Alert.alert("Error", error.message);
     }
-  };
+};
+
 
   if (loading) {
     return (
@@ -130,13 +136,9 @@ export default function ProfileDetails() {
       <View>
         <Text style={styles.headerText}>Your Profile Details</Text>
         <Text style={styles.headerTextEvent}>Event Id: {formNumber}</Text>
-        {/* <TouchableOpacity style={styles.editButton}>
-          <Text style={styles.editButtonText}>Edit Details</Text>
-        </TouchableOpacity> */}
       </View>
 
       <View style={styles.doubleFormGroup}>
-     
         <View style={styles.halfWidth}>
           <Text style={styles.inputText}>Player Name</Text>
           <Text style={styles.input}>{profileData?.fullname}</Text>
@@ -229,26 +231,13 @@ const styles = StyleSheet.create({
     textAlign: "center",
     textDecorationLine: "underline",
   },
-  headerTextEvent:{
+  headerTextEvent: {
     fontSize: 20,
     padding: 10,
     fontWeight: "bold",
     textAlign: "center",
     textDecorationLine: "underline",
-
   },
-  // editButton: {
-  //   alignSelf: "center",
-  //   backgroundColor: Colors.PRIMERY,
-  //   paddingVertical: 10,
-  //   paddingHorizontal: 15,
-  //   borderRadius: 10,
-  //   marginTop: 10,
-  // },
-  // editButtonText: {
-  //   color: "#fff",
-  //   fontSize: 16,
-  // },
   formGroup: {
     marginTop: 20,
   },
@@ -275,13 +264,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: Colors.PRIMERY,
     paddingVertical: 15,
-    paddingHorizontal: 15,
-    borderRadius: 25,
-    marginTop: 20,
-    marginBottom: 20,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    marginTop: 30,
   },
   detailsButtonText: {
-    color: "#fff",
+    color: Colors.WHITE,
+    fontWeight: "bold",
     fontSize: 16,
   },
 });
