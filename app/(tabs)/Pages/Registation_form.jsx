@@ -29,31 +29,43 @@ export default function ProfileDetails() {
   const fetchData = async () => {
     try {
       const token = await AsyncStorage.getItem("userToken");
-      if (!token) {
-        throw new Error("No token found, please login again.");
+      const userId = await AsyncStorage.getItem("userId"); // Assume userId is stored in AsyncStorage
+
+      if (!token || !userId) {
+        throw new Error("No token or userId found, please login again.");
       }
 
-      const [profileResponse, userResponse] = await Promise.all([
-        fetch("http://192.168.1.4:6000/profile", {
-          method: "GET",
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-        fetch("http://192.168.1.4:6000/userdata", {
-          method: "GET",
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-      ]);
+      // Fetch profile data
+      const profileResponse = await fetch("http://192.168.1.4:6000/profile", {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-      if (!profileResponse.ok || !userResponse.ok) {
-        const errorMessage = `Profile: ${profileResponse.statusText}, User: ${userResponse.statusText}`;
-        throw new Error(errorMessage || "Failed to fetch data.");
+      if (!profileResponse.ok) {
+        throw new Error("Profile fetch error");
       }
 
       const profileData = await profileResponse.json();
-      const userData = await userResponse.json();
-
       setProfileData(profileData);
+
+      // Fetch user data
+      const userResponse = await fetch("http://192.168.1.4:6000/userdata", {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      
+      if (!userResponse.ok) {
+        throw new Error("User fetch error");
+      }
+
+      const userData = await userResponse.json();
       setUserData(userData);
+
+      // Check registration data
+      const isRegistered = await checkRegistrationData(token, userId);
+      if (isRegistered) {
+        Alert.alert("Notice", "You are already registered.");
+      }
     } catch (error) {
       setError(error.message);
     } finally {
@@ -61,33 +73,52 @@ export default function ProfileDetails() {
     }
   };
 
+  async function checkRegistrationData(token, userId) {
+    try {
+      const response = await fetch(`http://192.168.1.4:6000/registrationform?userId=${userId}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        return data.message !== "No registration forms found for this user"; // Data exists
+      } else {
+        throw new Error("Fetch error");
+      }
+    } catch (error) {
+      // console.error("Error:", error);
+      return false;
+    }
+  }
+
   const handleUpdateDetails = async () => {
     Alert.alert(
       "Confirm Submission",
       "Are you sure you want to submit your form?",
       [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
+        { text: "Cancel", style: "cancel" },
         {
           text: "OK",
           onPress: async () => {
             const token = await AsyncStorage.getItem("userToken");
-  
-            if (!token) {
-              Alert.alert("Error", "No token found, please login again.");
-              return;
+            const userId = await AsyncStorage.getItem("userId");
+
+            if (!token || !userId) {
+              return Alert.alert("Error", "No token or userId found, please login again.");
             }
-  
-            // Generate Application ID
-            const year = profileData?.dob.split('-')[2]; // Extract year from DOB
-            const lastThreeDigits = formNumber.slice(-3); // Get the last 3 digits of formNumber
-            const randomNumber = Math.floor(Math.random() * 1000); // Generate random number
-            const applicationno = `${gamename}${year}${lastThreeDigits}${randomNumber}`;
-  
+
+            const isRegistered = await checkRegistrationData(token, userId);
+            if (isRegistered) {
+              return Alert.alert("Notice", "You are already registered.");
+            }
+
+            // If not registered, save data
             const registrationData = {
-              applicationno, // Include the application ID here
+              applicationno: generateApplicationID(),
               fullname: profileData?.fullname,
               dob: profileData?.dob,
               height: userData?.height,
@@ -102,8 +133,9 @@ export default function ProfileDetails() {
               city: profileData?.city,
               gamelevel: userData?.gamelevel,
               phonenumber: profileData?.phonenumber,
+              userId, // Ensure userId is passed in the registration form
             };
-  
+
             try {
               const response = await fetch("http://192.168.1.4:6000/registrationform", {
                 method: "POST",
@@ -113,12 +145,11 @@ export default function ProfileDetails() {
                 },
                 body: JSON.stringify(registrationData),
               });
-  
+
               const result = await response.json();
-  
               if (response.ok) {
-                Alert.alert("Success", "Registration Successful, Reach your Venue on time. Application ID: " + applicationno,);
-                router.push("./../(tab)/Games"); // Navigate to Games screen
+                Alert.alert("Success", "Registration Successful. Application ID: " + registrationData.applicationno);
+                router.push("./../(tab)/Games");
               } else {
                 throw new Error(result.error || "Failed to update profile details.");
               }
@@ -130,7 +161,13 @@ export default function ProfileDetails() {
       ]
     );
   };
-  
+
+  const generateApplicationID = () => {
+    const year = profileData?.dob.split('-')[2]; // Extract year from DOB
+    const lastThreeDigits = formNumber.slice(-3); // Get the last 3 digits of formNumber
+    const randomNumber = Math.floor(Math.random() * 1000); // Generate random number
+    return `${gamename}${year}${lastThreeDigits}${randomNumber}`;
+  };
 
   if (loading) {
     return (
@@ -188,7 +225,6 @@ export default function ProfileDetails() {
         </View>
       </View>
 
-      {/* Game, Age Group, Date, and Time from useSearchParams */}
       <View style={styles.doubleFormGroup}>
         <View style={styles.halfWidth}>
           <Text style={styles.inputText}>Game</Text>
@@ -227,12 +263,11 @@ export default function ProfileDetails() {
         <Text style={styles.input}>{profileData?.phonenumber}</Text>
       </View>
 
-      <TouchableOpacity
-        style={styles.updateButton}
-        onPress={handleUpdateDetails}
-      >
-        <Text style={styles.detailsButtonText}>Submit Details</Text>
-      </TouchableOpacity>
+      <View style={styles.formGroup}>
+        <TouchableOpacity onPress={handleUpdateDetails} style={styles.submitButton}>
+          <Text style={styles.buttonText}>Submit</Text>
+        </TouchableOpacity>
+      </View>
     </ScrollView>
   );
 }
@@ -280,7 +315,7 @@ const styles = StyleSheet.create({
     borderColor: Colors.DIMMYGRAY,
     marginTop: 10,
   },
-  updateButton: {
+  submitButton: {
     alignItems: "center",
     backgroundColor: Colors.PRIMERY,
     paddingVertical: 15,
@@ -288,7 +323,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: 30,
   },
-  detailsButtonText: {
+  buttonText: {
     color: Colors.WHITE,
     fontWeight: "bold",
     fontSize: 16,
