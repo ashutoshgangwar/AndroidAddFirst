@@ -10,8 +10,9 @@ import {
 import React, { useEffect, useState } from "react";
 import { Colors } from "./../../../constants/Colors";
 import { useNavigation, useRouter } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import AntDesign from '@expo/vector-icons/AntDesign';
+import AntDesign from "@expo/vector-icons/AntDesign";
 
 export default function Games() {
   const [games, setGames] = useState([]); // State to store fetched games
@@ -32,11 +33,9 @@ export default function Games() {
       }
 
       const data = await response.json();
-      // console.log("Fetched data:", data); // Log the fetched data
       setGames(data); // Set the fetched games data in state
     } catch (error) {
-      // Log error to console; do not set any UI state or message
-      // console.error("Error fetching game details:", error.message);
+      console.error("Error fetching game details:", error.message);
     }
   };
 
@@ -55,6 +54,80 @@ export default function Games() {
     fetchGameDetails(); // Call the function to fetch data when the component mounts
   }, []);
 
+  const handleEnrollment = async (game) => {
+    try {
+      const token = await AsyncStorage.getItem("userToken");
+      const userId = await AsyncStorage.getItem("userId");
+  
+      if (!token || !userId) {
+        throw new Error("User token or userId is missing");
+      }
+  
+      const formNumber = game.formNumber;
+  
+      const response = await fetch(
+        `http://192.168.1.4:6000/registrationform?userId=${userId}&formNumber=${formNumber}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+  
+      // If the response is 404 (not found), route to the registration form
+      if (response.status === 404) {
+        console.log("No registration forms found, routing to Registration_form");
+        router.push({
+          pathname: "./../Pages/Registation_form",
+          params: {
+            gamename: game.gamename,
+            agegroup: game.agegroup,
+            date: game.date,
+            time: game.time,
+            formNumber: game.formNumber,
+          },
+        });
+        return;
+      }
+  
+      if (!response.ok) {
+        throw new Error(`Failed to fetch registration data: ${response.status}`);
+      }
+  
+      const data = await response.json();
+  
+      if (data && data.length > 0) {
+        // Route to SuccessRegistration page if registered
+        router.push({
+          pathname: "./../Pages/SuccessRegistration",
+          params: {
+            gamename: game.gamename,
+            agegroup: game.agegroup,
+            date: game.date,
+            time: game.time,
+            formNumber: game.formNumber,
+          },
+        });
+      } else {
+        // If no registration data is found, route to the registration form
+        router.push({
+          pathname: "./../Pages/Registation_form",
+          params: {
+            gamename: game.gamename,
+            agegroup: game.agegroup,
+            date: game.date,
+            time: game.time,
+            formNumber: game.formNumber,
+          },
+        });
+      }
+    } catch (error) {
+      console.error("Error checking registration:", error.message);
+    }
+  };
+  
 
   return (
     <View style={styles.container}>
@@ -72,26 +145,30 @@ export default function Games() {
       >
         {games.length === 0 ? ( // Check if the games array is empty
           <View style={styles.noEventsContainer}>
-            <AntDesign name="closecircle" size={80} color="black" marginBottom={20} />
+            <AntDesign
+              name="closecircle"
+              size={80}
+              color="black"
+              marginBottom={20}
+            />
             <Text style={styles.noEventsText}>No events are available</Text>
           </View>
         ) : (
           games.map((game, index) => (
             <View key={index} style={styles.card}>
               <View style={styles.header}>
-                <Text style={styles.formnumber}>Event Id:{game.formNumber}</Text>
+                <Text style={styles.formnumber}>
+                  Event Id: {game.formNumber}
+                </Text>
               </View>
               <View style={styles.header}>
                 <Text style={styles.title}>{game.gamename}</Text>
               </View>
-              
-
               <Text style={styles.level}>Level: {game.gamelevel}</Text>
               <Image
                 source={{ uri: game.imageUrl }} // Ensure image URL is correct
                 style={styles.icon}
               />
-
               <View style={styles.infoRow}>
                 <Text style={styles.agegroup}>Age Group: {game.agegroup}</Text>
                 <Text style={styles.venue}>Venue: {game.venue}</Text>
@@ -100,30 +177,23 @@ export default function Games() {
                 <Text style={styles.agegroup}>Date: {game.date}</Text>
                 <Text style={styles.time}>Time: {game.time}</Text>
               </View>
-
               <Text style={styles.description}>{game.details}</Text>
-              <TouchableOpacity
-  style={styles.button}
-  onPress={() => {
-    // Pass selected game details via route params
-    router.push({
-      pathname: './../Pages/Registation_form',
-      params: {
-        gamename: game.gamename,
-        agegroup: game.agegroup,
-        date: game.date,
-        time: game.time,
-        formNumber:game.formNumber
-        
-      },
-    });
-  }}
->
-  <Text style={{ color: Colors.WHITE, textAlign: "center", fontSize: 17 }}>
-    Enroll Now
-  </Text>
-</TouchableOpacity>
 
+              {/* Button to Enroll */}
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => handleEnrollment(game)}
+              >
+                <Text
+                  style={{
+                    color: Colors.WHITE,
+                    textAlign: "center",
+                    fontSize: 17,
+                  }}
+                >
+                  Enroll Now
+                </Text>
+              </TouchableOpacity>
             </View>
           ))
         )}
@@ -197,10 +267,9 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "bold",
   },
-  formnumber:{
+  formnumber: {
     fontSize: 15,
     fontWeight: "bold",
-
   },
   venue: {
     fontSize: 15,

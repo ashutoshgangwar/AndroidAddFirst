@@ -1,20 +1,20 @@
-import React, { useEffect} from "react";
+import React, { useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
-import { useNavigation } from "expo-router";
+import { useNavigation, useRouter } from "expo-router";
 import { Colors } from "../../../constants/Colors";
 
-
-
 const RegistrationSuccess = () => {
-  
-const navigation = useNavigation();
+  const navigation = useNavigation();
+  const router = useRouter();
 
   useEffect(() => {
     navigation.setOptions({
       headerShown: false,
     });
-})
-    
+  }, [navigation]);
+
+ 
+
   return (
     <View style={styles.container}>
       <View style={styles.card}>
@@ -27,11 +27,11 @@ const navigation = useNavigation();
         {/* Success message */}
         <Text style={styles.successText}>Registration successful!</Text>
         <Text style={styles.descriptionText}>
-          You form is already submited, Your Application number is:
+          Your form has already been submitted. Your Application number is:
         </Text>
 
         {/* OK button */}
-        <TouchableOpacity style={styles.okButton} onPress={""}>
+        <TouchableOpacity style={styles.okButton} onPress={() => router.replace("./../(tab)/Games")}>
           <Text style={styles.okButtonText}>OK</Text>
         </TouchableOpacity>
       </View>
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     color: Colors.PRIMERY,
     textAlign: 'center',
     marginBottom: 20,
-    fontWeight:"black"
+    fontWeight: "black",
   },
   okButton: {
     backgroundColor: Colors.PRIMERY,
