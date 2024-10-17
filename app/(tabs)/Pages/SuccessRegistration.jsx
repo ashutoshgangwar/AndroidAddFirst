@@ -25,9 +25,9 @@ const RegistrationSuccess = () => {
         />
 
         {/* Success message */}
-        <Text style={styles.successText}>Registration successful!</Text>
+        <Text style={styles.successText}>Congratulations!!</Text>
         <Text style={styles.descriptionText}>
-          Your form has already been submitted. Your Application number is:
+          Your have already submitted your details.
         </Text>
 
         {/* OK button */}
@@ -64,14 +64,14 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   successText: {
-    fontSize: 20,
+    fontSize: 30,
     fontWeight: 'bold',
     color: Colors.PRIMERY,
     marginBottom: 10,
     textAlign: 'center',
   },
   descriptionText: {
-    fontSize: 15,
+    fontSize: 20,
     color: Colors.PRIMERY,
     textAlign: 'center',
     marginBottom: 20,
