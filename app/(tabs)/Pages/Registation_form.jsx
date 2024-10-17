@@ -62,65 +62,75 @@ export default function ProfileDetails() {
   };
 
   const handleUpdateDetails = async () => {
-    const token = await AsyncStorage.getItem("userToken");
-
-    if (!token) {
-        Alert.alert("Error", "No token found, please login again.");
-        return;
-    }
-
-    // Generate Application ID
-     // Extract the year from DOB (assuming DOB is in the format 'YYYY-MM-DD')
-     const year = profileData?.dob.split('-')[2]; // Get the first part (year) of the DOB
-     // Extract the last 3 digits from formNumber
-     const lastThreeDigits = formNumber.slice(-3);
-     // Generate a random number between 0 and 99
-     const randomNumber = Math.floor(Math.random() * 1000);
-     // Construct applicationno including gamename and year
-     const applicationno = `${gamename}${year}${lastThreeDigits}${randomNumber}`;
-
-    const registrationData = {
-        applicationno, // Include the application ID here
-        fullname: profileData?.fullname,
-        dob: profileData?.dob,
-        height: userData?.height,
-        weight: userData?.weight,
-        gender: profileData?.gender,
-        bloodgroup: userData?.bloodgroup,
-        gamename,
-        agegroup,
-        date,
-        time,
-        formNumber,
-        city: profileData?.city,
-        gamelevel: userData?.gamelevel,
-        phonenumber: profileData?.phonenumber,
-    };
-
-    try {
-        const response = await fetch("http://192.168.1.4:6000/registrationform", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify(registrationData),
-        });
-
-        const result = await response.json();
-
-        if (response.ok) {
-            Alert.alert("Success", "Registration Successful. Application ID: " + applicationno);
-            router.push("./../(tab)/Games"); // Navigate to Games screen
-        } else {
-            // Handle server errors specifically
-            throw new Error(result.error || "Failed to update profile details.");
-        }
-    } catch (error) {
-        Alert.alert("Error", error.message);
-    }
-};
-
+    Alert.alert(
+      "Confirm Submission",
+      "Are you sure you want to submit your form?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "OK",
+          onPress: async () => {
+            const token = await AsyncStorage.getItem("userToken");
+  
+            if (!token) {
+              Alert.alert("Error", "No token found, please login again.");
+              return;
+            }
+  
+            // Generate Application ID
+            const year = profileData?.dob.split('-')[2]; // Extract year from DOB
+            const lastThreeDigits = formNumber.slice(-3); // Get the last 3 digits of formNumber
+            const randomNumber = Math.floor(Math.random() * 1000); // Generate random number
+            const applicationno = `${gamename}${year}${lastThreeDigits}${randomNumber}`;
+  
+            const registrationData = {
+              applicationno, // Include the application ID here
+              fullname: profileData?.fullname,
+              dob: profileData?.dob,
+              height: userData?.height,
+              weight: userData?.weight,
+              gender: profileData?.gender,
+              bloodgroup: userData?.bloodgroup,
+              gamename,
+              agegroup,
+              date,
+              time,
+              formNumber,
+              city: profileData?.city,
+              gamelevel: userData?.gamelevel,
+              phonenumber: profileData?.phonenumber,
+            };
+  
+            try {
+              const response = await fetch("http://192.168.1.4:6000/registrationform", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(registrationData),
+              });
+  
+              const result = await response.json();
+  
+              if (response.ok) {
+                Alert.alert("Success", "Registration Successful, Reach your Venue on time. Application ID: " + applicationno,);
+                router.push("./../(tab)/Games"); // Navigate to Games screen
+              } else {
+                throw new Error(result.error || "Failed to update profile details.");
+              }
+            } catch (error) {
+              Alert.alert("Error", error.message);
+            }
+          },
+        },
+      ]
+    );
+  };
+  
 
   if (loading) {
     return (
@@ -217,7 +227,10 @@ export default function ProfileDetails() {
         <Text style={styles.input}>{profileData?.phonenumber}</Text>
       </View>
 
-      <TouchableOpacity style={styles.updateButton} onPress={handleUpdateDetails}>
+      <TouchableOpacity
+        style={styles.updateButton}
+        onPress={handleUpdateDetails}
+      >
         <Text style={styles.detailsButtonText}>Submit Details</Text>
       </TouchableOpacity>
     </ScrollView>
