@@ -75,25 +75,26 @@ export default function ProfileDetails() {
 
   async function checkRegistrationData(token, userId) {
     try {
-      const response = await fetch(`http://192.168.1.4:6000/registrationform?userId=${userId}`, {
+      const response = await fetch(`http://192.168.1.4:6000/registrationform?userId=${userId}&formNumber=${formNumber}`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });
-
+  
       if (response.ok) {
         const data = await response.json();
         return data.message !== "No registration forms found for this user"; // Data exists
       } else {
-        throw new Error("Fetch error");
+        // throw new Error("Fetch error: " + response.statusText);
       }
     } catch (error) {
-      // console.error("Error:", error);
+      console.error("Error:", error);
       return false;
     }
   }
+  
   const handleUpdateDetails = async () => {
     const token = await AsyncStorage.getItem("userToken");
     const userId = await AsyncStorage.getItem("userId");
