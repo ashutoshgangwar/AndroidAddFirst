@@ -17,7 +17,7 @@ export default function ProfileDetails() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const { gamename, agegroup, date, time, formNumber } = useLocalSearchParams();
+  const { gamename, agegroup, date, time, formNumber, venue } = useLocalSearchParams();
   const navigation = useNavigation();
   const router = useRouter();
 
@@ -132,6 +132,7 @@ export default function ProfileDetails() {
                 date,
                 time,
                 formNumber,
+                venue,
                 city: profileData?.city,
                 gamelevel: userData?.gamelevel,
                 phonenumber: profileData?.phonenumber,
@@ -193,6 +194,7 @@ export default function ProfileDetails() {
       <View>
         <Text style={styles.headerText}>Your Profile Details</Text>
         <Text style={styles.headerTextEvent}>Event Id: {formNumber}</Text>
+        <Text style={styles.headerTextEvent}>Venue: {venue}</Text>
       </View>
 
       <View style={styles.doubleFormGroup}>

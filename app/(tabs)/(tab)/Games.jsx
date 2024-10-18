@@ -87,6 +87,7 @@ export default function Games() {
             date: game.date,
             time: game.time,
             formNumber: game.formNumber,
+            venue:game.venue
           },
         });
         return;
@@ -108,6 +109,7 @@ export default function Games() {
             date: game.date,
             time: game.time,
             formNumber: game.formNumber,
+            
           },
         });
       } else {
@@ -120,6 +122,7 @@ export default function Games() {
             date: game.date,
             time: game.time,
             formNumber: game.formNumber,
+            venue:game.venue
           },
         });
       }
