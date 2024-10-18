@@ -14,6 +14,7 @@ export const Colors = {
   RED:'#f71f15',
   LIGHTBLUE:'#43abb6',
   Rosy_Brown:'#bc8f8f',
+  SILVER: '#dad7d7',
   light: {
     text: '#11181C',
     background: '#fff',
