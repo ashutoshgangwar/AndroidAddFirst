@@ -12,6 +12,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigation, useRouter } from "expo-router";
 import { Colors } from "../../../../constants/Colors";
 
+
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -87,8 +88,8 @@ export default function SignIn() {
           router.replace("./../../Journey");
         }
       } else {
-        console.error("Login failed:", loginData.message);
-        Alert.alert("Login Failed", loginData.message || "Invalid credentials");
+        // console.error("Login failed:", loginData.message);
+        Alert.alert("User Not Registered", "Please register yourself first.");
       }
     } catch (error) {
       console.error("Sign-in error:", error);
@@ -100,6 +101,7 @@ export default function SignIn() {
 
   return (
     <View style={styles.container}>
+      
       <Text style={styles.title}>Let's Start your Journey</Text>
       <Text style={styles.subtitle}>Welcome to you</Text>
       <Text style={styles.loginText}>User Login</Text>
@@ -135,14 +137,6 @@ export default function SignIn() {
         ) : (
           <Text style={styles.buttonText}>Sign In</Text>
         )}
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        onPress={() => router.replace("./../sign-up/role")
-        }
-        style={styles.createAccount}
-      >
-        <Text style={styles.createAccountText}>Register Now</Text>
       </TouchableOpacity>
       
     </View>
