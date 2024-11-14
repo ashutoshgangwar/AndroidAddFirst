@@ -253,7 +253,7 @@ const handleSubmit = async () => {
   try {
     // Check if the email exists
     const emailCheckResponse = await fetch(
-      `http://192.168.1.4:6000/check-email?email=${email}`,
+      `http://192.168.1.5:6000/check-email?email=${email}`,
       {
         method: "GET",
         headers: {
@@ -271,7 +271,7 @@ const handleSubmit = async () => {
 
     
     // Signup API
-    const response = await fetch("http://192.168.1.4:6000/signup", {
+    const response = await fetch("http://192.168.1.5:6000/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

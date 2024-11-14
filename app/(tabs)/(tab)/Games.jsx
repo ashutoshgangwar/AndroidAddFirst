@@ -24,7 +24,7 @@ export default function Games() {
   // Fetch game details from the backend
   const fetchGameDetails = async () => {
     try {
-      const response = await fetch("http://192.168.1.4:6000/gamedetail", {
+      const response = await fetch("http://192.168.1.5:6000/gamedetail", {
         method: "GET",
       });
 
@@ -66,7 +66,7 @@ export default function Games() {
       const formNumber = game.formNumber;
   
       const response = await fetch(
-        `http://192.168.1.4:6000/registrationform?userId=${userId}&formNumber=${formNumber}`,
+        `http://192.168.1.5:6000/registrationform?userId=${userId}&formNumber=${formNumber}`,
         {
           method: "GET",
           headers: {

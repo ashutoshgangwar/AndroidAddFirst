@@ -50,6 +50,7 @@ export default function Login() {
             Start your Journey
           </Text>
         </TouchableOpacity>
+        
       </View>
     </View>
   );

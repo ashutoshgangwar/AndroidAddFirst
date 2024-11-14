@@ -42,7 +42,7 @@ export default function Gamedetails() {
   const fetchGames = async () => {
     setLoading(true); // Start loading
     try {
-      const response = await fetch("http://192.168.1.4:6000/gamedetail");
+      const response = await fetch("http://192.168.1.5:6000/gamedetail");
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }

@@ -54,7 +54,7 @@ export default function ThirdForm() {
       }
   
       // Submit all the data to the API
-      const response = await fetch("http://192.168.1.4:6000/userdata", {
+      const response = await fetch("http://192.168.1.5:6000/userdata", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

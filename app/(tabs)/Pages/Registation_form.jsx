@@ -36,7 +36,7 @@ export default function ProfileDetails() {
       }
 
       // Fetch profile data
-      const profileResponse = await fetch("http://192.168.1.4:6000/profile", {
+      const profileResponse = await fetch("http://192.168.1.5:6000/profile", {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -49,7 +49,7 @@ export default function ProfileDetails() {
       setProfileData(profileData);
 
       // Fetch user data
-      const userResponse = await fetch("http://192.168.1.4:6000/userdata", {
+      const userResponse = await fetch("http://192.168.1.5:6000/userdata", {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -75,7 +75,7 @@ export default function ProfileDetails() {
 
   async function checkRegistrationData(token, userId) {
     try {
-      const response = await fetch(`http://192.168.1.4:6000/registrationform?userId=${userId}&formNumber=${formNumber}`, {
+      const response = await fetch(`http://192.168.1.5:6000/registrationform?userId=${userId}&formNumber=${formNumber}`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -140,7 +140,7 @@ export default function ProfileDetails() {
               };
   
               try {
-                const response = await fetch("http://192.168.1.4:6000/registrationform", {
+                const response = await fetch("http://192.168.1.5:6000/registrationform", {
                   method: "POST",
                   headers: {
                     "Content-Type": "application/json",
