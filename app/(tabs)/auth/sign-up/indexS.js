@@ -1,3 +1,4 @@
+import { API_URL } from '@env';
 import {
   View,
   Text,
@@ -112,7 +113,7 @@ const handleSubmit = async () => {
   try {
     // Check if the email exists
     const emailCheckResponse = await fetch(
-      `http://192.168.1.5:6000/check-email?email=${email}`,
+     `${API_URL}/check-email?email=${email}`,
       {
         method: "GET",
         headers: {
@@ -129,7 +130,7 @@ const handleSubmit = async () => {
     }
 
     // Signup API
-    const response = await fetch("http://192.168.1.5:6000/signup", {
+    const response = await fetch(`${API_URL}/signup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
