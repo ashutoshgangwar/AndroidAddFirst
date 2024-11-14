@@ -302,7 +302,7 @@ const styles = StyleSheet.create({
     color: Colors.PRIMERY,
     fontSize: 24,
     fontWeight: "bold",
-    marginRight: 20,
+    marginRight: 80,
   },
   sliderContainer: {
     height: imageHeight,
