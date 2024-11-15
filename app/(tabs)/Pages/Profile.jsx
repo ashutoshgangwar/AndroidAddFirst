@@ -65,7 +65,7 @@ export default function Profile() {
       setImageUri(fetchedImageUri);
       setInitialImageUri(fetchedImageUri); // Set initial image URI
       setImageUpdated(false);
-      setBio(data.bio || ""); // Set bio from profile data
+      setBio(data.bio || ""); // Make sure the bio state is set from the profile data
     } catch (error) {
       setError(error.message);
     } finally {
@@ -106,9 +106,16 @@ export default function Profile() {
         body: formData,
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to update profile data.");
+      if (response.ok) {
+        Alert.alert("Success", "Bio updated successfully!");
+        setIsEditingBio(false);
+        setBio(bio); // Make sure the bio state is updated with the new bio
+      } else {
+        console.error("API request failed with status:", response.status);
+        console.log("Response Text:", responseData);
+        throw new Error(
+          `Failed to update bio. Status code: ${response.status}`
+        );
       }
 
       const data = await response.json();
@@ -130,40 +137,37 @@ export default function Profile() {
       if (!token) {
         throw new Error("No token found, please login again.");
       }
-  
+
+      console.log("Saving Bio:", bio); // Debugging line
+
       const response = await fetch(`${API_URL}/profile/bio`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ bio: bio }),  // Using bio state here
+        body: JSON.stringify({ bio: bio }), // Ensure correct payload
       });
-  
-      const responseText = await response.text();  // Get raw response text
-      console.log("Response Text:", responseText);  // Log the raw response
-  
-      // Check if the response is valid and parse it
+
+      const responseData = await response.json();
+      console.log("Response Status:", response.status);
+      console.log("Response Data:", responseData);
       if (response.ok) {
-        try {
-          const responseData = JSON.parse(responseText); // Try to parse the response
-          Alert.alert("Success", "Bio updated successfully!");
-          setIsEditingBio(false);
-        } catch (e) {
-          console.error("Error parsing response JSON:", e);
-          Alert.alert("Error", "Failed to parse server response.");
-        }
+        Alert.alert("Success", "Bio updated successfully!");
+        setIsEditingBio(false);
+        setProfileData((prevData) => ({
+          ...prevData,
+          bio: bio, // Update local state
+        }));
       } else {
-        console.error("API request failed with status:", response.status);
-        console.log("Response Text:", responseText);  // Log the response text if the status is not OK
-        throw new Error(`Failed to update bio. Status code: ${response.status}`);
+        throw new Error(`Failed to update bio. Status: ${response.status}`);
       }
     } catch (error) {
+      console.error("Error saving bio:", error.message);
       Alert.alert("Error", error.message);
     }
   };
-  
-  
+
   const handleLogout = async () => {
     try {
       await AsyncStorage.removeItem("userToken");
@@ -244,17 +248,20 @@ export default function Profile() {
         <View style={styles.formGroup}>
           <Text style={styles.inputText}>About Us</Text>
           <View style={styles.bioContainer}>
-            <ScrollView nestedScrollEnabled={true} contentContainerStyle={styles.bioScroll}>
+            <ScrollView
+              nestedScrollEnabled={true}
+              contentContainerStyle={styles.bioScroll}
+            >
               {isEditingBio ? (
                 <TextInput
                   style={styles.bioText}
-                  value={bio}
-                  onChangeText={setBio}
+                  value={bio} // Bind the bio state here
+                  onChangeText={setBio} // Update the bio state when text changes
                   multiline
                   numberOfLines={4}
                 />
               ) : (
-                <Text style={styles.bioText}>{bio}</Text>
+                <Text style={styles.bioText}>{bio}</Text> // Display the bio when not editing
               )}
             </ScrollView>
           </View>
@@ -419,7 +426,6 @@ const styles = StyleSheet.create({
     color: "#333",
     lineHeight: 20, // Adjust for better readability
   },
-  
 
   accountInfo: {
     paddingHorizontal: 20,
