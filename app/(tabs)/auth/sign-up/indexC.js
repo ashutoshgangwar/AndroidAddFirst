@@ -37,6 +37,9 @@ export default function SignIn() {
 
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
+  const [expyear, setExpyear] = useState("");
+  const [language, setLanguage] = useState("");
+  const [expert, setExpert] = useState("");
   const [districts, setDistricts] = useState([]);
 
   const [gametype, setGametype] = useState("");
@@ -44,6 +47,36 @@ export default function SignIn() {
   const [selectedGame, setSelectedGame] = useState("");
 
   const [password, setPassword] = useState("");
+
+
+    // List of Indian languages
+    const indianLanguages = [
+      "Assamese",
+      "Bengali",
+      "Bodo",
+      "Dogri",
+      "Gujarati",
+      "Hindi",
+      "Kannada",
+      "Kashmiri",
+      "Konkani",
+      "Maithili",
+      "Malayalam",
+      "Manipuri",
+      "Marathi",
+      "Nepali",
+      "Odia",
+      "Punjabi",
+      "Sanskrit",
+      "Santali",
+      "Sindhi",
+      "Tamil",
+      "Telugu",
+      "Urdu",
+    ];
+  
+    // Experience years from 1 to 20
+    const experienceYears = Array.from({ length: 20 }, (_, i) => i + 1);
 
   // State-to-district mapping
   const stateDistricts = {
@@ -244,6 +277,9 @@ const handleSubmit = async () => {
     !city ||
     !state ||
     !gametype ||
+    !language ||
+    !expyear ||
+    !expert ||
     !selectedGame ||
     !password
   ) {
@@ -288,6 +324,9 @@ const handleSubmit = async () => {
         state,
         gametype,
         game: selectedGame,
+        language,
+        expyear,
+        expert,
         password,
       }),
     });
@@ -330,7 +369,7 @@ const handleSubmit = async () => {
       </TouchableOpacity>
       <Text style={styles.headerText}>Let's Sign Up</Text>
       <Text style={styles.headerTexttype}>As Coach/Trainer</Text>
-      <Text style={styles.subHeaderText}>Welcome to you</Text>
+      
 
       <View style={styles.formGroup}>
         <Text style={styles.inputText}>Register As</Text>
@@ -342,10 +381,26 @@ const handleSubmit = async () => {
             <Picker.Item label="Select Role" value="" />
             <Picker.Item label="Coach" value="Coach" />
             <Picker.Item label="Trainer" value="Trainer" />
+            <Picker.Item label="School PTI" value="School PTI" />
           </Picker>
         </View>
       </View>
 
+      {/* Experriane in */}
+      <View style={styles.formGroup}>
+        <Text style={styles.inputText}>Specialization</Text>
+        <View style={styles.pickerContainer}>
+          <Picker
+            selectedValue={expert}
+            onValueChange={(itemValue) => setExpert(itemValue)}
+          >
+            <Picker.Item label="Select group" value="" />
+            <Picker.Item label="Young" value="Young" />
+            <Picker.Item label="Senior" value="Senior" />
+            <Picker.Item label="University Level" value="University Level" />
+          </Picker>
+        </View>
+      </View>
       <View style={styles.formGroup}>
         <Text style={styles.inputText}>Full Name</Text>
         <TextInput
@@ -464,6 +519,40 @@ const handleSubmit = async () => {
             </Picker>
           </View>
         </View>
+      </View>
+
+       {/* Add Experience Year Picker */}
+     <View style={styles.doubleFormGroup}>
+     <View style={styles.halfWidth}>
+        <Text style={styles.inputText}>Experience Year</Text>
+        <View style={styles.pickerContainer}>
+        <Picker
+          selectedValue={expyear}
+          onValueChange={(itemValue) => setExpyear(itemValue)}
+        >
+          <Picker.Item label="Select Experience Year" value="" />
+          {experienceYears.map((year) => (
+            <Picker.Item label={year.toString()} value={year.toString()} key={year} />
+          ))}
+        </Picker>
+        </View>
+      </View>
+
+      {/* Add Language Picker */}
+      <View style={styles.halfWidth}>
+        <Text style={styles.inputText}>Preferred Language</Text>
+        <View style={styles.pickerContainer}>
+        <Picker
+          selectedValue={language}
+          onValueChange={(itemValue) => setLanguage(itemValue)}
+        >
+          <Picker.Item label="Select Language" value="" />
+          {indianLanguages.map((lang, idx) => (
+            <Picker.Item label={lang} value={lang} key={idx} />
+          ))}
+        </Picker>
+        </View>
+      </View>
       </View>
 
       <View style={styles.formGroup}>
