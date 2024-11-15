@@ -1,4 +1,5 @@
 import { API_URL } from '@env';
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,12 +8,13 @@ import {
   TouchableOpacity,
   Alert,
   ScrollView,
+  Platform,
+  Button,
 } from "react-native";
-import React, { useEffect, useState } from "react";
 import { useNavigation, useRouter } from "expo-router";
-import { Colors } from "../../../../constants/Colors";
 import { Picker } from "@react-native-picker/picker";
-
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { Colors } from "../../../../constants/Colors";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 export default function SignIn() {
@@ -26,84 +28,199 @@ export default function SignIn() {
   }, []);
 
   const [registeras, setRegisteras] = useState("");
-  const [instname, setInstname] = useState("");
-  const [address, setAddress] = useState("");
- 
+  const [fullname, setFullname] = useState("");
+  const [email, setEmail] = useState("");
+  const [phonenumber, setPhonenumber] = useState("");
+  const [dob, setDob] = useState(null); // Set initial date as current date
+  const [showDatePicker, setShowDatePicker] = useState(false); // Toggle date picker
+  const [gender, setGender] = useState("");
+
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
+  const [expyear, setExpyear] = useState("");
+  const [language, setLanguage] = useState("");
   const [districts, setDistricts] = useState([]);
-  const [email, setEmail] = useState("");
-  const [headname, setHeadname] = useState("");
-  const [headphone, setHeadphone] = useState("");
-  const [ptteachername, setPteachername] = useState("");
-  const [ptteacherphone, setPtteacherphone] = useState("");
+
+
+
   const [password, setPassword] = useState("");
 
 
-// State-to-district mapping
-const stateDistricts = {
-  "Uttar Pradesh": [
-  "Agra", "Aligarh", "Ambedkar Nagar", "Amethi", "Amroha", "Auraiya", "Azamgarh", 
-  "Baghpat", "Bahraich", "Ballia", "Balrampur", "Banda", "Barabanki", "Bareilly", 
-  "Basti", "Bijnor", "Budaun", "Bulandshahr", "Chandauli", "Chitrakoot", "Deoria", 
-  "Etah", "Etawah", "Farrukhabad", "Fatehpur", "Firozabad", "Gautam Buddha Nagar", 
-  "Ghaziabad", "Gonda", "Gorakhpur", "Hamirpur", "Hapur", "Hardoi", "Hathras", 
-  "Jalaun", "Jaunpur", "Jhansi", "Kannauj", "Kanpur Dehat", "Kanpur Nagar", 
-  "Kanshiram Nagar", "Kaushambi", "Kheri", "Kushinagar", "Lakhimpur Kheri", 
-  "Lalitpur", "Lucknow", "Maharajganj", "Mahoba", "Mainpuri", "Mathura", "Mau", 
-  "Meerut", "Mirzapur", "Moradabad", "Muzaffarnagar", "Pilibhit", "Prayagraj", 
-  "Rae Bareli", "Rampur", "Saharanpur", "Sambhal", "Sant Kabir Nagar", "Shahjahanpur", 
-  "Shamli", "Shravasti", "Siddharthnagar", "Sitapur", "Sonbhadra", "Sultanpur", 
-  "Unnao", "Varanasi"
-],
-"Delhi": ["Central Delhi", "East Delhi", "New Delhi", "North Delhi", "North East Delhi", 
-          "North West Delhi", "South Delhi", "South East Delhi", "South West Delhi", 
-          "West Delhi"],
-"Haryana": [
-  "Ambala", "Bhiwani", "Faridabad", "Fatehabad", "Gurugram", "Hisar", "Jhajjar", 
-  "Jind", "Kaithal", "Karnal", "Kurukshetra", "Mahendragarh", "Nuh", "Palwal", 
-  "Panchkula", "Panipat", "Rewari", "Rohtak", "Sirsa", "Sonipat", "Yamunanagar"
-]
-  // Add more states and districts here
-};
+    // List of Indian languages
+    const indianLanguages = [
+      "Assamese",
+      "Bengali",
+      "Bodo",
+      "Dogri",
+      "Gujarati",
+      "Hindi",
+      "Kannada",
+      "Kashmiri",
+      "Konkani",
+      "Maithili",
+      "Malayalam",
+      "Manipuri",
+      "Marathi",
+      "Nepali",
+      "Odia",
+      "Punjabi",
+      "Sanskrit",
+      "Santali",
+      "Sindhi",
+      "Tamil",
+      "Telugu",
+      "Urdu",
+    ];
+  
+    // Experience years from 1 to 20
+    const experienceYears = Array.from({ length: 20 }, (_, i) => i + 1);
 
-// Update districts when the state is selected
-useEffect(() => {
-  if (state) {
-    setDistricts(stateDistricts[state] || []);
-  } else {
-    setDistricts([]); // Reset districts if no state is selected
-  }
-}, [state]);
+  // State-to-district mapping
+  const stateDistricts = {
+    "Uttar Pradesh": [
+      "Agra",
+      "Aligarh",
+      "Ambedkar Nagar",
+      "Amethi",
+      "Amroha",
+      "Auraiya",
+      "Azamgarh",
+      "Baghpat",
+      "Bahraich",
+      "Ballia",
+      "Balrampur",
+      "Banda",
+      "Barabanki",
+      "Bareilly",
+      "Basti",
+      "Bijnor",
+      "Budaun",
+      "Bulandshahr",
+      "Chandauli",
+      "Chitrakoot",
+      "Deoria",
+      "Etah",
+      "Etawah",
+      "Farrukhabad",
+      "Fatehpur",
+      "Firozabad",
+      "Gautam Buddha Nagar",
+      "Ghaziabad",
+      "Gonda",
+      "Gorakhpur",
+      "Hamirpur",
+      "Hapur",
+      "Hardoi",
+      "Hathras",
+      "Jalaun",
+      "Jaunpur",
+      "Jhansi",
+      "Kannauj",
+      "Kanpur Dehat",
+      "Kanpur Nagar",
+      "Kanshiram Nagar",
+      "Kaushambi",
+      "Kheri",
+      "Kushinagar",
+      "Lakhimpur Kheri",
+      "Lalitpur",
+      "Lucknow",
+      "Maharajganj",
+      "Mahoba",
+      "Mainpuri",
+      "Mathura",
+      "Mau",
+      "Meerut",
+      "Mirzapur",
+      "Moradabad",
+      "Muzaffarnagar",
+      "Pilibhit",
+      "Prayagraj",
+      "Rae Bareli",
+      "Rampur",
+      "Saharanpur",
+      "Sambhal",
+      "Sant Kabir Nagar",
+      "Shahjahanpur",
+      "Shamli",
+      "Shravasti",
+      "Siddharthnagar",
+      "Sitapur",
+      "Sonbhadra",
+      "Sultanpur",
+      "Unnao",
+      "Varanasi",
+    ],
+    Delhi: [
+      "Central Delhi",
+      "East Delhi",
+      "New Delhi",
+      "North Delhi",
+      "North East Delhi",
+      "North West Delhi",
+      "South Delhi",
+      "South East Delhi",
+      "South West Delhi",
+      "West Delhi",
+    ],
+    Haryana: [
+      "Ambala",
+      "Bhiwani",
+      "Faridabad",
+      "Fatehabad",
+      "Gurugram",
+      "Hisar",
+      "Jhajjar",
+      "Jind",
+      "Kaithal",
+      "Karnal",
+      "Kurukshetra",
+      "Mahendragarh",
+      "Nuh",
+      "Palwal",
+      "Panchkula",
+      "Panipat",
+      "Rewari",
+      "Rohtak",
+      "Sirsa",
+      "Sonipat",
+      "Yamunanagar",
+    ],
+    // Add more states and districts here
+  };
 
+  
+  // Update districts when the state is selected
+  useEffect(() => {
+    if (state) {
+      setDistricts(stateDistricts[state] || []);
+    } else {
+      setDistricts([]); // Reset districts if no state is selected
+    }
+  }, [state]);
+
+ 
 
 const handleSubmit = async () => {
-  // Validate the phone numbers
+
+  // Validate the phone number
   const phoneNumberPattern = /^[0-9]{10}$/; // Regex to check for exactly 10 digits
-
-  // Check headphone number
-  if (!phoneNumberPattern.test(headphone)) {
-    Alert.alert("Error", "Principal contact number is invalid. It must be a 10-digit number.");
-    return;
-  }
-
-  // Check ptteacherphone number
-  if (!phoneNumberPattern.test(ptteacherphone)) {
-    Alert.alert("Error", "PT Teacher contact number is invalid. It must be a 10-digit number.");
+  if (!phoneNumberPattern.test(phonenumber)) {
+    Alert.alert("Error", "Contact number is invalid. It must be a 10-digit number.");
     return;
   }
 
   if (
     !registeras ||
-    !instname ||
-    !address ||
+    !fullname ||
+    !email ||
+    !phonenumber ||
+    !gender ||
+    !dob ||
     !city ||
     !state ||
-    !email ||
-    !headname ||
-    !headphone ||
-    !ptteachername ||
-    !ptteacherphone ||
+    !language ||
+    !expyear ||
     !password
   ) {
     Alert.alert("Error", "Please fill out all fields");
@@ -113,7 +230,7 @@ const handleSubmit = async () => {
   try {
     // Check if the email exists
     const emailCheckResponse = await fetch(
-     `${API_URL}/check-email?email=${email}`,
+      `${API_URL}/check-email?email=${email}`,
       {
         method: "GET",
         headers: {
@@ -125,10 +242,11 @@ const handleSubmit = async () => {
     const emailCheckData = await emailCheckResponse.json();
 
     if (emailCheckResponse.ok && emailCheckData.exists) {
-      Alert.alert("Opps", "User already exists, Register with another Email id");
+      Alert.alert("Opps", "User already exist, Register with another Email id");
       return; // Stop the sign-up process if the email exists
     }
 
+    
     // Signup API
     const response = await fetch(`${API_URL}/signup`, {
       method: "POST",
@@ -137,15 +255,15 @@ const handleSubmit = async () => {
       },
       body: JSON.stringify({
         registeras,
-        instname,
-        address,
+        fullname,
         email,
-        headname,
-        headphone,
-        ptteachername,
-        ptteacherphone,
+        phonenumber,
+        gender,
+        dob,
         city,
         state,
+        language,
+        expyear,
         password,
       }),
     });
@@ -164,14 +282,31 @@ const handleSubmit = async () => {
   }
 };
 
+
+   // Function to format date in DD-MM-YYYY
+   const formatDate = (date) => {
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // getMonth is 0-based
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  };
+
+  const onChangeDate = (event, selectedDate) => {
+    if (selectedDate) {
+      const formattedDate = formatDate(selectedDate);
+      setDob(formattedDate); // Set formatted date
+    }
+    setShowDatePicker(false); // Close the picker after selecting a date
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <TouchableOpacity onPress={() => router.replace("./../sign-in")}>
         <FontAwesome name="arrow-left" size={24} color="black" />
       </TouchableOpacity>
       <Text style={styles.headerText}>Let's Sign Up</Text>
-      <Text style={styles.headerTexttype}>As School/College</Text>
-      <Text style={styles.subHeaderText}>Welcome to you</Text>
+      <Text style={styles.headerTexttype}>As Dooctor/Nutritionist</Text>
+      
 
       <View style={styles.formGroup}>
         <Text style={styles.inputText}>Register As</Text>
@@ -181,32 +316,72 @@ const handleSubmit = async () => {
             onValueChange={(itemValue) => setRegisteras(itemValue)}
           >
             <Picker.Item label="Select Role" value="" />
-
-            <Picker.Item label="School" value="School" />
-            <Picker.Item label="College" value="College" />
+            <Picker.Item label="Dooctor" value="Dooctor" />
+            <Picker.Item label="Nutritionist" value="Nutritionist" />
+            <Picker.Item label="Therapist" value="Therapist" />
           </Picker>
         </View>
       </View>
 
+      
       <View style={styles.formGroup}>
-        <Text style={styles.inputText}>College or School Name</Text>
+        <Text style={styles.inputText}>Full Name</Text>
         <TextInput
           style={styles.input}
-          value={instname}
-          onChangeText={setInstname}
-          placeholder="Enter your College/School Name"
+          value={fullname}
+          onChangeText={setFullname}
+          placeholder="Enter your full name"
         />
       </View>
 
       <View style={styles.formGroup}>
-        <Text style={styles.inputText}>College/School Address</Text>
+        <Text style={styles.inputText}>Email</Text>
         <TextInput
           style={styles.input}
-          value={address}
-          onChangeText={setAddress}
-          placeholder="Enter Full address"
+          value={email}
+          onChangeText={setEmail}
+          placeholder="Enter your email address"
         />
       </View>
+
+      <View style={styles.doubleFormGroup}>
+        <View style={styles.halfWidth}>
+          <Text style={styles.inputText}>Gender</Text>
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={gender}
+              onValueChange={(itemValue) => setGender(itemValue)}
+            >
+              <Picker.Item label="Select Gender" value="" />
+              <Picker.Item label="Male" value="Male" />
+              <Picker.Item label="Female" value="Female" />
+            </Picker>
+          </View>
+        </View>
+
+        <View style={styles.halfWidth}>
+          <Text style={styles.inputText}>Date of Birth</Text>
+          
+          <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+            <TextInput
+              style={[styles.input, dob ? styles.selectedDateText : null]} // Apply bold style if a date is selected
+              value={dob || ""} // Display the formatted date
+              editable={false} // Prevent manual input
+              placeholder="Select your DOB"
+            />
+          </TouchableOpacity>
+          {showDatePicker && (
+            <DateTimePicker
+              value={new Date()} // Use current date as default
+              mode="date"
+              display="default"
+              onChange={onChangeDate}
+              maximumDate={new Date()} // Prevent selecting future dates
+            />
+          )}
+        </View>
+      </View>
+
       <View style={styles.doubleFormGroup}>
         <View style={styles.halfWidth}>
           <Text style={styles.inputText}>State</Text>
@@ -237,59 +412,49 @@ const handleSubmit = async () => {
           </View>
         </View>
       </View>
+       {/* Add Experience Year Picker */}
+     <View style={styles.doubleFormGroup}>
+     <View style={styles.halfWidth}>
+        <Text style={styles.inputText}>Experience Year</Text>
+        <View style={styles.pickerContainer}>
+        <Picker
+          selectedValue={expyear}
+          onValueChange={(itemValue) => setExpyear(itemValue)}
+        >
+          <Picker.Item label="Select Experience Year" value="" />
+          {experienceYears.map((year) => (
+            <Picker.Item label={year.toString()} value={year.toString()} key={year} />
+          ))}
+        </Picker>
+        </View>
+      </View>
+
+      {/* Add Language Picker */}
+      <View style={styles.halfWidth}>
+        <Text style={styles.inputText}>Preferred Language</Text>
+        <View style={styles.pickerContainer}>
+        <Picker
+          selectedValue={language}
+          onValueChange={(itemValue) => setLanguage(itemValue)}
+        >
+          <Picker.Item label="Select Language" value="" />
+          {indianLanguages.map((lang, idx) => (
+            <Picker.Item label={lang} value={lang} key={idx} />
+          ))}
+        </Picker>
+        </View>
+      </View>
+      </View>
 
       <View style={styles.formGroup}>
-        <Text style={styles.inputText}>Enter Principal Email Id</Text>
+        <Text style={styles.inputText}>Phone Number</Text>
         <TextInput
           style={styles.input}
-          value={email}
-          onChangeText={setEmail}
-          placeholder="Please enter email id"
+          value={phonenumber}
+          onChangeText={setPhonenumber}
+          placeholder="+91xxxxxxx11"
         />
       </View>
-
-      <View style={styles.doubleFormGroup}>
-        <View style={styles.halfWidth}>
-          <Text style={styles.inputText}>Principal Name</Text>
-          <TextInput
-            style={styles.input}
-            value={headname}
-            onChangeText={setHeadname}
-            placeholder="Principal Name"
-          />
-        </View>
-        <View style={styles.halfWidth}>
-          <Text style={styles.inputText}>Contact Details</Text>
-          <TextInput
-            style={styles.input}
-            value={headphone}
-            onChangeText={setHeadphone}
-            placeholder="+91xxxxxxx11"
-          />
-        </View>
-      </View>
-      <View style={styles.doubleFormGroup}>
-        <View style={styles.halfWidth}>
-          <Text style={styles.inputText}>PT Teacher Name</Text>
-          <TextInput
-            style={styles.input}
-            value={ptteachername}
-            onChangeText={setPteachername}
-            placeholder="PT Teacher Name"
-          />
-        </View>
-        <View style={styles.halfWidth}>
-          <Text style={styles.inputText}>Contact Details</Text>
-          <TextInput
-            style={styles.input}
-            value={ptteacherphone}
-            onChangeText={setPtteacherphone}
-            placeholder="+91xxxxxxx11"
-          />
-        </View>
-      </View>
-
-      {/* Edited */}
 
       <View style={styles.formGroup}>
         <Text style={styles.inputText}>Password</Text>
@@ -377,10 +542,8 @@ const styles = StyleSheet.create({
     borderColor: Colors.PRIMERY,
     borderRadius: 15,
     marginTop: 10,
-    backgroundColor: Colors.WHITE, // Ensures the picker has a white background
-    paddingLeft: 10, // Padding for better readability
   },
   selectedDateText: {
-    color: Colors.PRIMERY,
+    color: Colors.PRIMERY, // Make text bold when a date is selected
   },
 });
