@@ -18,11 +18,11 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import * as ImagePicker from "expo-image-picker";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-// import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 export default function Profile() {
   const [profileData, setProfileData] = useState(null);
- 
+  const [isEditingBio, setIsEditingBio] = useState(false);
+  const [bio, setBio] = useState(""); // Define bio state
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [imageUri, setImageUri] = useState(null);
@@ -65,6 +65,7 @@ export default function Profile() {
       setImageUri(fetchedImageUri);
       setInitialImageUri(fetchedImageUri); // Set initial image URI
       setImageUpdated(false);
+      setBio(data.bio || ""); // Set bio from profile data
     } catch (error) {
       setError(error.message);
     } finally {
@@ -123,6 +124,57 @@ export default function Profile() {
     }
   };
 
+  const handleSaveBio = async () => {
+    try {
+      const token = await AsyncStorage.getItem("userToken");
+      if (!token) {
+        throw new Error("No token found, please login again.");
+      }
+  
+      const response = await fetch(`${API_URL}/profile/bio`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ bio: bio }),  // Using bio state here
+      });
+  
+      const responseText = await response.text();  // Get raw response text
+      console.log("Response Text:", responseText);  // Log the raw response
+  
+      // Check if the response is valid and parse it
+      if (response.ok) {
+        try {
+          const responseData = JSON.parse(responseText); // Try to parse the response
+          Alert.alert("Success", "Bio updated successfully!");
+          setIsEditingBio(false);
+        } catch (e) {
+          console.error("Error parsing response JSON:", e);
+          Alert.alert("Error", "Failed to parse server response.");
+        }
+      } else {
+        console.error("API request failed with status:", response.status);
+        console.log("Response Text:", responseText);  // Log the response text if the status is not OK
+        throw new Error(`Failed to update bio. Status code: ${response.status}`);
+      }
+    } catch (error) {
+      Alert.alert("Error", error.message);
+    }
+  };
+  
+  
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.removeItem("userToken");
+      await AsyncStorage.removeItem("userId");
+      await AsyncStorage.removeItem("isDataFilled");
+      router.replace("auth/sign-in");
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+  };
+
   const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
@@ -144,21 +196,6 @@ export default function Profile() {
       console.log("Selected Image URI:", result.assets[0].uri);
       setImageUri(result.assets[0].uri);
       setImageUpdated(false); // Reset image updated state when a new image is picked
-    }
-  };
-
-  const handleLogout = async () => {
-    try {
-      // Clear AsyncStorage data on logout
-      await AsyncStorage.removeItem("userToken");
-      await AsyncStorage.removeItem("userId");
-      await AsyncStorage.removeItem("isDataFilled");
-
-      console.log("User token and related data removed from AsyncStorage.");
-      // Navigate to the SignIn page
-      router.replace("auth/sign-in");
-    } catch (error) {
-      console.error("Error during logout:", error);
     }
   };
 
@@ -205,26 +242,32 @@ export default function Profile() {
         <Text style={styles.name}>{profileData?.fullname}</Text>
 
         <View style={styles.formGroup}>
-        <Text style={styles.inputText}>About Us</Text>
-        <View style={styles.bioContainer}>
-  <ScrollView nestedScrollEnabled={true} contentContainerStyle={styles.bioScroll}>
-    <Text style={styles.bioText}>
-      {profileData?.bio || "No bio available"}
-    </Text>
-  </ScrollView>
-</View>
+          <Text style={styles.inputText}>About Us</Text>
+          <View style={styles.bioContainer}>
+            <ScrollView nestedScrollEnabled={true} contentContainerStyle={styles.bioScroll}>
+              {isEditingBio ? (
+                <TextInput
+                  style={styles.bioText}
+                  value={bio}
+                  onChangeText={setBio}
+                  multiline
+                  numberOfLines={4}
+                />
+              ) : (
+                <Text style={styles.bioText}>{bio}</Text>
+              )}
+            </ScrollView>
+          </View>
+          <TouchableOpacity
+            style={styles.saveButton}
+            onPress={isEditingBio ? handleSaveBio : () => setIsEditingBio(true)}
+          >
+            <Text style={styles.saveButtonText}>
+              {isEditingBio ? "Save Bio" : "Edit Bio"}
+            </Text>
+          </TouchableOpacity>
+        </View>
 
-      </View>
-
-        <TouchableOpacity style={styles.saveButton}>
-          <Text style={styles.saveButtonText}>Save</Text>
-        </TouchableOpacity>
-        {/* <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.push("./../(tab)/Home")}
-        >
-          <Text style={styles.backButtonText}>Back to Home</Text>
-        </TouchableOpacity> */}
         {imageUri !== initialImageUri && (
           <TouchableOpacity
             style={styles.saveButton}
