@@ -12,6 +12,7 @@ import {
   import { Colors } from "../../../../constants/Colors";
   
   import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+  import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
   
   export default function SignIn() {
     const navigation = useNavigation();
@@ -33,7 +34,7 @@ import {
         >
           <Text style={styles.signup}>Sign Up</Text>
           <FontAwesome5 name="running" size={50} color="white" />
-          <Text style={styles.createAccountText}>As Player</Text>
+          <Text style={styles.createAccountText}>As Athelet</Text>
         </TouchableOpacity>
   
         <TouchableOpacity
@@ -42,7 +43,7 @@ import {
         >
             <Text style={styles.signup}>Sign Up</Text>
           <FontAwesome5 name="chalkboard-teacher" size={50} color="white" />
-          <Text style={styles.createAccountText}>Coach/Trainer/Doctor</Text>
+          <Text style={styles.createAccountText}>Coach/Trainer</Text>
         </TouchableOpacity>
   
         <TouchableOpacity
@@ -50,8 +51,8 @@ import {
           style={styles.createAccount}
         >
           <Text style={styles.signup}>Sign Up</Text>
-          <FontAwesome5 name="school" size={50} color="white" />
-          <Text style={styles.createAccountText}>As School/College</Text>
+          <FontAwesome6 name="user-doctor" size={50} color="white" />
+          <Text style={styles.createAccountText}>Dooctor/Nutritionist</Text>
         </TouchableOpacity>
       </View>
     );
