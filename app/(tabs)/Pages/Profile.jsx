@@ -242,6 +242,14 @@ export default function Profile() {
             />
           )}
         </TouchableOpacity>
+        {imageUri !== initialImageUri && (
+          <TouchableOpacity
+            style={styles.saveButton}
+            onPress={handleUpdateProfile}
+          >
+            <Text style={styles.saveButtonText}>Save</Text>
+          </TouchableOpacity>
+        )}
 
         <Text style={styles.name}>{profileData?.fullname}</Text>
 
@@ -275,14 +283,9 @@ export default function Profile() {
           </TouchableOpacity>
         </View>
 
-        {imageUri !== initialImageUri && (
-          <TouchableOpacity
-            style={styles.saveButton}
-            onPress={handleUpdateProfile}
-          >
-            <Text style={styles.saveButtonText}>Save</Text>
-          </TouchableOpacity>
-        )}
+
+
+        
       </View>
 
       <View style={styles.accountInfo}>
@@ -396,35 +399,43 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
   },
-  saveButton: {
-    marginTop: 20,
-    backgroundColor: Colors.PRIMERY,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 20,
-  },
-  saveButtonText: {
-    color: "#fff",
-    fontSize: 16,
-  },
+  
   bioContainer: {
-    maxHeight: 100, // Fixed height
-    marginTop: 5,
-    padding: 8,
+    height: 100, // Fixed height for bio container
+    width: 350,  // Fixed width for bio container
+    marginVertical: 10,
     borderWidth: 1,
-    borderRadius: 5,
     borderColor: Colors.PRIMERY,
-    width: "100%",
-    backgroundColor: Colors.LIGHT_GRAY,
-    overflow: "hidden", // Ensure no overflow outside the container
+    borderRadius: 5,
+    padding: 10,
   },
   bioScroll: {
     flexGrow: 1,
+    justifyContent: "center",
   },
   bioText: {
-    fontSize: 14,
-    color: "#333",
-    lineHeight: 20, // Adjust for better readability
+    fontSize: 16,
+    color: Colors.BLACK,
+    lineHeight: 22,
+  },
+  detailsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+  },
+  saveButton: {
+    height: 45,
+    width: 120,
+    backgroundColor: Colors.PRIMERY,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 8,
+    marginTop:20
+  },
+  saveButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 
   accountInfo: {
