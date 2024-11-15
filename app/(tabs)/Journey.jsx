@@ -37,7 +37,7 @@ export default function Journey() {
           textAlign: "center",
         }}
       >
-        Welcome to Fitness World
+        Welcome to Atheletic World
       </Text>
 
       <View style={{ alignItems: "center", marginTop: 20 }}>

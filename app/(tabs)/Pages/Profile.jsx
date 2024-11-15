@@ -8,6 +8,7 @@ import {
   ScrollView,
   ActivityIndicator,
   Alert,
+  TextInput,
 } from "react-native";
 import { useRouter, useNavigation } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -15,6 +16,7 @@ import { Colors } from "../../../constants/Colors";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import * as ImagePicker from "expo-image-picker";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 // import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 export default function Profile() {
@@ -146,20 +148,17 @@ export default function Profile() {
   const handleLogout = async () => {
     try {
       // Clear AsyncStorage data on logout
-      await AsyncStorage.removeItem('userToken');
-      await AsyncStorage.removeItem('userId');
-      await AsyncStorage.removeItem('isDataFilled');
-      
+      await AsyncStorage.removeItem("userToken");
+      await AsyncStorage.removeItem("userId");
+      await AsyncStorage.removeItem("isDataFilled");
 
-      console.log('User token and related data removed from AsyncStorage.');
+      console.log("User token and related data removed from AsyncStorage.");
       // Navigate to the SignIn page
-      router.replace('auth/sign-in');
+      router.replace("auth/sign-in");
     } catch (error) {
-      console.error('Error during logout:', error);
+      console.error("Error during logout:", error);
     }
   };
-  
-   
 
   if (loading) {
     return (
@@ -182,9 +181,9 @@ export default function Profile() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-        {/* <TouchableOpacity onPress={() => router.replace("./../(tab)/Games")}>
-        <FontAwesome name="arrow-left" size={24} color="black"  style={styles.menuIcon}/>
-      </TouchableOpacity> */}
+      <TouchableOpacity onPress={() => router.replace("./../(tab)/Home")}>
+        <FontAwesome name="arrow-left" size={24} color="black" />
+      </TouchableOpacity>
       <View style={styles.header}>
         <TouchableOpacity onPress={pickImage}>
           {imageUri || profileData?.profilePic ? (
@@ -202,12 +201,17 @@ export default function Profile() {
         </TouchableOpacity>
 
         <Text style={styles.name}>{profileData?.fullname}</Text>
-        <TouchableOpacity
+
+        <View style={styles.formGroup}>
+          <Text style={styles.inputText}>About Us</Text>
+          <TextInput style={styles.input} placeholder="About your self" />
+        </View>
+        {/* <TouchableOpacity
           style={styles.backButton}
           onPress={() => router.push("./../(tab)/Home")}
         >
           <Text style={styles.backButtonText}>Back to Home</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         {imageUri !== initialImageUri && (
           <TouchableOpacity
             style={styles.saveButton}
@@ -258,7 +262,10 @@ export default function Profile() {
           <MaterialCommunityIcons name="logout" size={24} color="white" />
           <Text style={styles.logoutButtonText}>Logout</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.MoreButton}   onPress={() => router.push("./../../(tabs)/Pages/Profile_details")}>
+        <TouchableOpacity
+          style={styles.MoreButton}
+          onPress={() => router.push("./../../(tabs)/Pages/Profile_details")}
+        >
           <Text style={styles.detailsButtonText}>More Details</Text>
           <MaterialIcons
             name="expand-more"
@@ -283,13 +290,31 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   menuIcon: {
-    marginLeft:-20, // Adds space between the icon and the text
+    marginLeft: -20, // Adds space between the icon and the text
   },
   profilePic: {
     width: 100,
     height: 100,
     borderRadius: 50,
     backgroundColor: "#ccc",
+  },
+
+  formGroup: {
+    marginTop: 20,
+  },
+
+  input: {
+    padding: 8,
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: Colors.PRIMERY,
+    marginTop: 5,
+    height:60,
+    width:350
+  },
+  inputText: {
+    fontSize: 15,
+    fontWeight: "bold",
   },
   name: {
     fontSize: 24,
@@ -321,7 +346,7 @@ const styles = StyleSheet.create({
   },
   accountInfo: {
     paddingHorizontal: 20,
-    marginTop: 15,
+    marginTop: 5,
   },
   sectionTitle: {
     fontSize: 25,
