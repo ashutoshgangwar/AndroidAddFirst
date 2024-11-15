@@ -1,3 +1,4 @@
+import { API_URL } from "@env";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -21,6 +22,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 export default function Profile() {
   const [profileData, setProfileData] = useState(null);
+ 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [imageUri, setImageUri] = useState(null);
@@ -43,7 +45,7 @@ export default function Profile() {
         throw new Error("No token found, please login again.");
       }
 
-      const response = await fetch("http://192.168.1.5:6000/profile", {
+      const response = await fetch(`${API_URL}/profile`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -58,7 +60,7 @@ export default function Profile() {
       const data = await response.json();
       setProfileData(data);
       const fetchedImageUri = data.profilePic
-        ? `http://192.168.1.5:6000${data.profilePic}`
+        ? `${API_URL}${data.profilePic}`
         : null;
       setImageUri(fetchedImageUri);
       setInitialImageUri(fetchedImageUri); // Set initial image URI
@@ -94,7 +96,7 @@ export default function Profile() {
         });
       }
 
-      const response = await fetch("http://192.168.1.5:6000/profile/pic", {
+      const response = await fetch(`${API_URL}/profile/pic`, {
         method: "PUT",
         headers: {
           "Content-Type": "multipart/form-data",
@@ -203,9 +205,20 @@ export default function Profile() {
         <Text style={styles.name}>{profileData?.fullname}</Text>
 
         <View style={styles.formGroup}>
-          <Text style={styles.inputText}>About Us</Text>
-          <TextInput style={styles.input} placeholder="About your self" />
-        </View>
+        <Text style={styles.inputText}>About Us</Text>
+        <View style={styles.bioContainer}>
+  <ScrollView nestedScrollEnabled={true} contentContainerStyle={styles.bioScroll}>
+    <Text style={styles.bioText}>
+      {profileData?.bio || "No bio available"}
+    </Text>
+  </ScrollView>
+</View>
+
+      </View>
+
+        <TouchableOpacity style={styles.saveButton}>
+          <Text style={styles.saveButtonText}>Save</Text>
+        </TouchableOpacity>
         {/* <TouchableOpacity
           style={styles.backButton}
           onPress={() => router.push("./../(tab)/Home")}
@@ -309,8 +322,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderColor: Colors.PRIMERY,
     marginTop: 5,
-    height:60,
-    width:350
+    height: 60,
+    width: 350,
   },
   inputText: {
     fontSize: 15,
@@ -344,6 +357,27 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
   },
+  bioContainer: {
+    maxHeight: 100, // Fixed height
+    marginTop: 5,
+    padding: 8,
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: Colors.PRIMERY,
+    width: "100%",
+    backgroundColor: Colors.LIGHT_GRAY,
+    overflow: "hidden", // Ensure no overflow outside the container
+  },
+  bioScroll: {
+    flexGrow: 1,
+  },
+  bioText: {
+    fontSize: 14,
+    color: "#333",
+    lineHeight: 20, // Adjust for better readability
+  },
+  
+
   accountInfo: {
     paddingHorizontal: 20,
     marginTop: 5,
