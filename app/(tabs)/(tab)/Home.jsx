@@ -380,11 +380,14 @@ const styles = StyleSheet.create({
     marginTop: 20,
     elevation: 3,
     overflow: "hidden",
+    padding:" 20px"
   },
   cardImage: {
     width: "100%",
     height: 100,
     resizeMode: "cover",
+    marginBottom: 10,
+    
   },
   cardContent: {
     padding: 10,
@@ -398,11 +401,17 @@ const styles = StyleSheet.create({
     color: Colors.GRAY,
   },
   name: {
-    fontSize: 24,
+    fontSize: 20,
     color: Colors.PRIMERY,
-    marginBottom: 10,
     fontWeight: "bold",
+    padding: 5,
     // textDecorationLine: "underline",
+  },
+  bio: {
+    fontSize: 15,
+    color: Colors.GRAY,
+    marginBottom: 5,
+    padding: 10,
   },
   popupContainer: {
     flex: 1,

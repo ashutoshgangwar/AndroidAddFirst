@@ -24,7 +24,7 @@ export default function SignIn() {
       headerShown: false,
     });
   }, []);
-
+  const [registeras, setRegisteras] = useState("");
   const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
   const [phonenumber, setPhonenumber] = useState("");
@@ -262,6 +262,7 @@ export default function SignIn() {
     }
   
     if (
+      !registeras ||
       !fullname ||
       !email ||
       !phonenumber ||
@@ -304,6 +305,7 @@ export default function SignIn() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          registeras,
           fullname,
           email,
           phonenumber,
@@ -358,7 +360,19 @@ export default function SignIn() {
       <Text style={styles.headerText}>Let's Sign Up</Text>
       <Text style={styles.headerTexttype}>As Athlete</Text>
       
-
+      <View style={styles.formGroup}>
+        <Text style={styles.inputText}>Register As</Text>
+        <View style={styles.pickerContainer}>
+          <Picker
+            selectedValue={registeras}
+            onValueChange={(itemValue) => setRegisteras(itemValue)}
+          >
+            <Picker.Item label="Select Role" value="" />
+            <Picker.Item label="Athlete" value="Athlete" />
+            
+          </Picker>
+        </View>
+      </View>
       <View style={styles.formGroup}>
         <Text style={styles.inputText}>Full Name</Text>
         <TextInput
