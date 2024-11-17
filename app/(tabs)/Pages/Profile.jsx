@@ -224,9 +224,15 @@ export default function Profile() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <TouchableOpacity onPress={() => router.replace("./../(tab)/Home")}>
-        <FontAwesome name="arrow-left" size={24} color="black" />
-      </TouchableOpacity>
+      <View style={styles.headerContainer}>
+        <TouchableOpacity
+          onPress={() => router.replace("./../(tab)/Home")}
+          style={styles.backButtonWrapper} // Add this style
+        >
+          <FontAwesome name="arrow-left" size={24} color="black" />
+        </TouchableOpacity>
+        <Text style={styles.profiletext}>Profile</Text>
+      </View>
       <View style={styles.header}>
         <TouchableOpacity onPress={pickImage}>
           {imageUri || profileData?.profilePic ? (
@@ -251,10 +257,10 @@ export default function Profile() {
           </TouchableOpacity>
         )}
 
-        <Text style={styles.name}>{profileData?.fullname}</Text>
-
+        <Text style={styles.name}>({profileData?.fullname})</Text>
+        <Text style={styles.email}>{profileData?.email}</Text>
         <View style={styles.formGroup}>
-          <Text style={styles.inputText}>About Us</Text>
+          <Text style={styles.inputText}>About Me</Text>
           <View style={styles.bioContainer}>
             <ScrollView
               nestedScrollEnabled={true}
@@ -282,10 +288,6 @@ export default function Profile() {
             </Text>
           </TouchableOpacity>
         </View>
-
-
-
-        
       </View>
 
       <View style={styles.accountInfo}>
@@ -353,7 +355,25 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: "center",
-    marginBottom: 30,
+    marginBottom: 20,
+  },
+  headerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    // justifyContent: "space-between", // Ensure proper spacing
+    marginBottom: 10,
+    paddingHorizontal: 5,
+    marginLeft: -24,
+  },
+  backButtonWrapper: {
+    padding: 1, // Add padding to make it easier to tap
+  },
+  profiletext: {
+    fontSize: 25,
+    color: Colors.PRIMERY,
+    fontWeight: "bold",
+    textAlign: "center",
+    flex: 1, // Allows text to take up remaining space
   },
   menuIcon: {
     marginLeft: -20, // Adds space between the icon and the text
@@ -366,7 +386,7 @@ const styles = StyleSheet.create({
   },
 
   formGroup: {
-    marginTop: 20,
+    marginTop: 1,
   },
 
   input: {
@@ -387,7 +407,13 @@ const styles = StyleSheet.create({
     color: Colors.PRIMERY,
     marginBottom: 10,
     fontWeight: "bold",
-    textDecorationLine: "underline",
+    // textDecorationLine: "underline",
+  },
+  email: {
+    fontSize: 15,
+    color: Colors.GRAY,
+    marginBottom: 10,
+    // fontWeight: "bold",
   },
   backButton: {
     backgroundColor: Colors.PRIMERY,
@@ -399,15 +425,15 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
   },
-  
+
   bioContainer: {
     height: 100, // Fixed height for bio container
-    width: 350,  // Fixed width for bio container
+    width: 350, // Fixed width for bio container
     marginVertical: 10,
     borderWidth: 1,
     borderColor: Colors.PRIMERY,
     borderRadius: 5,
-    padding: 10,
+    padding: 5,
   },
   bioScroll: {
     flexGrow: 1,
@@ -419,23 +445,23 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   detailsRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: 20,
   },
   saveButton: {
-    height: 45,
-    width: 120,
+    height: 40,
+    width: 100,
     backgroundColor: Colors.PRIMERY,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     borderRadius: 8,
-    marginTop:20
+    marginTop: 8,
   },
   saveButtonText: {
-    color: 'white',
+    color: "white",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 
   accountInfo: {
