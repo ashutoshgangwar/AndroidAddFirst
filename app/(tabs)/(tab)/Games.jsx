@@ -1,3 +1,4 @@
+import { API_URL } from "@env";
 import {
   View,
   Text,
@@ -24,7 +25,7 @@ export default function Games() {
   // Fetch game details from the backend
   const fetchGameDetails = async () => {
     try {
-      const response = await fetch("http://192.168.1.5:6000/gamedetail", {
+      const response = await fetch(`${API_URL}/gamedetail`, {
         method: "GET",
       });
 
@@ -66,7 +67,7 @@ export default function Games() {
       const formNumber = game.formNumber;
   
       const response = await fetch(
-        `http://192.168.1.5:6000/registrationform?userId=${userId}&formNumber=${formNumber}`,
+        `${API_URL}/registrationform?userId=${userId}&formNumber=${formNumber}`,
         {
           method: "GET",
           headers: {
