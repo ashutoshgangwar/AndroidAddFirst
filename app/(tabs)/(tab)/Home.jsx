@@ -1,3 +1,4 @@
+import { API_URL } from "@env";
 import React, { useState, useEffect, useRef } from "react";
 import {
   View,
@@ -10,6 +11,7 @@ import {
   Modal,
   RefreshControl,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Colors } from "@/constants/Colors";
 import { useRouter, useNavigation } from "expo-router";
 import Entypo from "@expo/vector-icons/Entypo";
@@ -21,45 +23,65 @@ export default function Gamedetails() {
   const [activeNews, setActiveNews] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
   const [popupContent, setPopupContent] = useState("");
-  const [tableData, setTableData] = useState([]); // For managing table data
-  const [games, setGames] = useState([]); // For fetched game data
-  const [loading, setLoading] = useState(true); // Loading state
-  const [error, setError] = useState(null); // Error state
+  const [tableData, setTableData] = useState([]);
+  const [games, setGames] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [profileData, setProfileData] = useState(null);
+  const [refreshing, setRefreshing] = useState(false);
+  const [imageUri, setImageUri] = useState(null); // To store the profile image URL
+  const [bio, setBio] = useState(""); // Define bio state
+
   const scrollViewRef = useRef(null);
   const navigation = useNavigation();
   const router = useRouter();
-  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     navigation.setOptions({
       headerShown: false,
     });
 
-    fetchGames(); // Fetch games data on component mount
+    fetchProfileData(); // Fetch profile data on component mount
   }, []);
 
-  // Fetch data from API
-  const fetchGames = async () => {
-    setLoading(true); // Start loading
+  const fetchProfileData = async () => {
     try {
-      const response = await fetch("http://192.168.1.5:6000/gamedetail");
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
+      const token = await AsyncStorage.getItem("userToken");
+      if (!token) {
+        throw new Error("No token found, please login again.");
       }
+
+      const response = await fetch(`${API_URL}/profile`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to fetch profile data.");
+      }
+
       const data = await response.json();
-      setGames(data); // Set the fetched data to state
+      setProfileData(data);
+      const fetchedImageUri = data.profilePic
+        ? `${API_URL}${data.profilePic}`
+        : null;
+      setImageUri(fetchedImageUri); // Set the image URI correctly
+      setBio(data.bio || ""); // Make sure the bio state is set
     } catch (error) {
-      setError(error.message); // Set error if any
+      setError(error.message);
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
 
-  // Handle pull-down-to-refresh
+  // Handle pull-to-refresh
   const onRefresh = async () => {
-    setRefreshing(true); // Start the refresh animation
-    await fetchGames(); // Re-fetch the data
-    setRefreshing(false); // Stop the refresh animation
+    setRefreshing(true);
+    await fetchProfileData(); // Refresh profile data
+    setRefreshing(false);
   };
 
   const images = [
@@ -80,18 +102,6 @@ export default function Gamedetails() {
   const onScroll = (event) => {
     const slide = Math.ceil(event.nativeEvent.contentOffset.x / screenWidth);
     setActiveNews(slide);
-  };
-
-  const nextNews = () => {
-    const nextSlide = (activeNews + 1) % newsItems.length;
-    setActiveNews(nextSlide);
-
-    if (scrollViewRef.current) {
-      scrollViewRef.current.scrollTo({
-        x: nextSlide * screenWidth,
-        animated: true,
-      });
-    }
   };
 
   const openPopup = (content, tableData) => {
@@ -221,33 +231,18 @@ export default function Gamedetails() {
                 </View>
               ))}
             </ScrollView>
-
-            {/* <View style={styles.arrowContainer}>
-              <TouchableOpacity onPress={nextNews}>
-                <Text style={styles.arrow}>➡️</Text>
-              </TouchableOpacity>
-            </View> */}
-
-            {/* New Card Section for fetched games data */}
-            <View style={styles.cardContainer}>
-              {games.map((game, index) => (
-                <View key={index} style={styles.card}>
-                  <Image
-                    source={{ uri: game.imageUrl }} // Assuming the API returns an image URL
-                    style={styles.cardImage}
-                  />
-                  <View style={styles.cardContent}>
-                    <Text style={styles.cardTitle}>{game.gamename}</Text>
-                    <Text style={styles.cardDescription}>{game.details}</Text>
-                  </View>
-                </View>
-              ))}
+            <View style={styles.card}>
+              <Image
+                source={{ uri: imageUri || profileData?.profilePic }} // Fallback to a default image
+                style={styles.cardImage}
+              />
+              <Text style={styles.name}>{profileData?.fullname}</Text>
+              <Text style={styles.bio}>{profileData?.bio}</Text>
             </View>
           </ScrollView>
         </ScrollView>
       )}
 
-      {/* Modal for Popup */}
       <Modal
         visible={showPopup}
         transparent={true}
@@ -277,6 +272,9 @@ export default function Gamedetails() {
     </View>
   );
 }
+
+// ... Styles remain unchanged ...
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -369,34 +367,17 @@ const styles = StyleSheet.create({
     width: screenWidth,
     height: 50,
     backgroundColor: Colors.LIGHTGRAY,
-    backgroundColor:Colors.SILVER
+    backgroundColor: Colors.SILVER,
   },
   newsText: {
     fontSize: 16,
   },
-  // arrowContainer: {
-  //   alignItems: "center",
-  //   marginVertical: 10,
-  //   // backgroundColor:Colors.PRIMERY
-    
-  // },
-  // arrow: {
-  //   fontSize: 30,
-  //   color: Colors.PRIMERY,
-    
-  // },
-  cardContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-    paddingBottom: 20,
-    marginTop:40
-  },
+  
   card: {
     width: "48%",
     backgroundColor: Colors.WHITE,
     borderRadius: 10,
-    marginBottom: 10,
+    marginTop: 20,
     elevation: 3,
     overflow: "hidden",
   },
@@ -415,6 +396,13 @@ const styles = StyleSheet.create({
   cardDescription: {
     fontSize: 14,
     color: Colors.GRAY,
+  },
+  name: {
+    fontSize: 24,
+    color: Colors.PRIMERY,
+    marginBottom: 10,
+    fontWeight: "bold",
+    // textDecorationLine: "underline",
   },
   popupContainer: {
     flex: 1,
