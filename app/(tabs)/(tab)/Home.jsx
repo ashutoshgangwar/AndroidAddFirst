@@ -449,6 +449,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.WHITE,
     borderRadius: 10,
     padding: 20,
+    borderWidth: 1, // Border added for popup
+    borderColor: Colors.GRAY,
   },
   popupTitle: {
     fontSize: 20,
@@ -457,16 +459,28 @@ const styles = StyleSheet.create({
   },
   tableContainer: {
     marginVertical: 10,
+    borderWidth: 1, // Table border
+    borderColor: Colors.GRAY,
+    borderRadius: 5,
+    overflow: "hidden", // Ensures rounded corners
   },
   tableRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingVertical: 5,
+    paddingVertical: 8,
+    paddingHorizontal: 8,
+    borderBottomWidth: 2, // Border between rows
+    borderBottomColor: Colors.GRAY,
+    backgroundColor: Colors.WHITE,
   },
   tableCell: {
     flex: 1,
     textAlign: "center",
+    paddingHorizontal: 1,
+    // borderRightWidth: 2, // Add partition between columns
+    borderRightColor: Colors.GRAY,
   },
+  
   closeButton: {
     alignItems: "center",
     paddingVertical: 10,
