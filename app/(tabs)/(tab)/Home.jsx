@@ -107,6 +107,81 @@ export default function Gamedetails() {
     setShowPopup(false);
   };
 
+
+  const openProfilePopup = (user) => {
+    setPopupContent(
+      <View style={styles.profilePopupContent}>
+        {/* Profile Header */}
+        <View style={styles.profileHeader}>
+          <Image
+            source={{
+              uri: user.profilePic
+                ? `${API_URL}${user.profilePic}`
+                : "https://via.placeholder.com/150",
+            }}
+            style={styles.profileImage}
+          />
+          <Text style={styles.profileName}>{user.fullname || "N/A"}</Text>
+          <Text style={styles.profileRole}>
+            {user.registeras || "Role not available"}
+          </Text>
+          <View style={styles.profileLocation}>
+            <Entypo name="location-pin" size={18} color="black" />
+            <Text style={styles.profileLocationText}>
+              {user.city || "City not available"}, {user.state || "State not available"}
+            </Text>
+          </View>
+        </View>
+
+        {/* Details Section */}
+        <View style={styles.profileStats}>
+          <View style={styles.statItem}>
+            <Text style={styles.statValue}>{user.patients || "N/A"}</Text>
+            <Text style={styles.statLabel}>Patients</Text>
+          </View>
+          <View style={styles.statItem}>
+            <Text style={styles.statValue}>{user.expyear || "N/A"}+</Text>
+            <Text style={styles.statLabel}>Years Exp.</Text>
+          </View>
+          <View style={styles.statItem}>
+            <Text style={styles.statValue}>{user.rating || "N/A"}</Text>
+            <Text style={styles.statLabel}>Rating</Text>
+          </View>
+          <View style={styles.statItem}>
+            <Text style={styles.statValue}>{user.reviews || "N/A"}</Text>
+            <Text style={styles.statLabel}>Reviews</Text>
+          </View>
+        </View>
+
+        {/* About Section */}
+        <Text style={styles.profileAboutTitle}>About</Text>
+        <Text style={styles.profileAboutText}>{user.bio || "No bio available"}</Text>
+
+        {/* Working Hours Section */}
+        <Text style={styles.profileHoursTitle}>Working Hours</Text>
+        {user.workingHours
+          ? user.workingHours.map((day, index) => (
+              <View key={index} style={styles.workingHourRow}>
+                <Text style={styles.workingHourDay}>{day.day}</Text>
+                <Text style={styles.workingHourTime}>
+                  {day.time || "00:00 - 00:00"}
+                </Text>
+              </View>
+            ))
+          : null}
+
+        {/* Book Appointment Button */}
+        <TouchableOpacity
+          style={styles.bookButton}
+          onPress={() => console.log("Book Appointment")}
+        >
+          <Text style={styles.bookButtonText}>Book Appointment</Text>
+        </TouchableOpacity>
+      </View>
+    );
+    setShowPopup(true);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
@@ -232,18 +307,7 @@ export default function Gamedetails() {
                 <TouchableOpacity
                   key={index}
                   style={styles.listItem}
-                  onPress={() =>
-                    openPopup(
-                      <Text style={styles.userName}>
-                        {user.fullname || "Name not available"}
-                      </Text>,
-                      [
-                        ["Specsilization Age", user.expert || "N/A"],
-                        ["Total Experience", user.expyear || "N/A"],
-                        ["Language Known", user.language || "N/A"],
-                      ]
-                    )
-                  }
+                  onPress={() => openProfilePopup(user)}
                 >
                   {/* User Image */}
                   <Image
@@ -516,4 +580,107 @@ const styles = StyleSheet.create({
     color: Colors.GRAY,
     marginLeft: 4, // Adds space between the icon and the text
   },
+  profilePopupContent: {
+    padding: 20,
+    borderRadius: 10,
+    backgroundColor: Colors.WHITE,
+    alignItems: "center",
+    elevation: 5,
+  },
+  
+  profileHeader: {
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  profileImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    marginBottom: 10,
+  },
+  profileName: {
+    fontSize: 22,
+    fontWeight: "bold",
+    color: Colors.PRIMERY,
+  },
+  profileRole: {
+    fontSize: 16,
+    color: Colors.GRAY,
+    marginBottom: 5,
+  },
+  profileLocation: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  profileLocationText: {
+    fontSize: 16,
+    color: Colors.GRAY,
+  },
+  
+  profileStats: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "100%",
+    marginBottom: 20,
+  },
+  statItem: {
+    alignItems: "center",
+  },
+  statValue: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: Colors.PRIMERY,
+  },
+  statLabel: {
+    fontSize: 14,
+    color: Colors.GRAY,
+  },
+  
+  profileAboutTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 5,
+    color: Colors.PRIMERY,
+  },
+  profileAboutText: {
+    fontSize: 14,
+    color: Colors.GRAY,
+    marginBottom: 20,
+  },
+  
+  profileHoursTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 5,
+    color: Colors.PRIMERY,
+  },
+  workingHourRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    marginVertical: 5,
+  },
+  workingHourDay: {
+    fontSize: 14,
+    color: Colors.GRAY,
+  },
+  workingHourTime: {
+    fontSize: 14,
+    color: Colors.PRIMERY,
+  },
+  
+  bookButton: {
+    marginTop: 20,
+    backgroundColor: Colors.PRIMERY,
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 5,
+  },
+  bookButtonText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#fff",
+  },
+  
 });
