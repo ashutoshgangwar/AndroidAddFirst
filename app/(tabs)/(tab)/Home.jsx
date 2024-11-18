@@ -229,7 +229,19 @@ export default function Gamedetails() {
 
             {Array.isArray(usersdata) &&
               usersdata.map((user, index) => (
-                <View key={index} style={styles.listItem}>
+                <TouchableOpacity
+                  key={index}
+                  style={styles.listItem}
+                  onPress={() =>
+                    openPopup( <Text style={styles.userName}>
+                      {user.fullname || "Name not available"}
+                    </Text>, [
+                      ["Specsilization Age", user.expert || "N/A"],
+                      ["Total Experience", user.expyear || "N/A"],
+                      ["Language Known", user.language || "N/A"],
+                    ])
+                  }
+                >
                   {/* User Image */}
                   <Image
                     source={{
@@ -249,13 +261,13 @@ export default function Gamedetails() {
                       {user.fullname || "Name not available"}
                     </Text>
                     <Text style={styles.userNameTitle}>
-                      ({user.registeras || "Name not available"})
+                      ({user.registeras || "Role not available"})
                     </Text>
                     <Text style={styles.statusMessage}>
-                      {user.bio || "Status message not available"}
+                      {user.bio || "Bio not available"}
                     </Text>
                   </View>
-                </View>
+                </TouchableOpacity>
               ))}
           </ScrollView>
         </ScrollView>
