@@ -15,6 +15,7 @@ import {
 import { Colors } from "@/constants/Colors";
 import { useRouter, useNavigation } from "expo-router";
 import Entypo from "@expo/vector-icons/Entypo";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 const screenWidth = Dimensions.get("window").width;
 const imageHeight = screenWidth * 0.5625; // 16:9 aspect ratio
@@ -106,14 +107,12 @@ export default function Gamedetails() {
   const openProfilePopup = (user) => {
     setPopupType("profile"); // Profile popup
     setPopupContent(
-      
       <View style={styles.profilePopupContent}>
         <View style={styles.crossButtonContainer}>
-        <TouchableOpacity onPress={closePopup}>
-          <Entypo name="circle-with-cross" size={35} color="black" />
-          {/* <Entypo name="cross" size={35} color="black" /> */}
-        </TouchableOpacity>
-      </View>
+          <TouchableOpacity onPress={closePopup}>
+            <Entypo name="circle-with-cross" size={35} color="black" />
+          </TouchableOpacity>
+        </View>
         <View style={styles.profileHeader}>
           <Image
             source={{
@@ -125,7 +124,7 @@ export default function Gamedetails() {
           />
           <Text style={styles.profileName}>{user.fullname || "N/A"}</Text>
           <Text style={styles.profileRole}>
-            {user.registeras || "Role not available"}
+            ({user.registeras || "Role not available"})
           </Text>
           <View style={styles.profileLocation}>
             <Entypo name="location-pin" size={18} color="black" />
@@ -137,18 +136,28 @@ export default function Gamedetails() {
         </View>
         <View style={styles.profileStats}>
           <View style={styles.statItem}>
+            <View style={styles.iconContainer}>
+              <Ionicons name="people-sharp" size={30} color="black" />
+            </View>
             <Text style={styles.statValue}>{user.patients || "N/A"}</Text>
             <Text style={styles.statLabel}>Patients</Text>
           </View>
           <View style={styles.statItem}>
+            <View style={styles.iconContainer}>
+            <Entypo name="briefcase" size={30} color="black" /></View>
             <Text style={styles.statValue}>{user.expyear || "N/A"}+</Text>
             <Text style={styles.statLabel}>Years Exp.</Text>
           </View>
           <View style={styles.statItem}>
+            <View style={styles.iconContainer}>
+            <Entypo name="star" size={30} color="black" /></View>
             <Text style={styles.statValue}>{user.rating || "N/A"}</Text>
             <Text style={styles.statLabel}>Rating</Text>
           </View>
           <View style={styles.statItem}>
+          <View style={styles.iconContainer}>
+            <Entypo name="chat" size={30} color="black" />
+            </View>
             <Text style={styles.statValue}>{user.reviews || "N/A"}</Text>
             <Text style={styles.statLabel}>Reviews</Text>
           </View>
@@ -338,10 +347,6 @@ export default function Gamedetails() {
                         {user.state || "State not available"}
                       </Text>
                     </View>
-
-                    <Text style={styles.statusMessage}>
-                      {user.bio || "Bio not available"}
-                    </Text>
                   </View>
                 </TouchableOpacity>
               ))}
@@ -692,5 +697,12 @@ const styles = StyleSheet.create({
     top: 5,
     right: 5,
     zIndex: 10, // Ensure it appears above other elements
+  },
+  iconContainer: {
+    backgroundColor: Colors.LIGHTGRAY,   // Set the background color
+    borderRadius: 50,          // Make the container circular
+    padding: 10,               // Add padding around the icon to create space
+    justifyContent: 'center',  // Center the icon
+    alignItems: 'center',      // Align the icon horizontally
   },
 });

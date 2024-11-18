@@ -10,11 +10,13 @@ export const Colors = {
   WHITE:'#fff',
   PRIMERY:'#17202a',
   GRAY:'#808080',
+  LIGHTGRAY: '#E8E8E8',
   DIMMYGRAY: '#a6a6a6',
   RED:'#f71f15',
   LIGHTBLUE:'#43abb6',
   Rosy_Brown:'#bc8f8f',
   SILVER: '#dad7d7',
+
   light: {
     text: '#11181C',
     background: '#fff',
