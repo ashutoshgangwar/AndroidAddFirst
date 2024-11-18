@@ -233,13 +233,16 @@ export default function Gamedetails() {
                   key={index}
                   style={styles.listItem}
                   onPress={() =>
-                    openPopup( <Text style={styles.userName}>
-                      {user.fullname || "Name not available"}
-                    </Text>, [
-                      ["Specsilization Age", user.expert || "N/A"],
-                      ["Total Experience", user.expyear || "N/A"],
-                      ["Language Known", user.language || "N/A"],
-                    ])
+                    openPopup(
+                      <Text style={styles.userName}>
+                        {user.fullname || "Name not available"}
+                      </Text>,
+                      [
+                        ["Specsilization Age", user.expert || "N/A"],
+                        ["Total Experience", user.expyear || "N/A"],
+                        ["Language Known", user.language || "N/A"],
+                      ]
+                    )
                   }
                 >
                   {/* User Image */}
@@ -263,6 +266,14 @@ export default function Gamedetails() {
                     <Text style={styles.userNameTitle}>
                       ({user.registeras || "Role not available"})
                     </Text>
+                    <View style={styles.locationContainer}>
+                    <Entypo name="location-pin" size={18} color="black" />
+                      <Text style={styles.userLocationText}>
+                        {user.city || "City not available"},{" "}
+                        {user.state || "State not available"}
+                      </Text>
+                    </View>
+                    
                     <Text style={styles.statusMessage}>
                       {user.bio || "Bio not available"}
                     </Text>
@@ -480,7 +491,7 @@ const styles = StyleSheet.create({
     // borderRightWidth: 2, // Add partition between columns
     borderRightColor: Colors.GRAY,
   },
-  
+
   closeButton: {
     alignItems: "center",
     paddingVertical: 10,
@@ -492,5 +503,17 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     fontWeight: "bold",
+  },
+
+  locationContainer: {
+    flexDirection: "row", // Aligns icon and text in a row
+    alignItems: "center", // Vertically centers the icon and text
+    marginTop: 12, // Adds some spacing
+  },
+
+  userLocationText: {
+    fontSize: 16,
+    color: Colors.GRAY,
+    marginLeft: 4, // Adds space between the icon and the text
   },
 });
