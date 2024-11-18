@@ -11,6 +11,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useState, useEffect } from "react";
 import { useNavigation, useRouter } from "expo-router";
 import { Colors } from "../../../../constants/Colors";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 
 export default function SignIn() {
@@ -101,7 +102,9 @@ export default function SignIn() {
 
   return (
     <View style={styles.container}>
-      
+      <TouchableOpacity onPress={() => router.replace("")}>
+        <FontAwesome name="arrow-left" size={24} color="black" />
+      </TouchableOpacity>
       <Text style={styles.title}>Let's Start your Journey</Text>
       <Text style={styles.subtitle}>Welcome to you</Text>
       <Text style={styles.loginText}>User Login</Text>

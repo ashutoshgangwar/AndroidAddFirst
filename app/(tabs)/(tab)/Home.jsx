@@ -11,7 +11,7 @@ import {
   Modal,
   RefreshControl,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import { Colors } from "@/constants/Colors";
 import { useRouter, useNavigation } from "expo-router";
 import Entypo from "@expo/vector-icons/Entypo";
@@ -53,15 +53,15 @@ export default function Gamedetails() {
       }
       const data = await response.json();
       setUsersdata(data);
-  
+
       // Log and set image URL
       const fetchedImageUri = data.profilePic
         ? `${API_URL}${data.profilePic}`
         : "https://via.placeholder.com/150";
-  
+
       console.log("Fetched Image URI:", fetchedImageUri);
       setImageUri(fetchedImageUri);
-  
+
       setLoading(false);
     } catch (error) {
       console.error("Error fetching profile data:", error.message);
@@ -69,7 +69,6 @@ export default function Gamedetails() {
       setLoading(false);
     }
   };
-  
 
   // Handle pull-to-refresh
   const onRefresh = async () => {
@@ -233,14 +232,16 @@ export default function Gamedetails() {
                 <View key={index} style={styles.listItem}>
                   {/* User Image */}
                   <Image
-  source={{
-    uri: user.profilePic
-      ? `${API_URL}${user.profilePic}`
-      : "https://via.placeholder.com/150",
-  }}
-  style={styles.userImage}
-  onError={() => console.error("Failed to load image:", user.profilePic)}
-/>
+                    source={{
+                      uri: user.profilePic
+                        ? `${API_URL}${user.profilePic}`
+                        : "https://via.placeholder.com/150",
+                    }}
+                    style={styles.userImage}
+                    onError={() =>
+                      console.error("Failed to load image:", user.profilePic)
+                    }
+                  />
 
                   {/* User Details */}
                   <View style={styles.userDetails}>
