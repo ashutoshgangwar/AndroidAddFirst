@@ -114,24 +114,30 @@ export default function Gamedetails() {
           </TouchableOpacity>
         </View>
         <View style={styles.profileHeader}>
-          <Image
-            source={{
-              uri: user.profilePic
-                ? `${API_URL}${user.profilePic}`
-                : "https://via.placeholder.com/150",
-            }}
-            style={styles.profileImage}
-          />
-          <Text style={styles.profileName}>{user.fullname || "N/A"}</Text>
-          <Text style={styles.profileRole}>
-            ({user.registeras || "Role not available"})
-          </Text>
-          <View style={styles.profileLocation}>
-            <Entypo name="location-pin" size={18} color="black" />
-            <Text style={styles.profileLocationText}>
-              {user.city || "City not available"},{" "}
-              {user.state || "State not available"}
-            </Text>
+          <View style={styles.profileInfoContainer}>
+            {/* Profile Image */}
+            <Image
+              source={{
+                uri: user.profilePic
+                  ? `${API_URL}${user.profilePic}`
+                  : "https://via.placeholder.com/150",
+              }}
+              style={styles.profileImage}
+            />
+            {/* Profile Info (Name, Role, Location) */}
+            <View style={styles.profileDetailsContainer}>
+              <Text style={styles.profileName}>{user.fullname || "N/A"}</Text>
+              <Text style={styles.profileRole}>
+                ({user.registeras || "Role not available"})
+              </Text>
+              <View style={styles.profileLocation}>
+                <Entypo name="location-pin" size={18} color="black" />
+                <Text style={styles.profileLocationText}>
+                  {user.city || "City not available"},{" "}
+                  {user.state || "State not available"}
+                </Text>
+              </View>
+            </View>
           </View>
         </View>
         <View style={styles.profileStats}>
@@ -144,19 +150,21 @@ export default function Gamedetails() {
           </View>
           <View style={styles.statItem}>
             <View style={styles.iconContainer}>
-            <Entypo name="briefcase" size={30} color="black" /></View>
+              <Entypo name="briefcase" size={30} color="black" />
+            </View>
             <Text style={styles.statValue}>{user.expyear || "N/A"}+</Text>
             <Text style={styles.statLabel}>Years Exp.</Text>
           </View>
           <View style={styles.statItem}>
             <View style={styles.iconContainer}>
-            <Entypo name="star" size={30} color="black" /></View>
+              <Entypo name="star" size={30} color="black" />
+            </View>
             <Text style={styles.statValue}>{user.rating || "N/A"}</Text>
             <Text style={styles.statLabel}>Rating</Text>
           </View>
           <View style={styles.statItem}>
-          <View style={styles.iconContainer}>
-            <Entypo name="chat" size={30} color="black" />
+            <View style={styles.iconContainer}>
+              <Entypo name="chat" size={30} color="black" />
             </View>
             <Text style={styles.statValue}>{user.reviews || "N/A"}</Text>
             <Text style={styles.statLabel}>Reviews</Text>
@@ -602,11 +610,21 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 20,
   },
+  profileInfoContainer: {
+    flexDirection: "row", // This will position the image and details side by side
+    alignItems: "center",
+    justifyContent: "flex-start", // Align items to the left
+  },
   profileImage: {
     width: 80,
     height: 80,
     borderRadius: 40,
-    marginBottom: 10,
+    marginRight: 15, // Space between image and text
+  },
+
+  profileDetailsContainer: {
+    flex: 1, // This makes sure the text takes up remaining space
+    
   },
   profileName: {
     fontSize: 22,
@@ -699,10 +717,10 @@ const styles = StyleSheet.create({
     zIndex: 10, // Ensure it appears above other elements
   },
   iconContainer: {
-    backgroundColor: Colors.LIGHTGRAY,   // Set the background color
-    borderRadius: 50,          // Make the container circular
-    padding: 10,               // Add padding around the icon to create space
-    justifyContent: 'center',  // Center the icon
-    alignItems: 'center',      // Align the icon horizontally
+    backgroundColor: Colors.LIGHTGRAY, // Set the background color
+    borderRadius: 50, // Make the container circular
+    padding: 10, // Add padding around the icon to create space
+    justifyContent: "center", // Center the icon
+    alignItems: "center", // Align the icon horizontally
   },
 });
