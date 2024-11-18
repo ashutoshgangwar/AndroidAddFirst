@@ -20,6 +20,7 @@ const screenWidth = Dimensions.get("window").width;
 const imageHeight = screenWidth * 0.5625; // 16:9 aspect ratio
 
 export default function Gamedetails() {
+  const [popupType, setPopupType] = useState(null); // To differentiate popup types
   const [activeNews, setActiveNews] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
   const [popupContent, setPopupContent] = useState("");
@@ -54,7 +55,6 @@ export default function Gamedetails() {
       const data = await response.json();
       setUsersdata(data);
 
-      // Log and set image URL
       const fetchedImageUri = data.profilePic
         ? `${API_URL}${data.profilePic}`
         : "https://via.placeholder.com/150";
@@ -70,10 +70,9 @@ export default function Gamedetails() {
     }
   };
 
-  // Handle pull-to-refresh
   const onRefresh = async () => {
     setRefreshing(true);
-    await fetchProfileData(); // Refresh profile data
+    await fetchProfileData();
     setRefreshing(false);
   };
 
@@ -98,20 +97,23 @@ export default function Gamedetails() {
   };
 
   const openPopup = (content, tableData) => {
+    setPopupType("manual"); // Manual popup
     setPopupContent(content);
     setTableData(tableData);
     setShowPopup(true);
   };
 
-  const closePopup = () => {
-    setShowPopup(false);
-  };
-
-
   const openProfilePopup = (user) => {
+    setPopupType("profile"); // Profile popup
     setPopupContent(
+      
       <View style={styles.profilePopupContent}>
-        {/* Profile Header */}
+        <View style={styles.crossButtonContainer}>
+        <TouchableOpacity onPress={closePopup}>
+          <Entypo name="circle-with-cross" size={35} color="black" />
+          {/* <Entypo name="cross" size={35} color="black" /> */}
+        </TouchableOpacity>
+      </View>
         <View style={styles.profileHeader}>
           <Image
             source={{
@@ -128,12 +130,11 @@ export default function Gamedetails() {
           <View style={styles.profileLocation}>
             <Entypo name="location-pin" size={18} color="black" />
             <Text style={styles.profileLocationText}>
-              {user.city || "City not available"}, {user.state || "State not available"}
+              {user.city || "City not available"},{" "}
+              {user.state || "State not available"}
             </Text>
           </View>
         </View>
-
-        {/* Details Section */}
         <View style={styles.profileStats}>
           <View style={styles.statItem}>
             <Text style={styles.statValue}>{user.patients || "N/A"}</Text>
@@ -152,12 +153,10 @@ export default function Gamedetails() {
             <Text style={styles.statLabel}>Reviews</Text>
           </View>
         </View>
-
-        {/* About Section */}
         <Text style={styles.profileAboutTitle}>About</Text>
-        <Text style={styles.profileAboutText}>{user.bio || "No bio available"}</Text>
-
-        {/* Working Hours Section */}
+        <Text style={styles.profileAboutText}>
+          {user.bio || "No bio available"}
+        </Text>
         <Text style={styles.profileHoursTitle}>Working Hours</Text>
         {user.workingHours
           ? user.workingHours.map((day, index) => (
@@ -169,8 +168,6 @@ export default function Gamedetails() {
               </View>
             ))
           : null}
-
-        {/* Book Appointment Button */}
         <TouchableOpacity
           style={styles.bookButton}
           onPress={() => console.log("Book Appointment")}
@@ -180,6 +177,10 @@ export default function Gamedetails() {
       </View>
     );
     setShowPopup(true);
+  };
+
+  const closePopup = () => {
+    setShowPopup(false);
   };
 
   return (
@@ -331,13 +332,13 @@ export default function Gamedetails() {
                       ({user.registeras || "Role not available"})
                     </Text>
                     <View style={styles.locationContainer}>
-                    <Entypo name="location-pin" size={18} color="black" />
+                      <Entypo name="location-pin" size={18} color="black" />
                       <Text style={styles.userLocationText}>
                         {user.city || "City not available"},{" "}
                         {user.state || "State not available"}
                       </Text>
                     </View>
-                    
+
                     <Text style={styles.statusMessage}>
                       {user.bio || "Bio not available"}
                     </Text>
@@ -355,23 +356,27 @@ export default function Gamedetails() {
         onRequestClose={closePopup}
       >
         <View style={styles.popupContainer}>
-          <View style={styles.popupContent}>
-            <Text style={styles.popupTitle}>{popupContent}</Text>
-            <View style={styles.tableContainer}>
-              {tableData.map((row, index) => (
-                <View key={index} style={styles.tableRow}>
-                  {row.map((cell, cellIndex) => (
-                    <Text key={cellIndex} style={styles.tableCell}>
-                      {cell}
-                    </Text>
-                  ))}
-                </View>
-              ))}
+          {popupType === "manual" ? (
+            <View style={styles.popupContent}>
+              <Text style={styles.popupTitle}>{popupContent}</Text>
+              <View style={styles.tableContainer}>
+                {tableData.map((row, index) => (
+                  <View key={index} style={styles.tableRow}>
+                    {row.map((cell, cellIndex) => (
+                      <Text key={cellIndex} style={styles.tableCell}>
+                        {cell}
+                      </Text>
+                    ))}
+                  </View>
+                ))}
+              </View>
+              <TouchableOpacity style={styles.closeButton} onPress={closePopup}>
+                <Text style={styles.closeButtonText}>Close</Text>
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity style={styles.closeButton} onPress={closePopup}>
-              <Text style={styles.closeButtonText}>Close</Text>
-            </TouchableOpacity>
-          </View>
+          ) : popupType === "profile" ? (
+            popupContent
+          ) : null}
         </View>
       </Modal>
     </View>
@@ -587,7 +592,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     elevation: 5,
   },
-  
+
   profileHeader: {
     alignItems: "center",
     marginBottom: 20,
@@ -617,7 +622,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: Colors.GRAY,
   },
-  
+
   profileStats: {
     flexDirection: "row",
     justifyContent: "space-around",
@@ -636,7 +641,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: Colors.GRAY,
   },
-  
+
   profileAboutTitle: {
     fontSize: 18,
     fontWeight: "bold",
@@ -648,7 +653,7 @@ const styles = StyleSheet.create({
     color: Colors.GRAY,
     marginBottom: 20,
   },
-  
+
   profileHoursTitle: {
     fontSize: 18,
     fontWeight: "bold",
@@ -669,7 +674,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: Colors.PRIMERY,
   },
-  
+
   bookButton: {
     marginTop: 20,
     backgroundColor: Colors.PRIMERY,
@@ -682,5 +687,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#fff",
   },
-  
+  crossButtonContainer: {
+    position: "absolute",
+    top: 5,
+    right: 5,
+    zIndex: 10, // Ensure it appears above other elements
+  },
 });
