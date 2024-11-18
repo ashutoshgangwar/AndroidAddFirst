@@ -34,6 +34,7 @@ export default function Games() {
       }
 
       const data = await response.json();
+    
       setGames(data); // Set the fetched games data in state
     } catch (error) {
       console.error("Error fetching game details:", error.message);

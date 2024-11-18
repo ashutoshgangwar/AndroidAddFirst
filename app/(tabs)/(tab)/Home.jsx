@@ -24,14 +24,11 @@ export default function Gamedetails() {
   const [showPopup, setShowPopup] = useState(false);
   const [popupContent, setPopupContent] = useState("");
   const [tableData, setTableData] = useState([]);
-  const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [profileData, setProfileData] = useState(null);
+  const [usersdata, setUsersdata] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
-  const [imageUri, setImageUri] = useState(null); // To store the profile image URL
-  const [bio, setBio] = useState(""); // Define bio state
-
+  const [imageUri, setImageUri] = useState(null);
   const scrollViewRef = useRef(null);
   const navigation = useNavigation();
   const router = useRouter();
@@ -44,38 +41,35 @@ export default function Gamedetails() {
     fetchProfileData(); // Fetch profile data on component mount
   }, []);
 
+  useEffect(() => {
+    console.log("usersdata updated:", usersdata);
+  }, [usersdata]);
+
   const fetchProfileData = async () => {
     try {
-      const token = await AsyncStorage.getItem("userToken");
-      if (!token) {
-        throw new Error("No token found, please login again.");
-      }
-
-      const response = await fetch(`${API_URL}/profile`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
+      const response = await fetch(`${API_URL}/users`, { method: "GET" });
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to fetch profile data.");
+        throw new Error("Failed to fetch users details");
       }
-
       const data = await response.json();
-      setProfileData(data);
+      setUsersdata(data);
+  
+      // Log and set image URL
       const fetchedImageUri = data.profilePic
         ? `${API_URL}${data.profilePic}`
-        : null;
-      setImageUri(fetchedImageUri); // Set the image URI correctly
-      setBio(data.bio || ""); // Make sure the bio state is set
+        : "https://via.placeholder.com/150";
+  
+      console.log("Fetched Image URI:", fetchedImageUri);
+      setImageUri(fetchedImageUri);
+  
+      setLoading(false);
     } catch (error) {
+      console.error("Error fetching profile data:", error.message);
       setError(error.message);
-    } finally {
       setLoading(false);
     }
   };
+  
 
   // Handle pull-to-refresh
   const onRefresh = async () => {
@@ -231,14 +225,37 @@ export default function Gamedetails() {
                 </View>
               ))}
             </ScrollView>
-            <View style={styles.card}>
-              <Image
-                source={{ uri: imageUri || profileData?.profilePic }} // Fallback to a default image
-                style={styles.cardImage}
-              />
-              <Text style={styles.name}>{profileData?.fullname}</Text>
-              <Text style={styles.bio}>{profileData?.bio}</Text>
-            </View>
+
+            {/* Profile Data */}
+
+            {Array.isArray(usersdata) &&
+              usersdata.map((user, index) => (
+                <View key={index} style={styles.listItem}>
+                  {/* User Image */}
+                  <Image
+  source={{
+    uri: user.profilePic
+      ? `${API_URL}${user.profilePic}`
+      : "https://via.placeholder.com/150",
+  }}
+  style={styles.userImage}
+  onError={() => console.error("Failed to load image:", user.profilePic)}
+/>
+
+                  {/* User Details */}
+                  <View style={styles.userDetails}>
+                    <Text style={styles.userName}>
+                      {user.fullname || "Name not available"}
+                    </Text>
+                    <Text style={styles.userNameTitle}>
+                      ({user.registeras || "Name not available"})
+                    </Text>
+                    <Text style={styles.statusMessage}>
+                      {user.bio || "Status message not available"}
+                    </Text>
+                  </View>
+                </View>
+              ))}
           </ScrollView>
         </ScrollView>
       )}
@@ -272,8 +289,6 @@ export default function Gamedetails() {
     </View>
   );
 }
-
-// ... Styles remain unchanged ...
 
 const styles = StyleSheet.create({
   container: {
@@ -328,8 +343,9 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   categories: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: "row", // Arrange cards in a row
+    flexWrap: "wrap", // Allow wrapping when there are more than 2 cards
+    justifyContent: "space-between", // Space between the cards
     marginBottom: 20,
   },
   rankContainer: {
@@ -366,52 +382,48 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: screenWidth,
     height: 50,
-    backgroundColor: Colors.LIGHTGRAY,
     backgroundColor: Colors.SILVER,
   },
   newsText: {
     fontSize: 16,
   },
-  
-  card: {
-    width: "48%",
+  listItem: {
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: Colors.WHITE,
+    padding: 15,
     borderRadius: 10,
-    marginTop: 20,
-    elevation: 3,
-    overflow: "hidden",
-    padding:" 20px"
+    marginVertical: 5,
+    elevation: 3, // For shadow effect
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
   },
-  cardImage: {
-    width: "100%",
-    height: 100,
-    resizeMode: "cover",
-    marginBottom: 10,
-    
+  userImage: {
+    width: 50,
+    height: 50,
+    borderRadius: 25, // Circular image
+    marginRight: 10,
   },
-  cardContent: {
-    padding: 10,
+  userDetails: {
+    flex: 1, // Take up available space
   },
-  cardTitle: {
-    fontSize: 16,
+
+  userName: {
+    fontSize: 20,
     fontWeight: "bold",
+    color: Colors.PRIMERY,
   },
-  cardDescription: {
+  userNameTitle: {
+    fontSize: 15,
+    fontWeight: "bold",
+    color: Colors.GRAY,
+  },
+
+  statusMessage: {
     fontSize: 14,
     color: Colors.GRAY,
-  },
-  name: {
-    fontSize: 20,
-    color: Colors.PRIMERY,
-    fontWeight: "bold",
-    padding: 5,
-    // textDecorationLine: "underline",
-  },
-  bio: {
-    fontSize: 15,
-    color: Colors.GRAY,
-    marginBottom: 5,
-    padding: 10,
+    marginTop: 2,
   },
   popupContainer: {
     flex: 1,
