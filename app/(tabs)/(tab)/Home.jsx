@@ -10,6 +10,7 @@ import {
   Dimensions,
   Modal,
   RefreshControl,
+  TextInput,
 } from "react-native";
 
 import { Colors } from "@/constants/Colors";
@@ -31,6 +32,7 @@ export default function Gamedetails() {
   const [usersdata, setUsersdata] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
   const [imageUri, setImageUri] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const scrollViewRef = useRef(null);
   const navigation = useNavigation();
   const router = useRouter();
@@ -76,7 +78,27 @@ export default function Gamedetails() {
     await fetchProfileData();
     setRefreshing(false);
   };
+  // Function to handle the search input change
+  const handleSearchChange = (text) => {
+    setSearchQuery(text);
+  };
 
+  // Filter profiles based on the search query
+  const filteredUsers = searchQuery
+  ? usersdata?.filter((user) => {
+      const fullName = user.fullname?.toLowerCase() || "";
+      const role = user.registeras?.toLowerCase() || "";
+      const city = user.city?.toLowerCase() || "";
+      const state = user.state?.toLowerCase() || "";
+      const query = searchQuery.toLowerCase();
+      return (
+        fullName.includes(query) ||
+        role.includes(query) ||
+        city.includes(query) ||
+        state.includes(query)
+      );
+    })
+  : usersdata; // Show all users if searchQuery is empty
   const images = [
     require("./../../../assets/images/rank.jpeg"),
     require("./../../../assets/images/news.jpeg"),
@@ -124,9 +146,11 @@ export default function Gamedetails() {
               }}
               style={styles.profileImage}
             />
+
             {/* Profile Info (Name, Role, Location) */}
             <View style={styles.profileDetailsContainer}>
               <Text style={styles.profileName}>{user.fullname || "N/A"}</Text>
+
               <Text style={styles.profileRole}>
                 ({user.registeras || "Role not available"})
               </Text>
@@ -317,47 +341,48 @@ export default function Gamedetails() {
                 </View>
               ))}
             </ScrollView>
+            {/* Search Bar */}
+            <View style={styles.searchContainer}>
+              <TextInput
+                style={styles.searchInput}
+                placeholder="Search by name, role, city..."
+                value={searchQuery}
+                onChangeText={handleSearchChange}
+              />
+            </View>
 
             {/* Profile Data */}
 
-            {Array.isArray(usersdata) &&
-              usersdata.map((user, index) => (
-                <TouchableOpacity
-                  key={index}
-                  style={styles.listItem}
-                  onPress={() => openProfilePopup(user)}
-                >
-                  {/* User Image */}
-                  <Image
-                    source={{
-                      uri: user.profilePic
-                        ? `${API_URL}${user.profilePic}`
-                        : "https://via.placeholder.com/150",
-                    }}
-                    style={styles.userImage}
-                    onError={() =>
-                      console.error("Failed to load image:", user.profilePic)
-                    }
-                  />
-
-                  {/* User Details */}
-                  <View style={styles.userDetails}>
-                    <Text style={styles.userName}>
-                      {user.fullname || "Name not available"}
-                    </Text>
-                    <Text style={styles.userNameTitle}>
-                      ({user.registeras || "Role not available"})
-                    </Text>
-                    <View style={styles.locationContainer}>
-                      <Entypo name="location-pin" size={18} color="black" />
-                      <Text style={styles.userLocationText}>
-                        {user.city || "City not available"},{" "}
-                        {user.state || "State not available"}
-                      </Text>
-                    </View>
-                  </View>
-                </TouchableOpacity>
-              ))}
+             {/* Render filtered or all users */}
+    {Array.isArray(filteredUsers) &&
+      filteredUsers.map((user, index) => (
+        <TouchableOpacity
+          key={index}
+          style={styles.listItem}
+          onPress={() => openProfilePopup(user)}
+        >
+          <Image
+            source={{
+              uri: user.profilePic
+                ? `${API_URL}${user.profilePic}`
+                : "https://via.placeholder.com/150",
+            }}
+            style={styles.userImage}
+          />
+          <View style={styles.userDetails}>
+            <Text style={styles.userName}>{user.fullname || "N/A"}</Text>
+            <Text style={styles.userNameTitle}>
+              ({user.registeras || "Role not available"})
+            </Text>
+            <View style={styles.locationContainer}>
+              <Entypo name="location-pin" size={18} color="black" />
+              <Text style={styles.userLocationText}>
+                {user.city || "N/A"}, {user.state || "N/A"}
+              </Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+      ))}
           </ScrollView>
         </ScrollView>
       )}
@@ -624,7 +649,6 @@ const styles = StyleSheet.create({
 
   profileDetailsContainer: {
     flex: 1, // This makes sure the text takes up remaining space
-    
   },
   profileName: {
     fontSize: 22,
@@ -722,5 +746,20 @@ const styles = StyleSheet.create({
     padding: 10, // Add padding around the icon to create space
     justifyContent: "center", // Center the icon
     alignItems: "center", // Align the icon horizontally
+  },
+
+  searchContainer: {
+    padding: 10,
+    backgroundColor: Colors.WHITE,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.GRAY,
+  },
+  searchInput: {
+    height: 40,
+    borderColor: Colors.GRAY,
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingLeft: 10,
+    fontSize: 16,
   },
 });
