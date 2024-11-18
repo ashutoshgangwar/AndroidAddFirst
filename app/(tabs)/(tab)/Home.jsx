@@ -140,6 +140,11 @@ export default function Gamedetails() {
             </View>
           </View>
         </View>
+
+        <Text style={styles.profileAboutTitle}>About</Text>
+        <Text style={styles.profileAboutText}>
+          {user.bio || "No bio available"}
+        </Text>
         <View style={styles.profileStats}>
           <View style={styles.statItem}>
             <View style={styles.iconContainer}>
@@ -170,10 +175,7 @@ export default function Gamedetails() {
             <Text style={styles.statLabel}>Reviews</Text>
           </View>
         </View>
-        <Text style={styles.profileAboutTitle}>About</Text>
-        <Text style={styles.profileAboutText}>
-          {user.bio || "No bio available"}
-        </Text>
+        
         <Text style={styles.profileHoursTitle}>Working Hours</Text>
         {user.workingHours
           ? user.workingHours.map((day, index) => (
