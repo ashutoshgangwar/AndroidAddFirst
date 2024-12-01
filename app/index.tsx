@@ -1,6 +1,6 @@
 import { Text, View } from "react-native";
 
-import Login from "./../../Components/Login";
+import Login from "./../Components/Login";
 // import Gamedetails from "./../(tabs)/(tab)/Games"
 
 
